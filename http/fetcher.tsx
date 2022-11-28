@@ -1,6 +1,6 @@
-import { TupleType } from "typescript";
 import useSWR from "swr";
 
+// TODO make this "permanent" by using the data feed from arweave.
 export const fetcher = (...args: any) =>
   // @ts-ignore
   fetch(...(args as any)).then((res) => res.json());
