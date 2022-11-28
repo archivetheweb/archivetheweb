@@ -9,12 +9,12 @@ export const Header = () => {
 
   return (
     <div
-      className="grid grid-cols-3 py-8"
+      className="grid grid-cols-3 pt-8"
       style={{ color: "rgba(0, 0, 0, 0.6)" }}
     >
       <div className="flex gap-8 col-span-2">
         <div className="flex justify-center content-center items-center">
-          <Link href={"/"}>
+          <Link href={"/save"}>
             <Image
               src={logo}
               alt="logo"
@@ -28,7 +28,7 @@ export const Header = () => {
           </Link>
         </div>
         <div className="flex justify-center content-center items-center">
-          <Link href={"/"}>Save a Website</Link>
+          <Link href={"/save"}>Save a Website</Link>
         </div>
         <div className="flex justify-center content-center items-center">
           <Link href={"/explore"}>Explore Archive</Link>
