@@ -1,5 +1,4 @@
 import { Footer } from "../components/footer";
-import styles from "../styles/Home.module.css";
 import { Header } from "../components/header";
 import emptyWebpage from "../public/empty_webpage.png";
 import Image from "next/image";
@@ -42,10 +41,10 @@ export default function Save() {
     });
   };
   return (
-    <div className="h-screen px-8">
+    <div className="flex flex-col h-screen px-8">
       <Header />
-      <div className="container p-16">
-        <main className={styles.main}>
+      <div className="container p-16 grow">
+        <main className="">
           <div className="text-3xl">Save a website</div>
 
           <div className="text-[#0000008A] pb-3">

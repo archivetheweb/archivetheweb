@@ -3,9 +3,9 @@ import { Header } from "../components/header";
 
 const FAQ = () => {
   return (
-    <div className="h-screen px-8">
+    <div className="flex flex-col h-screen px-8">
       <Header />
-      FAQ
+      <div className="container p-16 grow ">FAQ</div>
       <Footer />;
     </div>
   );

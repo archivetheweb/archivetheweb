@@ -14,7 +14,7 @@ export const Header = () => {
     >
       <div className="flex gap-8 col-span-2">
         <div className="flex justify-center content-center items-center">
-          <Link href={"/save"}>
+          <Link href={"/"}>
             <Image
               src={logo}
               alt="logo"
