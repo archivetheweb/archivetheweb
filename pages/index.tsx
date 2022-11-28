@@ -18,13 +18,15 @@ import openarchive from "../public/open_archive.png";
 import mainHeader from "../public/main_header.png";
 import pagebreak from "../public/page_break.png";
 import Image from "next/image";
-import { useState } from "react";
-import { isValidUrl } from "../components/utils";
+import { useRef, useState } from "react";
+import { isValidUrl, Toast } from "../components/utils";
 import { useRouter } from "next/router";
 import { EthereumClient } from "@web3modal/ethereum";
 export default function Home() {
   const router = useRouter();
   let [urlInfo, setURL] = useState({ url: "", valid: false });
+  let [toastMessage, setToastMessage] = useState("");
+  const textAreaRef = useRef(null);
 
   const handleURL = (e: React.FormEvent<HTMLInputElement>) => {
     setURL({
@@ -41,10 +43,22 @@ export default function Home() {
     router.push(`/save?url=${urlInfo.url}`);
   };
 
+  const handleCopyArClick = (e: any) => {
+    navigator.clipboard.writeText(e.target.childNodes[0].data);
+
+    setToastMessage("Arweave address copied to Clipboard");
+  };
+
+  const handleCopyEthClick = (e: any) => {
+    navigator.clipboard.writeText(e.target.childNodes[0].data);
+    setToastMessage("Eth address copied to Clipboard");
+  };
+
   return (
     <div className="flex flex-col h-screen">
-      <Header className="px-24" />
+      <Toast message={toastMessage} />
       <div className="grow ">
+        <Header className="px-24" />
         <div className="hero">
           <div className="hero-content flex-col lg:flex-row md:flex-col-reverse px-8">
             <div>
@@ -328,13 +342,15 @@ export default function Home() {
               <br />
               <br />
               <button
-                // onClick={handleClick}
-                className="btn btn-outline bg-funpurple text-[#FFFFFF] hover:bg-funpurple/75 border-none h-16 "
+                onClick={() =>
+                  window.open("https://github.com/archivetheweb/archivetheweb")
+                }
+                className="btn btn-outline  text-funpurple hover:bg-funpurple/75 border-funpurple h-16 "
               >
                 Github
               </button>
             </div>
-            <div className="text-3xl font-bold pb-8">
+            <div className="text-3xl font-bold pb-8 pt-10">
               Donate to Archive the Web
             </div>
             <div className="text-[#737B7D]">
@@ -351,7 +367,10 @@ export default function Home() {
                   style={{ width: "12px", height: "18px" }}
                   alt="eth"
                 />
-                <div className="grow text-center text-[#737B7D]">
+                <div
+                  className="grow text-center text-[#737B7D]"
+                  onClick={handleCopyEthClick}
+                >
                   0x00000000000000000000000000000000
                 </div>
                 <Image className=" " src={svg} alt="copy eth address" />
@@ -359,16 +378,27 @@ export default function Home() {
             </div>
             <br />
             <div className="flex justify-center content-center items-center gap-2 border rounded-lg p-2 border-[#D9D9D9]">
-              <button className="flex flex-row w-full">
+              <button
+                className="flex flex-row w-full"
+                onClick={handleCopyArClick}
+              >
                 <Image
                   src={arweave}
                   style={{ width: "16px", height: "16px" }}
                   alt="eth"
                 />
-                <div className="grow text-center text-[#737B7D]">
+                <div
+                  id="ar_address"
+                  className="grow text-center text-[#737B7D]"
+                >
                   AAAAAABBBBBBBCCCCCCCDDDDDDEEEEE
                 </div>
-                <Image className=" " src={svg} alt="copy arweave address" />
+                <Image
+                  className=" "
+                  style={{ width: "18px", height: "21px" }}
+                  src={svg}
+                  alt="copy arweave address"
+                />
               </button>
             </div>
             {/* TODO */}
@@ -378,7 +408,12 @@ export default function Home() {
             </div>
           </div>
           <div className="flex justify-center">
-            <Image className="" src={puzzle} alt="puzzle " />
+            <Image
+              className=""
+              style={{ maxWidth: "348px", maxHeight: "348px" }}
+              src={puzzle}
+              alt="puzzle "
+            />
           </div>
         </div>
       </div>

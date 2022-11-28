@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+
 export const isValidUrl = (url: string) => {
   try {
     // if it isn't, throws an error
@@ -16,4 +18,35 @@ export const isValidUrl = (url: string) => {
   } catch (e) {
     return false;
   }
+};
+
+export const Toast = ({ message }: { message: string }) => {
+  let [isDiplayed, setIsDisplayed] = useState(false);
+  let [m, setM] = useState("");
+
+  useEffect(() => {
+    let timer = setTimeout(() => {}, 0);
+
+    if (m !== message) {
+      setIsDisplayed(true);
+      timer = setTimeout(() => {
+        setIsDisplayed(false);
+        setM("");
+      }, 3000);
+    }
+    return () => {
+      setIsDisplayed(false);
+      clearTimeout(timer);
+    };
+  }, [message]);
+
+  return (
+    <div className="toast" style={{ display: isDiplayed ? "" : "none" }}>
+      <div className="alert alert-success">
+        <div>
+          <span className="text-[#FFFFFF]">{message}</span>
+        </div>
+      </div>
+    </div>
+  );
 };
