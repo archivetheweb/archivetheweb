@@ -1,8 +1,13 @@
 import logo from "../public/logo.png";
 import Link from "next/link";
 import Image from "next/image";
+import { useContext } from "react";
+import ConnectorContext from "../context/connector";
 
 export const Header = () => {
+  const { address, blockchain } = useContext(ConnectorContext);
+  console.log(blockchain);
+
   return (
     <div
       className="grid grid-cols-3 py-8 px-16"
@@ -15,8 +20,8 @@ export const Header = () => {
               src={logo}
               alt="logo"
               style={{
-                maxHeight: "72px",
-                maxWidth: "250px",
+                maxHeight: "41px",
+                maxWidth: "140px",
                 minHeight: "30px",
                 minWidth: "100px",
               }}

@@ -9,6 +9,7 @@ import {
 import { Web3Modal } from "@web3modal/react";
 import { chain, configureChains, createClient, WagmiConfig } from "wagmi";
 import { Header } from "../components/header";
+import ConnectorContext, { emptyState } from "../context/connector";
 
 const chains = [chain.mainnet, chain.polygon, chain.optimism, chain.arbitrum];
 
@@ -35,8 +36,10 @@ export default function App({ Component, pageProps }: AppProps) {
       </Head>
 
       <WagmiConfig client={wagmiClient}>
-        <Header />
-        <Component {...pageProps} />
+        <ConnectorContext.Provider value={emptyState}>
+          <Header />
+          <Component {...pageProps} />
+        </ConnectorContext.Provider>
       </WagmiConfig>
 
       <Web3Modal
