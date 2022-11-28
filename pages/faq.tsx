@@ -1,14 +1,7 @@
-import { Footer } from "../components/footer";
-import { Header } from "../components/header";
+import { Container } from "../components/container";
 
 const FAQ = () => {
-  return (
-    <div className="flex flex-col h-screen px-8">
-      <Header />
-      <div className="container p-16 grow ">FAQ</div>
-      <Footer />;
-    </div>
-  );
+  return <Container>FAQ</Container>;
 };
 
 export default FAQ;

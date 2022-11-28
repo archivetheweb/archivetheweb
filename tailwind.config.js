@@ -8,6 +8,9 @@ module.exports = {
   theme: {
     colors: {
       purple: "#7e5bef",
+      funpurple: "#8B66FF",
+      funbrightpurple: "#80B2FF",
+      funmidpurple: "#8788F8",
     },
     fontFamily: {
       fontFamily: "Open Sans",
@@ -29,6 +32,7 @@ module.exports = {
           success: "#36D399",
           warning: "#FBBD23",
           error: "#F87272",
+          funpurple: "#8B66FF",
         },
       },
       "dark",
