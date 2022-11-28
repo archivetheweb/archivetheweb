@@ -3,10 +3,10 @@ import Link from "next/link";
 import gh from "../public/github.png";
 import twitter from "../public/twitter_grey.png";
 
-export const Footer = ({ passedClass }: { passedClass: any }) => {
+export const Footer = ({}) => {
   return (
-    <footer className={"grid grid-cols-2 gap-4 p-8 full-w" + passedClass}>
-      <div className="flex gap-4">
+    <footer className={"grid grid-cols-2 gap-4  full-w pb-10"}>
+      <div className="flex gap-4 items-center align-center">
         <div>
           <Link href={"https://twitter.com/archive_the_web"} target="_blank">
             <Image src={twitter} height={24} width={24} alt="twitter" />

@@ -8,7 +8,6 @@ import {
 } from "@web3modal/ethereum";
 import { Web3Modal } from "@web3modal/react";
 import { chain, configureChains, createClient, WagmiConfig } from "wagmi";
-import { Header } from "../components/header";
 import ConnectorContext, { emptyState } from "../context/connector";
 
 const chains = [chain.mainnet, chain.polygon, chain.optimism, chain.arbitrum];
@@ -37,13 +36,12 @@ export default function App({ Component, pageProps }: AppProps) {
 
       <WagmiConfig client={wagmiClient}>
         <ConnectorContext.Provider value={emptyState}>
-          <Header />
           <Component {...pageProps} />
         </ConnectorContext.Provider>
       </WagmiConfig>
 
       <Web3Modal
-        projectId="1bc08808a680328f02879be7ffa70914"
+        projectId={process.env.WEB3_MODAL_PROJECT_ID}
         ethereumClient={ethereumClient}
       />
     </>

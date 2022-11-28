@@ -6,11 +6,10 @@ import ConnectorContext from "../context/connector";
 
 export const Header = () => {
   const { address, blockchain } = useContext(ConnectorContext);
-  console.log(blockchain);
 
   return (
     <div
-      className="grid grid-cols-3 py-8 px-16"
+      className="grid grid-cols-3 py-8"
       style={{ color: "rgba(0, 0, 0, 0.6)" }}
     >
       <div className="flex gap-8 col-span-2">
