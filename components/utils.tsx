@@ -20,9 +20,9 @@ export const isValidUrl = (url: string) => {
   }
 };
 
-export const Toast = ({ message }: { message: string }) => {
+export const Toast = ({ message }: { message: JSX.Element }) => {
   let [isDiplayed, setIsDisplayed] = useState(false);
-  let [m, setM] = useState("");
+  let [m, setM] = useState(<></>);
 
   useEffect(() => {
     let timer = setTimeout(() => {}, 0);
@@ -31,7 +31,7 @@ export const Toast = ({ message }: { message: string }) => {
       setIsDisplayed(true);
       timer = setTimeout(() => {
         setIsDisplayed(false);
-        setM("");
+        setM(<></>);
       }, 3000);
     }
     return () => {

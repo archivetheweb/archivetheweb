@@ -5,7 +5,7 @@ import twitter from "../public/twitter_grey.png";
 
 export const Footer: React.FC<any> = ({ props }) => {
   return (
-    <footer className="grid grid-cols-2 gap-4  full-w pb-4  shrink-0 px-24">
+    <footer className="grid grid-cols-2 gap-4  full-w pb-4  shrink-0 px-16">
       <div className="flex gap-4 items-center ">
         <div>
           <Link href={"https://twitter.com/archive_the_web"} target="_blank">

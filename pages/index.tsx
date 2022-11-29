@@ -1,5 +1,4 @@
-import { Header } from "../components/header";
-import { Footer } from "../components/footer";
+// IMAGES
 import arweave from "../public/ar.png";
 import monkey from "../public/monkey.png";
 import apple from "../public/apple.png";
@@ -13,20 +12,23 @@ import puzzle from "../public/puzzle.png";
 import eth from "../public/eth.png";
 import svg from "../public/copy.svg";
 import faqImage from "../public/faq.png";
+import gh from "../public/github.png";
 import diagram from "../public/diagram.png";
-import openarchive from "../public/open_archive.png";
+import openArchive from "../public/open_archive.png";
 import mainHeader from "../public/main_header.png";
-import pagebreak from "../public/page_break.png";
+import library from "../public/page_break.png";
+
+import { Header } from "../components/header";
+import { Footer } from "../components/footer";
 import Image from "next/image";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { isValidUrl, Toast } from "../components/utils";
 import { useRouter } from "next/router";
-import { EthereumClient } from "@web3modal/ethereum";
+
 export default function Home() {
   const router = useRouter();
   let [urlInfo, setURL] = useState({ url: "", valid: false });
-  let [toastMessage, setToastMessage] = useState("");
-  const textAreaRef = useRef(null);
+  let [toastMessage, setToastMessage] = useState(<></>);
 
   const handleURL = (e: React.FormEvent<HTMLInputElement>) => {
     setURL({
@@ -46,21 +48,29 @@ export default function Home() {
   const handleCopyArClick = (e: any) => {
     navigator.clipboard.writeText(e.target.childNodes[0].data);
 
-    setToastMessage("Arweave address copied to Clipboard");
+    setToastMessage(
+      <span>
+        <b>Arweave</b> address copied!
+      </span>
+    );
   };
 
   const handleCopyEthClick = (e: any) => {
     navigator.clipboard.writeText(e.target.childNodes[0].data);
-    setToastMessage("Eth address copied to Clipboard");
+    setToastMessage(
+      <span>
+        <b>ETH</b> address copied!
+      </span>
+    );
   };
 
   return (
     <div className="flex flex-col h-screen">
       <Toast message={toastMessage} />
       <div className="grow ">
-        <Header className="px-24" />
+        <Header className="px-16" />
         <div className="hero">
-          <div className="hero-content flex-col lg:flex-row md:flex-col-reverse px-8">
+          <div className="hero-content flex-col lg:flex-row md:flex-col-reverse px-16">
             <div>
               <div className="text-funpurple text-2xl font-bold ">
                 Archive what matters to you
@@ -68,7 +78,7 @@ export default function Home() {
               <h1 className="text-7xl font-bold">
                 An open & permanent public web archive <u>for everyone</u>
               </h1>
-              <p className="py-6 text-xl">
+              <p className="py-6 text-xl text-lightgrey">
                 Archive the Web is an open and decentralized backup of the world
                 wide web. You can set up long term archiving of websites,
                 tweets, articles and more.
@@ -94,7 +104,11 @@ export default function Home() {
                 </button>
               </div>
             </div>
-            <Image src={mainHeader} className="" alt="library" />
+            <Image
+              src={mainHeader}
+              className="max-h-full"
+              alt="man fetching book in library"
+            />
           </div>
         </div>
         <div className="flex justify-center content-center items-center w-full h-32 bg-gradient-to-r from-funbrightpurple via-funmidpurple to-funpurple">
@@ -122,11 +136,11 @@ export default function Home() {
             </div>
           </div>
         </div>
-        <div className="flex text-center w-full justify-center p-16 text-3xl font-bold">
+        <div className="flex text-center w-full justify-center px-16 py-8 text-3xl font-bold">
           The average website is{" "}
-          <span className="px-1 text-[#9FC5FF]">altered</span> or{" "}
-          <span className="px-1 text-[#FF7170]"> deleted</span> after{" "}
-          <span className="px-1 text-funmidpurple">92 days</span>.
+          <span className="px-2 text-[#9FC5FF]">altered</span> or{" "}
+          <span className="px-2 text-[#FF7170]"> deleted</span> after{" "}
+          <span className="px-2 text-funmidpurple">92 days.</span>
         </div>
 
         <div className="grid grid-cols-2 px-16 gap-8 ">
@@ -216,14 +230,14 @@ export default function Home() {
             </div>
           </div>
         </div>
-        <Image className="py-16" src={pagebreak} alt="library" />
+        <Image className="w-full py-16" src={library} alt="library" />
 
-        <div className="grid grid-cols-2 px-24 gap-4 justify-center content-center w-full pb-16">
+        <div className="grid grid-cols-2 px-16 gap-4 justify-center content-center w-full pb-16">
           <div>
             <div className="text-3xl font-bold pb-8">
               Introducing an open archive
             </div>
-            <div className="text-[#737B7D]">
+            <div className="text-lightgrey">
               Archive the Web is an open source website archiving tool that
               allows users to set up automated website archiving stored on
               Arweave. Our mission at Archive the Web is to help create a
@@ -234,39 +248,52 @@ export default function Home() {
             </div>
           </div>
           <div className="flex justify-center">
-            <Image className="" src={openarchive} alt="open archive" />
+            <Image
+              className=""
+              style={{ maxHeight: "398px", maxWidth: "398px" }}
+              src={openArchive}
+              alt="open archive"
+            />
           </div>
         </div>
-        <div className="grid grid-cols-2 px-24 gap-4 justify-center content-center w-full pb-16">
+        <div className="grid grid-cols-2 px-16 gap-4 justify-center content-center w-full pb-16">
           <div className="flex justify-center">
-            <Image className="" src={safe} alt="safe" />
+            <Image
+              className=""
+              style={{ maxHeight: "398px", maxWidth: "398px" }}
+              src={safe}
+              alt="safe"
+            />
           </div>
           <div>
+            <a id="how_it_works" />
+
             <div className="text-3xl font-bold pb-8">How it works</div>
-            <div className="text-[#737B7D] pb-2">
+
+            <div className="text-lightgrey pb-2 flex items-center gap-2">
               <span className="px-1 text-3xl text-funpurple text-bold">1</span>{" "}
               Find a website you want to archive
             </div>
-            <div className="text-[#737B7D] pb-2">
+            <div className="text-lightgrey pb-2 flex items-center gap-2">
               <span className="px-1 text-3xl text-funpurple text-bold">2</span>{" "}
               Select a duration and frequency for website snapshots
             </div>
-            <div className="text-[#737B7D] pb-8">
+            <div className="text-lightgrey pb-8 flex items-center gap-2">
               <span className="px-1 text-3xl text-funpurple text-bold">3</span>{" "}
               Pay the storage fee. Multiple payment methods available.
             </div>
-            <div className="text-[#737B7D] pb-2">
+            <div className="text-lightgrey pb-2">
               That’s all! Snapshots will be automatically taken until the
               prepayment has been completely used.
             </div>
           </div>
         </div>
-        <div className="grid grid-cols-2 px-24 gap-4 justify-center content-center w-full pb-16">
+        <div className="grid grid-cols-2 px-16 gap-4 justify-center content-center w-full pb-16">
           <div>
             <div className="text-3xl font-bold pb-8">
               Archive what matters to you
             </div>
-            <div className="text-[#737B7D]">
+            <div className="text-lightgrey">
               This is an open archive for all to contribute to regardless of
               your political, religious or ideological beliefs. We hope that by
               working together, a diverse and unbiased set of information will
@@ -279,16 +306,26 @@ export default function Home() {
             </div>
           </div>
           <div className="flex justify-center">
-            <Image className="" src={magnifyingGlass} alt="magnifying glass" />
+            <Image
+              className=""
+              style={{ maxHeight: "398px", maxWidth: "398px" }}
+              src={magnifyingGlass}
+              alt="magnifying glass"
+            />
           </div>
         </div>
-        <div className="grid grid-cols-2 px-24 gap-4 justify-center content-center w-full pb-16">
+        <div className="grid grid-cols-2 px-16 gap-4 justify-center content-center w-full pb-16">
           <div className="flex justify-center">
-            <Image className="" src={diagram} alt="diagram" />
+            <Image
+              className=""
+              style={{ maxHeight: "398px", maxWidth: "398px" }}
+              src={diagram}
+              alt="diagram"
+            />
           </div>
           <div>
             <div className="text-3xl font-bold pb-8">Built to last</div>
-            <div>
+            <div className="text-lightgrey">
               All website snapshots taken are stored on the permaweb which
               exists on the Arweave network.
               <br />
@@ -304,17 +341,19 @@ export default function Home() {
             </div>
           </div>
         </div>
-        <div className="grid grid-cols-2 px-24 gap-4 justify-center content-center w-full pb-16">
+        <div className="grid grid-cols-2 px-16 gap-4 justify-center content-center w-full pb-16">
           <div>
+            <a id="faq" />
+
             <div className="text-3xl font-bold pb-2">
               Frequently Asked Questions
             </div>
-            <div className="text-[#737B7D]">
+            <div className="text-lightgrey">
               {faq.map((x) => (
                 <>
                   <div className="collapse collapse-arrow">
                     <input type="checkbox" />
-                    <div className="collapse-title text-xl font-medium">
+                    <div className="collapse-title text-xl font-medium text-[#000000]">
                       {x.question}
                     </div>
                     <div className="collapse-content">
@@ -327,15 +366,22 @@ export default function Home() {
             </div>
           </div>
           <div className="flex justify-center">
-            <Image className="" src={faqImage} alt="faq" />
+            <Image
+              className=""
+              style={{ maxHeight: "398px", maxWidth: "398px" }}
+              src={faqImage}
+              alt="faq"
+            />
           </div>
         </div>
-        <div className="grid grid-cols-2 px-24 gap-4 justify-center content-center w-full pb-16">
+        <a id="contribute" />
+
+        <div className="grid grid-cols-2 px-16 gap-4 justify-center content-center w-full pb-16">
           <div>
             <div className="text-3xl font-bold pb-8">
               Help build Archive the Web
             </div>
-            <div className="text-[#737B7D]">
+            <div className="text-lightgrey">
               Archive the Web is an open source project. Anyone is welcome to
               contribute to the project. Start getting involved by visiting our
               github repository!
@@ -347,13 +393,14 @@ export default function Home() {
                 }
                 className="btn btn-outline  text-funpurple hover:bg-funpurple/75 border-funpurple h-16 "
               >
-                Github
+                <Image src={gh} height={24} width={24} alt="github" />
+                <span className="pl-2">Github</span>
               </button>
             </div>
             <div className="text-3xl font-bold pb-8 pt-10">
               Donate to Archive the Web
             </div>
-            <div className="text-[#737B7D]">
+            <div className="text-lightgrey">
               Another way you can contribute to Archive the Web is by donating
               to support the platform’s open source development. Any donation is
               greatly appreciated. Our ETH and AR addresses are included below.
@@ -361,14 +408,14 @@ export default function Home() {
             <br />
             <br />
             <div className="flex justify-center content-center items-center gap-2 border rounded-lg p-2 border-[#D9D9D9]">
-              <button className="flex flex-row w-full">
+              <button className="flex flex-row w-full items-center">
                 <Image
                   src={eth}
                   style={{ width: "12px", height: "18px" }}
                   alt="eth"
                 />
                 <div
-                  className="grow text-center text-[#737B7D]"
+                  className="grow text-center text-lightgrey"
                   onClick={handleCopyEthClick}
                 >
                   0x00000000000000000000000000000000
@@ -379,7 +426,7 @@ export default function Home() {
             <br />
             <div className="flex justify-center content-center items-center gap-2 border rounded-lg p-2 border-[#D9D9D9]">
               <button
-                className="flex flex-row w-full"
+                className="flex flex-row w-full items-center"
                 onClick={handleCopyArClick}
               >
                 <Image
@@ -389,7 +436,7 @@ export default function Home() {
                 />
                 <div
                   id="ar_address"
-                  className="grow text-center text-[#737B7D]"
+                  className="grow text-center text-lightgrey"
                 >
                   AAAAAABBBBBBBCCCCCCCDDDDDDEEEEE
                 </div>
@@ -402,7 +449,7 @@ export default function Home() {
               </button>
             </div>
             {/* TODO */}
-            <div className="pt-10 text-[#737B7D]">
+            <div className="pt-10 text-lightgrey">
               This website does not use any cookies or trackers. Website last
               updated: November 22, 2022
             </div>
@@ -412,7 +459,7 @@ export default function Home() {
               className=""
               style={{ maxWidth: "348px", maxHeight: "348px" }}
               src={puzzle}
-              alt="puzzle "
+              alt="puzzle"
             />
           </div>
         </div>
@@ -424,8 +471,14 @@ export default function Home() {
 
 const faq = [
   { question: "How does Archive the Web work?", answer: "Like this" },
-  { question: "How does Archive the Web work?", answer: "Like this" },
-  { question: "How does Archive the Web work?", answer: "Like this" },
-  { question: "How does Archive the Web work?", answer: "Like this" },
-  { question: "How does Archive the Web work?", answer: "Like this" },
+  { question: "What can I store? ", answer: "Like this" },
+  { question: "How do you save data permanently?", answer: "Like this" },
+  {
+    question: "Why do I have to pay and how is the cost calculated?",
+    answer: "Like this",
+  },
+  {
+    question: "What is Archive the Web’s content moderation policy? ",
+    answer: "Like this",
+  },
 ];

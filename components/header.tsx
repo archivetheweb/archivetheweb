@@ -1,17 +1,16 @@
 import logo from "../public/logo.png";
 import Link from "next/link";
 import Image from "next/image";
-import { useContext } from "react";
-import ConnectorContext from "../context/connector";
 import { fetchPrice } from "../http/fetcher";
+import { useRouter } from "next/router";
 
 export const Header: React.FC<any> = (props) => {
-  const { address, blockchain } = useContext(ConnectorContext);
-  const { price, isLoading, isError } = fetchPrice();
+  const router = useRouter();
+  const { price, isLoading } = fetchPrice();
 
   return (
     <div
-      className={"grid grid-cols-3 pt-8 " + props.className}
+      className={"grid grid-cols-3 pt-4 " + props.className}
       style={{ color: "rgba(0, 0, 0, 0.6)" }}
     >
       <div className="flex gap-8 col-span-2">
@@ -33,13 +32,13 @@ export const Header: React.FC<any> = (props) => {
           <Link href={"/"}>Home</Link>
         </div>
         <div className="flex justify-center content-center items-center">
-          <Link href={"/faq"}>How it works</Link>
+          <Link href={"/#how_it_works"}>How it works</Link>
         </div>
         <div className="flex justify-center content-center items-center">
-          <Link href={"/faq"}>FAQs</Link>
+          <Link href={"/#faq"}>FAQs</Link>
         </div>
         <div className="flex justify-center content-center items-center">
-          <Link href={"/"}>Contribute</Link>
+          <Link href={"/#contribute"}>Contribute</Link>
         </div>
       </div>
       <div className="flex col-span-1 justify-end content-center items-center gap-8">
@@ -49,7 +48,10 @@ export const Header: React.FC<any> = (props) => {
             USD ${isLoading ? "loading..." : Math.round(+price * 100) / 100}
           </div>
         </div>
-        <button className="btn bg-funpurple text-[#FFFFFF] hover:bg-funpurple/75 border-none">
+        <button
+          onClick={() => router.push("/save")}
+          className="btn bg-funpurple text-[#FFFFFF] hover:bg-funpurple/75 border-none"
+        >
           Save a Website
         </button>
       </div>

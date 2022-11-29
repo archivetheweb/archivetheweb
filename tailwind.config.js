@@ -11,6 +11,7 @@ module.exports = {
       funpurple: "#8B66FF",
       funbrightpurple: "#80B2FF",
       funmidpurple: "#8788F8",
+      lightgrey: "#737B7D",
     },
     fontFamily: {
       fontFamily: "Open Sans",
