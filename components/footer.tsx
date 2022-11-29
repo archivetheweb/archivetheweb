@@ -5,7 +5,7 @@ import twitter from "../public/twitter_grey.png";
 
 export const Footer: React.FC<any> = ({ props }) => {
   return (
-    <footer className="grid grid-cols-2 gap-4  full-w pb-4  shrink-0 px-16">
+    <footer className="grid grid-cols-2 gap-4 items-center full-w pb-4  shrink-0 px-16">
       <div className="flex gap-4 items-center ">
         <div>
           <Link href={"https://twitter.com/archive_the_web"} target="_blank">
@@ -22,12 +22,12 @@ export const Footer: React.FC<any> = ({ props }) => {
         </div>
       </div>
 
-      <div className="justify-self-end">
+      <div className="justify-self-end items-center">
         {" "}
         {/* TODO */}
-        <div className="pt-10 text-lightgrey text-xs">
-          This website does not use any cookies or trackers. Website last
-          updated: November 29, 2022
+        <div className="text-lightgrey text-xs">
+          This website does not use any cookies or trackers. <br />
+          Website last updated: November 29, 2022
         </div>
       </div>
     </footer>
