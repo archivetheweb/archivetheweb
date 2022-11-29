@@ -22,7 +22,7 @@ export default function Save() {
   // TODO remove
   useEffect(() => {
     router.push("/");
-  }, []);
+  }, [router, router.query.url]);
 
   useEffect(() => {
     let url = router.query.url as string;

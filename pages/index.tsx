@@ -177,6 +177,7 @@ export default function Home() {
                   className="underline"
                   href="https://www.theguardian.com/world/2022/nov/28/china-censors-maskless-crowd-footage-in-world-cup-broadcasts"
                   target={"_blank"}
+                  rel="noreferrer"
                 >
                   censored
                 </a>{" "}
@@ -202,6 +203,7 @@ export default function Home() {
                   className="underline"
                   href="https://www.vice.com/en/article/78xzmb/the-conservative-party-tried-to-delete-their-old-speeches-from-the-web"
                   target={"_blank"}
+                  rel="noreferrer"
                 >
                   deleted files
                 </a>
@@ -238,6 +240,7 @@ export default function Home() {
                   className="underline"
                   href="https://ahrefs.com/blog/link-rot-study/"
                   target={"_blank"}
+                  rel="noreferrer"
                 >
                   9 years are lost
                 </a>
@@ -247,6 +250,7 @@ export default function Home() {
                   className="underline"
                   href="https://harvardlawreview.org/2014/03/perma-scoping-and-addressing-the-problem-of-link-and-reference-rot-in-legal-citations"
                   target={"_blank"}
+                  rel="noreferrer"
                 >
                   U.S. Supreme Court decisions no longer worked.
                 </a>
@@ -281,6 +285,7 @@ export default function Home() {
                   className="underline"
                   href="https://www.bbc.com/news/technology-47610936"
                   target={"_blank"}
+                  rel="noreferrer"
                 >
                   songs from 14 million artists
                 </a>
@@ -572,6 +577,7 @@ const faq = [
           className="underline"
           href="https://ardrive.io/what-is-arweave/"
           target={"_blank"}
+          rel="noreferrer"
         >
           {" "}
           here
@@ -614,6 +620,7 @@ const faq = [
           className="underline"
           href="https://www.arweave.org/technology#content-moderation"
           target={"_blank"}
+          rel="noreferrer"
         >
           {" "}
           website
@@ -623,6 +630,7 @@ const faq = [
           className="underline"
           href="https://www.arweave.org/yellow-paper.pdf"
           target={"_blank"}
+          rel="noreferrer"
         >
           {" "}
           yellow paper

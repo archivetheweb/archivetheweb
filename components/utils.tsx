@@ -38,7 +38,7 @@ export const Toast = ({ message }: { message: JSX.Element }) => {
       setIsDisplayed(false);
       clearTimeout(timer);
     };
-  }, [message]);
+  }, [message.type, m.type]);
 
   return (
     <div className="toast" style={{ display: isDiplayed ? "" : "none" }}>
