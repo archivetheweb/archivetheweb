@@ -36,7 +36,6 @@ module.exports = {
           funpurple: "#8B66FF",
         },
       },
-      "dark",
     ],
   },
   plugins: [require("daisyui")],
