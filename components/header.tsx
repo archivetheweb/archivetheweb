@@ -42,18 +42,24 @@ export const Header: React.FC<any> = (props) => {
         </div>
       </div>
       <div className="flex col-span-1 justify-end content-center items-center gap-8">
-        <div className="flex flex-col">
+        {/* <div className="flex flex-col">
           <div>Average Snapshot Cost</div>
           <div className="text-funpurple">
             USD ${isLoading ? "loading..." : Math.round(+price * 100) / 100}
           </div>
-        </div>
+        </div> */}
         <button
+          onClick={() => window.open("https://twitter.com/archive_the_web")}
+          className="btn bg-funpurple text-[#FFFFFF] hover:bg-funpurple/75 border-none"
+        >
+          Follow us on Twitter
+        </button>
+        {/* <button
           onClick={() => router.push("/save")}
           className="btn bg-funpurple text-[#FFFFFF] hover:bg-funpurple/75 border-none"
         >
           Save a Website
-        </button>
+        </button> */}
       </div>
     </div>
   );

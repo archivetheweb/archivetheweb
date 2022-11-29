@@ -68,9 +68,9 @@ export default function Home() {
     <div className="flex flex-col h-screen">
       <Toast message={toastMessage} />
       <div className="grow ">
-        <Header className="px-16" />
+        <Header className="px-16 pb-16" />
         <div className="hero">
-          <div className="hero-content flex-col lg:flex-row md:flex-col-reverse px-16">
+          <div className="hero-content flex-col lg:flex-row md:flex-col   px-16">
             <div>
               <div className="text-funpurple text-2xl font-bold ">
                 Archive what matters to you
@@ -84,7 +84,11 @@ export default function Home() {
                 tweets, articles and more.
               </p>
               <div className="flex gap-4">
-                <input
+                <br />
+                <br />
+                <br />
+                <br />
+                {/* <input
                   type="text"
                   value={urlInfo.url}
                   onChange={handleURL}
@@ -101,18 +105,23 @@ export default function Home() {
                   className="btn bg-funpurple text-[#FFFFFF] hover:bg-funpurple/75 border-none h-16 "
                 >
                   Save a Website
-                </button>
+                </button> */}
               </div>
             </div>
-            <Image
-              src={mainHeader}
-              className="max-h-full"
-              alt="man fetching book in library"
-            />
+            <div className="flex justify-center items-center p-16">
+              <Image
+                src={mainHeader}
+                className="max-h-full"
+                // height={413}
+                // width={353}
+                style={{ maxHeight: "413px", maxWidth: "353px" }}
+                alt="man fetching book in library"
+              />
+            </div>
           </div>
         </div>
         <div className="flex justify-center content-center items-center w-full h-32 bg-gradient-to-r from-funbrightpurple via-funmidpurple to-funpurple">
-          <div className="grid grid-cols-7">
+          {/* <div className="grid grid-cols-7" hidden={true}>
             <div className="text-[#FFFFFF] p-4 text-center">
               Sites recently snapshotted
             </div>
@@ -134,7 +143,7 @@ export default function Home() {
             <div className="">
               <Image src={arweave} alt="alt" />
             </div>
-          </div>
+          </div>*/}
         </div>
         <div className="flex text-center w-full justify-center px-16 py-8 text-3xl font-bold">
           The average website is{" "}
@@ -152,7 +161,7 @@ export default function Home() {
             />
             <div>
               <div className="font-bold pb-1">Content is censored</div>
-              <div>
+              <div className="text-lightgrey">
                 As of December 15, 2022 Chinese social media and web video
                 platforms must approve all news-related comments before they go
                 online and step up training for censors to keep out “harmful”
@@ -168,7 +177,7 @@ export default function Home() {
             />
             <div>
               <div className="font-bold pb-1">Opinions change</div>
-              <div>
+              <div className="text-lightgrey">
                 In 2013, ten years’ worth of British Conservative Party speeches
                 and press releases were abruptly deleted from their website.
               </div>
@@ -182,7 +191,7 @@ export default function Home() {
             />
             <div>
               <div className="font-bold pb-1">Organizations close</div>
-              <div>
+              <div className="text-lightgrey">
                 Companies can shut down and lose the data you entrusted them to
                 keep as well as their own websites and information.
               </div>
@@ -196,7 +205,7 @@ export default function Home() {
             />
             <div>
               <div className="font-bold pb-1">Links rot</div>
-              <div>
+              <div className="text-lightgrey">
                 As of 2013, 49% of hyperlinks cited in United States Supreme
                 Court decisions no longer worked.
               </div>
@@ -210,7 +219,7 @@ export default function Home() {
             />
             <div>
               <div className="font-bold pb-1">Hosting is unpaid</div>
-              <div>
+              <div className="text-lightgrey">
                 Hosting services can be left unpaid and content abandoned.
               </div>
             </div>
@@ -223,7 +232,7 @@ export default function Home() {
             />
             <div>
               <div className="font-bold pb-1">Servers go down</div>
-              <div>
+              <div className="text-lightgrey">
                 In 2019, MySpace mysteriously lost 12 years of music uploads,
                 totalling 50+ million songs from 14 million artists.
               </div>
@@ -418,7 +427,7 @@ export default function Home() {
                   className="grow text-center text-lightgrey"
                   onClick={handleCopyEthClick}
                 >
-                  0x00000000000000000000000000000000
+                  0x9655443B0DBA59d9125d2fEC98f84f4c9c0460BE
                 </div>
                 <Image className=" " src={svg} alt="copy eth address" />
               </button>
@@ -438,7 +447,7 @@ export default function Home() {
                   id="ar_address"
                   className="grow text-center text-lightgrey"
                 >
-                  AAAAAABBBBBBBCCCCCCCDDDDDDEEEEE
+                  7BOgKhQMI3rxhTZRBqazmCY6AiSFN3etX_5w91Ks7sQ
                 </div>
                 <Image
                   className=" "
@@ -447,11 +456,6 @@ export default function Home() {
                   alt="copy arweave address"
                 />
               </button>
-            </div>
-            {/* TODO */}
-            <div className="pt-10 text-lightgrey">
-              This website does not use any cookies or trackers. Website last
-              updated: November 22, 2022
             </div>
           </div>
           <div className="flex justify-center">

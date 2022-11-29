@@ -22,7 +22,14 @@ export const Footer: React.FC<any> = ({ props }) => {
         </div>
       </div>
 
-      <div className="justify-self-end">Made with ❤️</div>
+      <div className="justify-self-end">
+        {" "}
+        {/* TODO */}
+        <div className="pt-10 text-lightgrey text-xs">
+          This website does not use any cookies or trackers. Website last
+          updated: November 29, 2022
+        </div>
+      </div>
     </footer>
   );
 };

@@ -19,6 +19,11 @@ export default function Save() {
   let [duration, setDuration] = useState(0);
   let [terms, setTerms] = useState("short"); // short by default for now
 
+  // TODO remove
+  useEffect(() => {
+    router.push("/");
+  }, []);
+
   useEffect(() => {
     let url = router.query.url as string;
     if (url && isValidUrl(url)) {
