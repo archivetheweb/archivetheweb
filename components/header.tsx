@@ -6,15 +6,63 @@ import { useRouter } from "next/router";
 
 export const Header: React.FC<any> = (props) => {
   const router = useRouter();
-  const { price, isLoading } = fetchPrice();
+  // const { price, isLoading } = fetchPrice();
 
   return (
     <div
-      className={"grid grid-cols-3 pt-4 " + props.className}
+      className={
+        "grid grid-cols-2 md:grid-cols-3 pt-4 w-full " + props.className
+      }
       style={{ color: "rgba(0, 0, 0, 0.6)" }}
     >
-      <div className="flex gap-8 col-span-2">
-        <div className="flex justify-center content-center items-center">
+      <div className="flex justify-center content-center items-center md:hidden pr-8">
+        <Link href={"/"}>
+          <Image
+            src={logo}
+            alt="logo"
+            style={{
+              maxHeight: "41px",
+              maxWidth: "140px",
+              minHeight: "30px",
+              minWidth: "100px",
+            }}
+          />
+        </Link>
+      </div>
+
+      <ul className="menu menu-horizontal bg-base-100 rounded  md:hidden z-50">
+        <li tabIndex={0}>
+          <span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              className="inline-block w-5 h-5 stroke-current"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M4 6h16M4 12h16M4 18h16"
+              ></path>
+            </svg>
+          </span>
+          <ul className="bg-base-100 border border-lightgrey ">
+            <li className="border-b border-lightgrey">
+              <a href="#how_it_works">How it works</a>
+            </li>
+            <li className="border-b border-lightgrey">
+              <a href="#faq">FAQs</a>
+            </li>
+            <li>
+              <a href="#contribute">Contribute</a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+
+      <div className=" gap-8 col-span-2  hidden md:flex ">
+        <div className="flex justify-center content-center items-center ">
           <Link href={"/"}>
             <Image
               src={logo}
@@ -41,7 +89,7 @@ export const Header: React.FC<any> = (props) => {
           <Link href={"/#contribute"}>Contribute</Link>
         </div>
       </div>
-      <div className="flex col-span-1 justify-end content-center items-center gap-8">
+      <div className="flex col-span-1 justify-end content-center items-center gap-8 ">
         {/* <div className="flex flex-col">
           <div>Average Snapshot Cost</div>
           <div className="text-funpurple">
@@ -50,7 +98,7 @@ export const Header: React.FC<any> = (props) => {
         </div> */}
         <button
           onClick={() => window.open("https://twitter.com/archive_the_web")}
-          className="btn bg-funpurple text-[#FFFFFF] hover:bg-funpurple/75 border-none"
+          className="hidden md:inline btn bg-funpurple text-[#FFFFFF] hover:bg-funpurple/75 border-none"
         >
           Follow us on Twitter
         </button>

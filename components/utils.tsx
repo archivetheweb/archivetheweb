@@ -27,7 +27,7 @@ export const Toast = ({ message }: { message: JSX.Element }) => {
   useEffect(() => {
     let timer = setTimeout(() => {}, 0);
 
-    if (m !== message) {
+    if (m.type !== message.type) {
       setIsDisplayed(true);
       timer = setTimeout(() => {
         setIsDisplayed(false);

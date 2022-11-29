@@ -70,7 +70,7 @@ export default function Home() {
       <div className="grow ">
         <Header className="px-16 pb-16" />
         <div className="hero">
-          <div className="hero-content flex-col lg:flex-row md:flex-col   px-16">
+          <div className="hero-content flex-col lg:flex-row md:flex-col px-16">
             <div>
               <div className="text-funpurple text-2xl font-bold ">
                 Archive what matters to you
@@ -120,7 +120,7 @@ export default function Home() {
             </div>
           </div>
         </div>
-        <div className="flex justify-center content-center items-center w-full h-32 bg-gradient-to-r from-funbrightpurple via-funmidpurple to-funpurple">
+        <div className="flex  justify-center content-center items-center w-full h-32 bg-gradient-to-r from-funbrightpurple via-funmidpurple to-funpurple">
           {/* <div className="grid grid-cols-7" hidden={true}>
             <div className="text-[#FFFFFF] p-4 text-center">
               Sites recently snapshotted
@@ -145,15 +145,15 @@ export default function Home() {
             </div>
           </div>*/}
         </div>
-        <div className="flex text-center w-full justify-center px-16 py-8 text-3xl font-bold">
-          The average website is{" "}
-          <span className="px-2 text-[#9FC5FF]">altered</span> or{" "}
+        <div className="flex text-center w-full justify-center px-16 py-8 md:text-3xl lg:text-3xl sm:text-xl font-bold">
+          <span className="flex-none">The average website is </span>
+          <span className="px-2 text-[#9FC5FF] inline">altered</span> or{" "}
           <span className="px-2 text-[#FF7170]"> deleted</span> after{" "}
-          <span className="px-2 text-funmidpurple">92 days.</span>
+          <span className="flex-none px-2 text-funmidpurple">92 days.</span>
         </div>
 
-        <div className="grid grid-cols-2 px-16 gap-8 ">
-          <div className="flex border rounded-md p-8 gap-4">
+        <div className="grid lg:grid-cols-2 sm:grid-cols-1 px-16 gap-8 ">
+          <div className="flex flex-col sm:flex-row border rounded-md p-8 gap-4">
             <Image
               src={monkey}
               style={{ height: "100px", width: "100px" }}
@@ -169,7 +169,7 @@ export default function Home() {
               </div>
             </div>
           </div>
-          <div className="flex border rounded-md p-8 gap-4">
+          <div className="flex flex-col sm:flex-row border rounded-md p-8 gap-4">
             <Image
               src={opinions}
               alt="opinions"
@@ -183,7 +183,7 @@ export default function Home() {
               </div>
             </div>
           </div>
-          <div className="flex border rounded-md p-8 gap-4">
+          <div className="flex flex-col sm:flex-row border rounded-md p-8 gap-4">
             <Image
               src={door}
               alt="door"
@@ -197,7 +197,7 @@ export default function Home() {
               </div>
             </div>
           </div>
-          <div className="flex border rounded-md p-8 gap-4">
+          <div className="flex flex-col sm:flex-row border rounded-md p-8 gap-4">
             <Image
               src={apple}
               alt="apple"
@@ -211,7 +211,7 @@ export default function Home() {
               </div>
             </div>
           </div>
-          <div className="flex border rounded-md p-8 gap-4">
+          <div className="flex flex-col sm:flex-row border rounded-md p-8 gap-4">
             <Image
               src={unpaid}
               alt="wallet"
@@ -224,7 +224,7 @@ export default function Home() {
               </div>
             </div>
           </div>
-          <div className="flex border rounded-md p-8 gap-4">
+          <div className="flex flex-col sm:flex-row border rounded-md p-8 gap-4">
             <Image
               src={fire}
               alt="fire"
@@ -241,7 +241,7 @@ export default function Home() {
         </div>
         <Image className="w-full py-16" src={library} alt="library" />
 
-        <div className="grid grid-cols-2 px-16 gap-4 justify-center content-center w-full pb-16">
+        <div className="grid lg:grid-cols-2 sm:grid-cols-1 px-16 gap-4 justify-center content-center w-full pb-16">
           <div>
             <div className="text-3xl font-bold pb-8">
               Introducing an open archive
@@ -265,7 +265,7 @@ export default function Home() {
             />
           </div>
         </div>
-        <div className="grid grid-cols-2 px-16 gap-4 justify-center content-center w-full pb-16">
+        <div className="grid lg:grid-cols-2 sm:grid-cols-1 px-16 gap-4 justify-center content-center w-full pb-16">
           <div className="flex justify-center">
             <Image
               className=""
@@ -297,7 +297,7 @@ export default function Home() {
             </div>
           </div>
         </div>
-        <div className="grid grid-cols-2 px-16 gap-4 justify-center content-center w-full pb-16">
+        <div className="grid lg:grid-cols-2 sm:grid-cols-1 px-16 gap-4 justify-center content-center w-full pb-16">
           <div>
             <div className="text-3xl font-bold pb-8">
               Archive what matters to you
@@ -323,7 +323,7 @@ export default function Home() {
             />
           </div>
         </div>
-        <div className="grid grid-cols-2 px-16 gap-4 justify-center content-center w-full pb-16">
+        <div className="grid lg:grid-cols-2 sm:grid-cols-1 px-16 gap-4 justify-center content-center w-full pb-16">
           <div className="flex justify-center">
             <Image
               className=""
@@ -350,7 +350,7 @@ export default function Home() {
             </div>
           </div>
         </div>
-        <div className="grid grid-cols-2 px-16 gap-4 justify-center content-center w-full pb-16">
+        <div className="grid lg:grid-cols-2 sm:grid-cols-1 px-16 gap-4 justify-center content-center w-full pb-16">
           <div>
             <a id="faq" />
 
@@ -359,7 +359,7 @@ export default function Home() {
             </div>
             <div className="text-lightgrey">
               {faq.map((x) => (
-                <>
+                <div key={x.question}>
                   <div className="collapse collapse-arrow">
                     <input type="checkbox" />
                     <div className="collapse-title text-xl font-medium text-[#000000]">
@@ -370,7 +370,7 @@ export default function Home() {
                     </div>
                   </div>
                   <div className="divider m-0  before:bg-[#000000] after:bg-[#000000]"></div>
-                </>
+                </div>
               ))}
             </div>
           </div>
@@ -385,7 +385,7 @@ export default function Home() {
         </div>
         <a id="contribute" />
 
-        <div className="grid grid-cols-2 px-16 gap-4 justify-center content-center w-full pb-16">
+        <div className="grid lg:grid-cols-2 sm:grid-cols-1   px-16 gap-4 justify-center content-center w-full pb-16">
           <div>
             <div className="text-3xl font-bold pb-8">
               Help build Archive the Web
