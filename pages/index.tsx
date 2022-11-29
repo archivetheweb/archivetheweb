@@ -17,6 +17,7 @@ import diagram from "../public/diagram.png";
 import openArchive from "../public/open_archive.png";
 import mainHeader from "../public/main_header.png";
 import library from "../public/page_break.png";
+import top from "../public/top.svg";
 
 import { Header } from "../components/header";
 import { Footer } from "../components/footer";
@@ -65,10 +66,16 @@ export default function Home() {
   };
 
   return (
-    <div className="flex flex-col h-screen">
+    <div className="flex flex-col h-screen w-fit">
+      <Header className="px-16 pb-16" />
       <Toast message={toastMessage} />
-      <div className="grow ">
-        <Header className="px-16 pb-16" />
+      <button
+        onClick={() => router.push("/")}
+        className="btn btn-circle bg-[#FFFFFF] active:bg-funpurple hover:bg-funpurple  right-2 bottom-2 fixed"
+      >
+        <Image src={top} alt="top" />
+      </button>
+      <div className=" ">
         <div className="hero">
           <div className="hero-content flex-col lg:flex-row md:flex-col px-16">
             <div>
@@ -111,7 +118,7 @@ export default function Home() {
             <div className="flex justify-center items-center p-16">
               <Image
                 src={mainHeader}
-                className="max-h-full"
+                // className="max-h-full"
                 // height={413}
                 // width={353}
                 style={{ maxHeight: "413px", maxWidth: "353px" }}
@@ -120,7 +127,7 @@ export default function Home() {
             </div>
           </div>
         </div>
-        <div className="flex  justify-center content-center items-center w-full h-32 bg-gradient-to-r from-funbrightpurple via-funmidpurple to-funpurple">
+        <div className=" w-full h-32 bg-gradient-to-r from-funbrightpurple via-funmidpurple to-funpurple">
           {/* <div className="grid grid-cols-7" hidden={true}>
             <div className="text-[#FFFFFF] p-4 text-center">
               Sites recently snapshotted
@@ -153,7 +160,7 @@ export default function Home() {
         </div>
 
         <div className="grid lg:grid-cols-2 sm:grid-cols-1 px-16 gap-8 ">
-          <div className="flex flex-col sm:flex-row border rounded-md p-8 gap-4">
+          <div className="flex flex-col items-center sm:flex-row  border rounded-md p-8 gap-4">
             <Image
               src={monkey}
               style={{ height: "100px", width: "100px" }}
@@ -162,14 +169,23 @@ export default function Home() {
             <div>
               <div className="font-bold pb-1">Content is censored</div>
               <div className="text-lightgrey">
-                As of December 15, 2022 Chinese social media and web video
-                platforms must approve all news-related comments before they go
-                online and step up training for censors to keep out “harmful”
-                content.
+                Censorship occurs when governments or private groups suppress
+                words, images and ideas that are “offensive” and impose this on
+                others. For example, in China during the FIFA World Cup 2022,
+                footage of maskless crowds in Qatar were{" "}
+                <a
+                  className="underline"
+                  href="https://www.theguardian.com/world/2022/nov/28/china-censors-maskless-crowd-footage-in-world-cup-broadcasts"
+                  target={"_blank"}
+                >
+                  censored
+                </a>{" "}
+                from being aired as it contradicts the zero-covid lockdown
+                protocols in place.
               </div>
             </div>
           </div>
-          <div className="flex flex-col sm:flex-row border rounded-md p-8 gap-4">
+          <div className="flex flex-col items-center sm:flex-row border rounded-md p-8 gap-4">
             <Image
               src={opinions}
               alt="opinions"
@@ -180,10 +196,20 @@ export default function Home() {
               <div className="text-lightgrey">
                 In 2013, ten years’ worth of British Conservative Party speeches
                 and press releases were abruptly deleted from their website.
+                Their robots.txt files were also updated to stop search engines
+                from being able to access the{" "}
+                <a
+                  className="underline"
+                  href="https://www.vice.com/en/article/78xzmb/the-conservative-party-tried-to-delete-their-old-speeches-from-the-web"
+                  target={"_blank"}
+                >
+                  deleted files
+                </a>
+                .
               </div>
             </div>
           </div>
-          <div className="flex flex-col sm:flex-row border rounded-md p-8 gap-4">
+          <div className="flex flex-col items-center sm:flex-row border rounded-md p-8 gap-4">
             <Image
               src={door}
               alt="door"
@@ -193,11 +219,11 @@ export default function Home() {
               <div className="font-bold pb-1">Organizations close</div>
               <div className="text-lightgrey">
                 Companies can shut down and lose the data you entrusted them to
-                keep as well as their own websites and information.
+                keep.
               </div>
             </div>
           </div>
-          <div className="flex flex-col sm:flex-row border rounded-md p-8 gap-4">
+          <div className="flex flex-col items-center sm:flex-row border rounded-md p-8 gap-4">
             <Image
               src={apple}
               alt="apple"
@@ -206,12 +232,28 @@ export default function Home() {
             <div>
               <div className="font-bold pb-1">Links rot</div>
               <div className="text-lightgrey">
-                As of 2013, 49% of hyperlinks cited in United States Supreme
-                Court decisions no longer worked.
+                A 2022 study found that at least 66.5% of links to sites in the
+                last{" "}
+                <a
+                  className="underline"
+                  href="https://ahrefs.com/blog/link-rot-study/"
+                  target={"_blank"}
+                >
+                  9 years are lost
+                </a>
+                . An earlier study from 2014 found that 70% of links in legal
+                journals and 50% of URLs cited in{" "}
+                <a
+                  className="underline"
+                  href="https://harvardlawreview.org/2014/03/perma-scoping-and-addressing-the-problem-of-link-and-reference-rot-in-legal-citations"
+                  target={"_blank"}
+                >
+                  U.S. Supreme Court decisions no longer worked.
+                </a>
               </div>
             </div>
           </div>
-          <div className="flex flex-col sm:flex-row border rounded-md p-8 gap-4">
+          <div className="flex flex-col items-center sm:flex-row border rounded-md p-8 gap-4">
             <Image
               src={unpaid}
               alt="wallet"
@@ -224,7 +266,7 @@ export default function Home() {
               </div>
             </div>
           </div>
-          <div className="flex flex-col sm:flex-row border rounded-md p-8 gap-4">
+          <div className="flex flex-col items-center sm:flex-row border rounded-md p-8 gap-4">
             <Image
               src={fire}
               alt="fire"
@@ -234,7 +276,15 @@ export default function Home() {
               <div className="font-bold pb-1">Servers go down</div>
               <div className="text-lightgrey">
                 In 2019, MySpace mysteriously lost 12 years of music uploads,
-                totalling 50+ million songs from 14 million artists.
+                totalling 50+ million{" "}
+                <a
+                  className="underline"
+                  href="https://www.bbc.com/news/technology-47610936"
+                  target={"_blank"}
+                >
+                  songs from 14 million artists
+                </a>
+                .
               </div>
             </div>
           </div>
@@ -474,15 +524,111 @@ export default function Home() {
 }
 
 const faq = [
-  { question: "How does Archive the Web work?", answer: "Like this" },
-  { question: "What can I store? ", answer: "Like this" },
-  { question: "How do you save data permanently?", answer: "Like this" },
+  {
+    question: "How does Archive the Web work?",
+    answer: (
+      <div>
+        <ol>
+          <li>Find a website you want to archive.</li>
+          <li>
+            Enter the website URL on archive the web. At first you will be able
+            to archive a website one time. In the future, you will be able to
+            set up long term archiving so that snapshots are taken at pre-set
+            intervals (i.e. once per day at noon)
+          </li>
+          <li>
+            Pay the storage fee. You can pay via Metamask, Wallet Connect, or
+            Arweave directly. This includes payment with ETH and ERC-20s on
+            multiple chains. Via Metamask, you can pay with a credit card to
+            purchase ETH to be able to save the content.
+          </li>
+          <br />
+          That’s all! The snapshots will be automatically taken and saved on the
+          permaweb.
+        </ol>
+      </div>
+    ),
+  },
+  {
+    question: "What can I store? ",
+    answer: (
+      <div>
+        Currently you can store interactive website snapshots. These capture the
+        websites as they are in real time. In the future, you will be able to
+        archive other mediums as well.
+      </div>
+    ),
+  },
+  {
+    question: "How do you save data permanently?",
+    answer: (
+      <div>
+        All website snapshots are saved on Arweave, a permanent data storage
+        protocol. This new type of technology does not allow data to be deleted
+        or changed once saved. This adds a great deal of security to the
+        websites archived via Archive the Web. A great primer on What Arweave is
+        can be found on Ardrive, a decentralized version of dropbox{" "}
+        <a
+          className="underline"
+          href="https://ardrive.io/what-is-arweave/"
+          target={"_blank"}
+        >
+          {" "}
+          here
+        </a>
+        .
+      </div>
+    ),
+  },
   {
     question: "Why do I have to pay and how is the cost calculated?",
-    answer: "Like this",
+    answer: (
+      <div>
+        To permanently save data on Arweave, a small fee called an “endowment
+        fee” must be sent to the network to pay data storers to keep it for 200+
+        years. The fee charged is solely the Arweave network fee. Archive the
+        Web does not charge a fee. The cost is calculated based on the real-time
+        Arweave network pricing which takes into account a conservative estimate
+        of the cost of data storage over the next 200 years.
+      </div>
+    ),
   },
   {
     question: "What is Archive the Web’s content moderation policy? ",
-    answer: "Like this",
+    answer: (
+      <div>
+        Archive the Web is a decentralized open source project that allows
+        anyone to trustlessly upload content to the Arweave network. Once
+        content has been uploaded to the Arweave network, that data becomes
+        subject to Arweave’s content moderation policies. They take this
+        potential for abuse seriously and have implemented a democratic
+        moderation tool at the core of the protocol. When someone submits a
+        transaction to the Arweave network, data storers are given the choice of
+        whether to replicate the associated data. The maintainers of the network
+        are able to filter and screen the transaction in whichever manner they
+        choose, checking against known illicit material, scanning the data with
+        computer vision software, et cetera. Complainants can contact gateways
+        who serve said data to request its removal from the network. You can
+        read more about their content moderation policy on their{" "}
+        <a
+          className="underline"
+          href="https://www.arweave.org/technology#content-moderation"
+          target={"_blank"}
+        >
+          {" "}
+          website
+        </a>{" "}
+        or in greater detail in their{" "}
+        <a
+          className="underline"
+          href="https://www.arweave.org/yellow-paper.pdf"
+          target={"_blank"}
+        >
+          {" "}
+          yellow paper
+        </a>
+        .
+      </div>
+    ),
   },
 ];
