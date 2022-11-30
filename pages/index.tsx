@@ -252,7 +252,7 @@ export default function Home() {
                   target={"_blank"}
                   rel="noreferrer"
                 >
-                  nince years have been lost
+                  nine years have been lost
                 </a>
                 . An earlier study from 2014 found that 70% of links in legal
                 journals and 50% of URLs cited in the{" "}
