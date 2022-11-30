@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 
 export const Header: React.FC<any> = (props) => {
   const router = useRouter();
-  // const { price, isLoading } = fetchPrice();
+  const { price, isLoading } = fetchPrice();
 
   return (
     <div
@@ -98,25 +98,20 @@ export const Header: React.FC<any> = (props) => {
         </div>
       </div>
       <div className="flex col-span-1 justify-end content-center items-center gap-8 ">
-        {/* <div className="flex flex-col">
+        <div className="flex flex-col">
           <div>Average Snapshot Cost</div>
           <div className="text-funpurple">
-            USD ${isLoading ? "loading..." : Math.round(+price * 100) / 100}
+            {" "}
+            {isLoading ? "" : "USD $" + Math.round(+price * 100) / 100}
           </div>
-        </div> */}
+        </div>
         <button
-          onClick={() => window.open("https://twitter.com/archive_the_web")}
+          onClick={() => router.push("/save")}
           style={{ borderRadius: "5px" }}
           className="hidden md:inline btn bg-funpurple normal-case  text-[#FFFFFF] hover:bg-funpurple/75 border-none"
         >
-          Follow us on Twitter
-        </button>
-        {/* <button
-          onClick={() => router.push("/save")}
-          className="btn bg-funpurple text-[#FFFFFF] hover:bg-funpurple/75 border-none"
-        >
           Save a Website
-        </button> */}
+        </button>
       </div>
     </div>
   );
