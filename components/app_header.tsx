@@ -63,7 +63,7 @@ export const AppHeader = () => {
           />
         </div>
       </div>
-      <div className="flex col-span-1 justify-end content-center items-center">
+      <div className="flex justify-end content-center items-center">
         <div className="pr-4 tooltip tooltip-bottom" data-tip="Save a website">
           <Link className="flex gap-2" href={"/save"}>
             <Image
@@ -71,7 +71,7 @@ export const AppHeader = () => {
               alt="logo"
               style={{ height: "24px", width: "24px" }}
             />
-            <span className="hidden lg:inline">Save a Website</span>
+            <div className="hidden lg:inline">Save a Website</div>
           </Link>
         </div>
         <div
@@ -84,7 +84,7 @@ export const AppHeader = () => {
               alt="logo"
               style={{ height: "24px", width: "24px" }}
             />
-            <span className="hidden lg:inline">All archived websites</span>
+            <div className="hidden lg:inline">All archived websites</div>
           </Link>
         </div>
         <button className="btn btn-primary bg-funpurple hover:bg-funmidpurple">
