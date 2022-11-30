@@ -323,9 +323,9 @@ export default function Home() {
             </div>
           </div>
         </div>
-        <Image className="w-full py-16" src={library} alt="library" />
+        <Image className="w-full pt-16" src={library} alt="library" />
 
-        <div className="grid lg:grid-cols-2 sm:grid-cols-1 px-24 gap-4 justify-center content-center w-full pb-16 bg-[#FAFAFA]">
+        <div className="grid lg:grid-cols-2 sm:grid-cols-1 px-24 gap-4 justify-center content-center w-full py-16 bg-[#FAFAFA]">
           <div>
             <div className="text-3xl font-bold pb-8 ">
               Introducing an open archive
@@ -349,7 +349,7 @@ export default function Home() {
             />
           </div>
         </div>
-        <div className="grid lg:grid-cols-2 sm:grid-cols-1 px-24 gap-4 justify-center content-center w-full pb-16">
+        <div className="grid lg:grid-cols-2 sm:grid-cols-1 px-24 gap-4 justify-center content-center w-full py-16">
           <div className="flex justify-center">
             <Image
               className=""
@@ -361,7 +361,7 @@ export default function Home() {
           <div>
             <a id="how_it_works" />
 
-            <div className="text-3xl font-bold pb-8">How it works</div>
+            <div className="text-3xl font-bold pb-8 pt-16">How it works</div>
 
             <div className="text-lightgrey pb-2 flex items-center gap-2">
               <span className="px-1 text-3xl text-funpurple text-bold">1</span>{" "}
@@ -381,7 +381,7 @@ export default function Home() {
             </div>
           </div>
         </div>
-        <div className="grid lg:grid-cols-2 sm:grid-cols-1 px-24 gap-4 justify-center content-center w-full pb-16 bg-[#FAFAFA]">
+        <div className="grid lg:grid-cols-2 sm:grid-cols-1 px-24 gap-4 justify-center content-center w-full py-16 bg-[#FAFAFA]">
           <div>
             <div className="text-3xl font-bold pb-8 ">
               Archive what matters to you
@@ -407,7 +407,7 @@ export default function Home() {
             />
           </div>
         </div>
-        <div className="grid lg:grid-cols-2 sm:grid-cols-1 px-24 gap-4 justify-center content-center w-full pb-16">
+        <div className="grid lg:grid-cols-2 sm:grid-cols-1 px-24 gap-4 justify-center content-center w-full py-16">
           <div className="flex justify-center">
             <Image
               className=""
@@ -435,7 +435,7 @@ export default function Home() {
             </div>
           </div>
         </div>
-        <div className="grid lg:grid-cols-2 sm:grid-cols-1 px-24 gap-4 justify-center content-center w-full pb-16 bg-[#FAFAFA]">
+        <div className="grid lg:grid-cols-2 sm:grid-cols-1 px-24 gap-4 justify-center content-center w-full py-16 bg-[#FAFAFA]">
           <div>
             <a id="faq" />
 
@@ -468,7 +468,7 @@ export default function Home() {
         </div>
         <a id="contribute" />
 
-        <div className="grid lg:grid-cols-2 sm:grid-cols-1 px-24 gap-4 justify-center content-center w-full pb-16">
+        <div className="grid lg:grid-cols-2 sm:grid-cols-1 px-24 gap-4 justify-center content-center w-full py-16">
           <div>
             <div className="text-3xl font-bold pb-8">
               Help build Archive the Web
@@ -483,6 +483,7 @@ export default function Home() {
                 onClick={() =>
                   window.open("https://github.com/archivetheweb/archivetheweb")
                 }
+                style={{ borderRadius: "5px" }}
                 className="btn btn-outline normal-case  text-funpurple hover:border-none hover:bg-funpurple/75 border-funpurple h-16 "
               >
                 {/* <Image src={gh} height={24} width={24} alt="github" /> */}
