@@ -98,7 +98,7 @@ export const Header: React.FC<any> = (props) => {
         </div>
       </div>
       <div className="flex col-span-1 justify-end content-center items-center gap-8 ">
-        <div className="flex flex-col">
+        <div className=" flex-col hidden lg:flex ">
           <div>Average Snapshot Cost</div>
           <div className="text-funpurple">
             {" "}

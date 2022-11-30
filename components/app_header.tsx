@@ -5,13 +5,26 @@ import { useContext, useState } from "react";
 import ConnectorContext from "../context/connector";
 import bookshelf from "../public/bookshelf.png";
 import saveWebsite from "../public/save_website.png";
+import { isValidUrl } from "./utils";
+import { useRouter } from "next/router";
 
 export const AppHeader = () => {
+  const router = useRouter();
   const { address, blockchain } = useContext(ConnectorContext);
-  const [search, setSearch] = useState("");
+  let [urlInfo, setURL] = useState({ url: "", valid: false });
 
-  const handleSearch = (e: React.FormEvent<HTMLInputElement>) => {
-    setSearch(e.currentTarget.value);
+  const handleURL = (e: React.FormEvent<HTMLInputElement>) => {
+    setURL({
+      url: e.currentTarget.value,
+      valid: isValidUrl(e.currentTarget.value),
+    });
+  };
+  const handleClick = () => {
+    if (!urlInfo.valid) {
+      return;
+    }
+
+    router.push(`/explore?url=${urlInfo.url}`);
   };
 
   return (
@@ -56,8 +69,11 @@ export const AppHeader = () => {
           </div>
           <input
             type="text"
-            value={search}
-            onChange={handleSearch}
+            value={urlInfo.url}
+            onChange={handleURL}
+            onKeyDown={(e) =>
+              e.key === "Enter" && urlInfo.valid && handleClick()
+            }
             placeholder="Search for websites by URL"
             className="input input-bordered border-extralightgrey border-l-0 rounded-r-full focus:outline-none"
           />

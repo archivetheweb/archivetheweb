@@ -12,7 +12,6 @@ import puzzle from "../public/puzzle.png";
 import eth from "../public/eth.png";
 import svg from "../public/copy.svg";
 import faqImage from "../public/faq.png";
-import gh from "../public/github.png";
 import diagram from "../public/diagram.png";
 import openArchive from "../public/open_archive.png";
 import mainHeader from "../public/main_header.png";
@@ -43,7 +42,7 @@ export default function Home() {
       return;
     }
 
-    router.push(`/save?url=${urlInfo.url}`);
+    router.push(`/explore?url=${urlInfo.url}`);
   };
 
   const handleCopyArClick = (e: any) => {
@@ -94,11 +93,7 @@ export default function Home() {
                 tweets, articles, and more.
               </div>
               <div className="flex gap-4">
-                <br />
-                <br />
-                <br />
-                <br />
-                {/* <input
+                <input
                   type="text"
                   value={urlInfo.url}
                   onChange={handleURL}
@@ -112,18 +107,16 @@ export default function Home() {
                 <button
                   disabled={!urlInfo.valid}
                   onClick={handleClick}
+                  style={{ borderRadius: "5px" }}
                   className="btn bg-funpurple text-[#FFFFFF] hover:bg-funpurple/75 border-none h-16 "
                 >
                   Save a Website
-                </button> */}
+                </button>
               </div>
             </div>
             <div className="flex justify-center items-center p-16">
               <Image
                 src={mainHeader}
-                // className="max-h-full"
-                // height={413}
-                // width={353}
                 style={{ maxHeight: "413px", maxWidth: "353px" }}
                 alt="man fetching book in library"
               />
@@ -486,7 +479,6 @@ export default function Home() {
                 style={{ borderRadius: "5px" }}
                 className="btn btn-outline normal-case  text-funpurple hover:border-none hover:bg-funpurple/75 border-funpurple h-16 "
               >
-                {/* <Image src={gh} height={24} width={24} alt="github" /> */}
                 <span className="">Visit our Github</span>
               </button>
             </div>

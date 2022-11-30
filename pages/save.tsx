@@ -19,10 +19,6 @@ export default function Save() {
   let [isCheckout, setIsCheckout] = useState(false); // short by default for now
 
   useEffect(() => {
-    router.push("/");
-  }, [router]);
-
-  useEffect(() => {
     let url = router.query.url as string;
     if (url && isValidUrl(url)) {
       setURL({ url: url, valid: true });
