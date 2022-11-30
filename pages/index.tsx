@@ -163,7 +163,7 @@ export default function Home() {
         </div>
 
         <div className="grid lg:grid-cols-2 sm:grid-cols-1 px-24 gap-8 pt-16 ">
-          <div className="flex flex-col items-center sm:flex-row  border rounded-md p-8 gap-4">
+          <div className="flex flex-col items-center sm:flex-row  border rounded-md p-8 gap-4 border-[#D9D9D9]">
             <Image
               src={monkey}
               style={{ height: "100px", width: "100px" }}
@@ -189,7 +189,7 @@ export default function Home() {
               </div>
             </div>
           </div>
-          <div className="flex flex-col items-center sm:flex-row border rounded-md p-8 gap-4">
+          <div className="flex flex-col items-center sm:flex-row border rounded-md p-8 gap-4 border-[#D9D9D9]">
             <Image
               src={opinions}
               alt="opinions"
@@ -216,7 +216,7 @@ export default function Home() {
               </div>
             </div>
           </div>
-          <div className="flex flex-col items-center sm:flex-row border rounded-md p-8 gap-4">
+          <div className="flex flex-col items-center sm:flex-row border rounded-md p-8 gap-4 border-[#D9D9D9]">
             <Image
               src={door}
               alt="door"
@@ -233,7 +233,7 @@ export default function Home() {
               </div>
             </div>
           </div>
-          <div className="flex flex-col items-center sm:flex-row border rounded-md p-8 gap-4">
+          <div className="flex flex-col items-center sm:flex-row border rounded-md border-[#D9D9D9] p-8 gap-4">
             <Image
               src={apple}
               alt="apple"
@@ -267,7 +267,7 @@ export default function Home() {
               </div>
             </div>
           </div>
-          <div className="flex flex-col items-center sm:flex-row border rounded-md p-8 gap-4">
+          <div className="flex flex-col items-center sm:flex-row border rounded-md p-8 gap-4 border-[#D9D9D9]">
             <Image
               src={unpaid}
               alt="wallet"
@@ -295,7 +295,7 @@ export default function Home() {
               </div>
             </div>
           </div>
-          <div className="flex flex-col items-center sm:flex-row border rounded-md p-8 gap-4">
+          <div className="flex flex-col items-center sm:flex-row border rounded-md p-8 gap-4 border-[#D9D9D9]">
             <Image
               src={fire}
               alt="fire"
