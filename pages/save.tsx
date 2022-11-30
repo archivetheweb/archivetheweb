@@ -1,6 +1,3 @@
-import { Footer } from "../components/footer";
-import { AppHeader } from "../components/app_header";
-import emptyWebpage from "../public/empty_webpage.png";
 import Image from "next/image";
 import arweave from "../public/ar.png";
 import mm from "../public/mm.png";
@@ -10,6 +7,7 @@ import Link from "next/link";
 import { Container } from "../components/container";
 import { isValidUrl } from "../components/utils";
 import { useRouter } from "next/router";
+import info from "../public/info.png";
 
 export default function Save() {
   const router = useRouter();
@@ -18,11 +16,7 @@ export default function Save() {
   let [frequency, setFrequency] = useState(0);
   let [duration, setDuration] = useState(0);
   let [terms, setTerms] = useState("short"); // short by default for now
-
-  // TODO remove
-  useEffect(() => {
-    router.push("/");
-  }, [router, router.query.url]);
+  let [isCheckout, setIsCheckout] = useState(false); // short by default for now
 
   useEffect(() => {
     let url = router.query.url as string;
@@ -39,25 +33,22 @@ export default function Save() {
   };
   return (
     <Container>
-      <div className="text-3xl">Save a website</div>
+      <div className="grid grid-cols-1 border border-[#00000033] rounded-lg mx-8 md:mx-16 lg:mx-32 mt-16 pt-16 px-16 shadow-xl ">
+        <div className="text-3xl">Save a website</div>
 
-      <div className="text-[#0000008A] pb-3">
-        Help create a historical log of important websites. Each snapshot is
-        stored on Arweave, a permanent data storage solution.
-      </div>
+        <div className="text-[#0000008A] pb-3">
+          Help create an open and decentralized backup of the world wide web.
+        </div>
 
-      <div className="grid grid-cols-2 border border-[#00000033] rounded-lg    ">
-        <div className="flex flex-col justify-center content-center items-center w-full gap-4 border-r border-[#00000033]  p-8 ">
-          {/* <div className="flex justify-center content-center items-center w-full  "> */}
-          <div className="btn-group  grid grid-cols-2 w-full rounded-ful border rounded-full  border-[#00000033]">
+        <div className="flex flex-col justify-center content-center items-center w-full gap-4">
+          {/* <div className="btn-group  grid grid-cols-2 w-full rounded-ful border rounded-full  border-[#00000033]">
             <button className="rounded-l-full bg-[#1f94ee16] p-4 border-r border-[#00000033]">
               ✓ One Time
             </button>
             <button className="rounded-r-full bg-[#1f94ee16] disabled  ">
               Long Term
             </button>
-          </div>
-          {/* </div> */}
+          </div> */}
 
           <div className="form-control w-full">
             <label className="label">
@@ -71,6 +62,24 @@ export default function Save() {
               className="input input-bordered w-full h-16"
             />
           </div>
+
+          {urlInfo.valid ? (
+            <div className="flex flex-col items-center  aspect-video  w-full">
+              <iframe className="h-5/6 shadow-2xl w-full " src={urlInfo.url} />
+              <div className="flex justify-end w-full pt-2">
+                <Link
+                  className="link link-primary link-hover"
+                  href={urlInfo.url}
+                  target="_blank"
+                >
+                  Open website ↗{" "}
+                </Link>
+              </div>
+            </div>
+          ) : (
+            // <Image src={emptyWebpage} alt="empty webpage" />
+            <></>
+          )}
 
           {terms === "long" && (
             <>
@@ -104,33 +113,37 @@ export default function Save() {
             <table className="table w-full ">
               <thead></thead>
               <tbody className="">
-                <tr className="bg-[#1f94ee0a] ">
-                  <td className="bg-[#1f94ee0a] rounded-tl-lg">
-                    Expected Price Per Snapshot
-                  </td>
-                  <td className="bg-[#1f94ee0a] rounded-tr-lg ">USD $0.007</td>
-                </tr>
-
-                {terms === "long" && (
-                  <tr className="bg-[#1f94ee0a]">
-                    <td className="bg-[#1f94ee0a]">Total Snapshots*</td>
-                    <td className="bg-[#1f94ee0a]">-</td>
+                {!isCheckout ? (
+                  <tr className=" ">
+                    <td className=" rounded-tl-lg bg-extralightgrey ">
+                      Expected Price Per Snapshot
+                    </td>
+                    <td className=" font-bold rounded-tr-lg bg-extralightgrey text-right m-4 ">
+                      USD $0.007
+                    </td>
+                  </tr>
+                ) : (
+                  <tr className="">
+                    <td className="bg-extralightgrey">Total Cost</td>
+                    <td className="bg-extralightgrey">-</td>
                   </tr>
                 )}
 
-                <tr className="bg-[#1f94ee0a]">
-                  <td className="bg-[#1f94ee0a]">Total Cost</td>
-                  <td className="bg-[#1f94ee0a]">-</td>
-                </tr>
+                {terms === "long" && (
+                  <tr className="">
+                    <td className="bg-extralightgrey">Total Snapshots*</td>
+                    <td className="bg-extralightgrey">-</td>
+                  </tr>
+                )}
               </tbody>
             </table>
           </div>
-          <button className="btn w-full btn-primary h-16">
-            Connect Wallet
+          <button className="btn w-full btn-primary bg-funpurple hover:bg-funmidpurple h-16">
+            Continue to payment
           </button>
 
           <div>
-            <div className="flex gap-2">
+            <div className="flex gap-2 p-8">
               Pay for archiving with
               <Image
                 src={arweave}
@@ -150,27 +163,56 @@ export default function Save() {
             </div>
           </div>
         </div>
-
-        <div className="flex flex-col  items-center p-8 ">
-          {urlInfo.valid ? (
-            <>
-              <iframe
-                className=" h-5/6  shadow-2xl w-full "
-                src={urlInfo.url}
-              />
-              <div className="flex justify-end w-full pt-2">
-                <Link
-                  className="link  link-primary link-hover"
-                  href={urlInfo.url}
-                  target="_blank"
-                >
-                  Open website ↗{" "}
-                </Link>
-              </div>
-            </>
-          ) : (
-            <Image src={emptyWebpage} alt="empty webpage" />
-          )}
+      </div>
+      <div className="grid grid-cols-1 border border-[#00000033] rounded-lg mx-8 md:mx-16 lg:mx-32 mt-4 px-16 py-8 shadow-xl ">
+        <div className="flex gap-4 pb-1">
+          <Image
+            src={info}
+            alt="info 1"
+            style={{ width: "18px", height: "18px" }}
+          />
+          <div>
+            <span className="text-funpurple font-bold ">
+              Why do I need to pay to save a website?{" "}
+            </span>{" "}
+            All website snapshots are saved on Arweave, a permanent data storage
+            protocol. A small fee is sent to the network to pay data storers to
+            add data to the network and keep it for 200+ years. Archive the Web
+            does not take a fee. Learn more here.
+          </div>
+        </div>
+        <div className="flex gap-4 pb-1">
+          <Image
+            src={info}
+            alt="info 2"
+            style={{ width: "18px", height: "18px" }}
+          />
+          <div>
+            <span className="text-funpurple font-bold ">
+              What payment methods are accepted?{" "}
+            </span>{" "}
+            To archive on Arweave, the payment must be made in their native
+            currency, a token called “AR.” You can think of this as a digital
+            currency like Bitcoin and Ethereum. With Archive the Web, you can
+            pay for archiving with AR, ETH and ERC-20 tokens on different
+            blockchains (i.e. Polygon, Arbitrum, etc.).
+          </div>
+        </div>
+        <div className="flex gap-4">
+          <Image
+            src={info}
+            alt="info 3"
+            style={{ width: "18px", height: "18px" }}
+          />
+          <div>
+            <span className="text-funpurple font-bold ">
+              Is it possible to pay with credit card?{" "}
+            </span>{" "}
+            Yes, you can pay for archiving with credit card. To do so, you will
+            need to use Metamask. You can buy ETH and ERC-20 tokens with credit
+            card there. You then will use the currency you purchased as the
+            final payment method.
+          </div>
         </div>
       </div>
     </Container>
