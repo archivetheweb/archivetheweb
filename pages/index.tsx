@@ -15,7 +15,7 @@ import faqImage from "../public/faq.png";
 import diagram from "../public/diagram.png";
 import openArchive from "../public/open_archive.png";
 import mainHeader from "../public/main_header.png";
-import library from "../public/page_break.png";
+import library from "../public/library.png";
 import top from "../public/top.svg";
 
 import { Header } from "../components/header";
