@@ -82,7 +82,7 @@ export default function Home() {
             style={{ maxWidth: "100%" }}
           >
             <div>
-              <div className="text-funpurple text-2xl font-bold ">
+              <div className="text-funpurple text-2xl font-bold mb-2">
                 Archive what matters to you
               </div>
               <h1 className="text-6xl font-bold">
@@ -90,8 +90,8 @@ export default function Home() {
               </h1>
               <div className="py-6 text-xl text-lightgrey">
                 Archive the Web is an open and decentralized backup of the world
-                wide web. You can set up long term archiving of websites,
-                tweets, articles and more.
+                wide web. You can set up long-term archiving of websites,
+                tweets, articles, and more.
               </div>
               <div className="flex gap-4">
                 <br />
@@ -173,19 +173,19 @@ export default function Home() {
               <div className="font-bold pb-1">Content is censored</div>
               <div className="text-lightgrey">
                 Censorship occurs when governments or private groups suppress
-                words, images and ideas that are “offensive” and impose this on
-                others. For example, in China during the FIFA World Cup 2022,
-                footage of maskless crowds in Qatar were{" "}
+                words, images, and ideas that are &quot;offensive&quot; and
+                impose this on others. For example{" "}
                 <a
                   className="underline"
                   href="https://www.theguardian.com/world/2022/nov/28/china-censors-maskless-crowd-footage-in-world-cup-broadcasts"
                   target={"_blank"}
                   rel="noreferrer"
                 >
-                  censored
+                  in China, during the FIFA World Cup 2022 in Qatar,
                 </a>{" "}
-                from being aired as it contradicts the zero-covid lockdown
-                protocols in place.
+                footage of maskless crowds in the stadiums was not aired on TV
+                because it contradicted China&apos;s zero-covid lockdown
+                protocols.
               </div>
             </div>
           </div>
@@ -198,19 +198,21 @@ export default function Home() {
             <div>
               <div className="font-bold pb-1">Opinions change</div>
               <div className="text-lightgrey">
-                In 2013, ten years’ worth of British Conservative Party speeches
-                and press releases were abruptly deleted from their website.
-                Their robots.txt files were also updated to stop search engines
-                from being able to access the{" "}
+                Sometimes, online information is deleted or altered due to a
+                change in leadership. For example, this can occur when there is
+                a change in government. In 2013, the{" "}
                 <a
                   className="underline"
                   href="https://www.vice.com/en/article/78xzmb/the-conservative-party-tried-to-delete-their-old-speeches-from-the-web"
                   target={"_blank"}
                   rel="noreferrer"
                 >
-                  deleted files
-                </a>
-                .
+                  British Conservative Party abruptly deleted ten years&apos;
+                  worth of speeches and press releases
+                </a>{" "}
+                from their website. They also attempted to prevent search
+                engines from being able to access the deleted files by updating
+                the robots.txt files.
               </div>
             </div>
           </div>
@@ -223,8 +225,11 @@ export default function Home() {
             <div>
               <div className="font-bold pb-1">Organizations close</div>
               <div className="text-lightgrey">
-                Companies can shut down and lose the data you entrusted them to
-                keep.
+                Companies can shut down and lose the data you entrusted them
+                with keeping. If they were running a website of particular
+                social and historical significance, the information made
+                available there may be lost and unincluded in our digital
+                memory.
               </div>
             </div>
           </div>
@@ -237,18 +242,20 @@ export default function Home() {
             <div>
               <div className="font-bold pb-1">Links rot</div>
               <div className="text-lightgrey">
-                A 2022 study found that at least 66.5% of links to sites in the
-                last{" "}
+                Link rot occurs when the hyperlinked text no longer leads to the
+                original site or file. In other words, when hyperlinked text is
+                broken. A 2022 study found that over 66.5% of links to sites in
+                the last{" "}
                 <a
                   className="underline"
                   href="https://ahrefs.com/blog/link-rot-study/"
                   target={"_blank"}
                   rel="noreferrer"
                 >
-                  9 years are lost
+                  nince years have been lost
                 </a>
                 . An earlier study from 2014 found that 70% of links in legal
-                journals and 50% of URLs cited in{" "}
+                journals and 50% of URLs cited in the{" "}
                 <a
                   className="underline"
                   href="https://harvardlawreview.org/2014/03/perma-scoping-and-addressing-the-problem-of-link-and-reference-rot-in-legal-citations"
@@ -269,7 +276,22 @@ export default function Home() {
             <div>
               <div className="font-bold pb-1">Hosting is unpaid</div>
               <div className="text-lightgrey">
-                Hosting services can be left unpaid and content abandoned.
+                Hosting services can be left unpaid and content abandoned. This
+                may be an unintended consequence for users due to company
+                shutdowns and bankruptcies. For example, the{" "}
+                <a
+                  href="https://decrypt.co/114856/coachella-tomorrowland-solana-nfts-stuck-ftx"
+                  target={"_blank"}
+                  rel="noreferrer"
+                  className="underline"
+                >
+                  {" "}
+                  artwork for Coachella NFTs, including the lifetime passes
+                  which sold for six figures, is unavailable{" "}
+                </a>{" "}
+                because of server issues in the wake of the FTX collapse and
+                bankruptcy. Many other projects launched on this platform are
+                having similar problems.
               </div>
             </div>
           </div>
@@ -282,8 +304,12 @@ export default function Home() {
             <div>
               <div className="font-bold pb-1">Servers go down</div>
               <div className="text-lightgrey">
-                In 2019, MySpace mysteriously lost 12 years of music uploads,
-                totalling 50+ million{" "}
+                In a company&apos;s routine operations, servers can sometimes go
+                down, causing data loss on small and large scales. One extreme
+                example was the massive data loss suffered by Myspace in 2019.
+                Images, videos, and audio files uploaded before 2016 were likely
+                lost due to this incident. This loss included 12 years of music
+                uploads, totalling 50+ million{" "}
                 <a
                   className="underline"
                   href="https://www.bbc.com/news/technology-47610936"
@@ -292,7 +318,7 @@ export default function Home() {
                 >
                   songs from 14 million artists
                 </a>
-                .
+                . They claimed it occurred due to server migration.
               </div>
             </div>
           </div>
@@ -305,13 +331,13 @@ export default function Home() {
               Introducing an open archive
             </div>
             <div className="text-lightgrey">
-              Archive the Web is an open source website archiving tool that
-              allows users to set up automated website archiving stored on
-              Arweave. Our mission at Archive the Web is to help create a
-              decentralized backup of the world wide web.
+              Archive the Web is an open-source website archiving tool that
+              allows you to set up automated archiving stored on Arweave. Our
+              mission at Archive the Web is to create a decentralized backup of
+              the world wide web together.
               <br /> <br />
-              It is open by default, you simply need to select the content you
-              want to include.
+              It is open by default. Simply select the content you want to
+              include.
             </div>
           </div>
           <div className="flex justify-center">
@@ -339,37 +365,37 @@ export default function Home() {
 
             <div className="text-lightgrey pb-2 flex items-center gap-2">
               <span className="px-1 text-3xl text-funpurple text-bold">1</span>{" "}
-              Find a website you want to archive
+              Find a website you want to archive permanently.
             </div>
             <div className="text-lightgrey pb-2 flex items-center gap-2">
               <span className="px-1 text-3xl text-funpurple text-bold">2</span>{" "}
-              Select a duration and frequency for website snapshots
+              Select a duration and frequency for website snapshots.
             </div>
             <div className="text-lightgrey pb-8 flex items-center gap-2">
               <span className="px-1 text-3xl text-funpurple text-bold">3</span>{" "}
-              Pay the storage fee. Multiple payment methods available.
+              Pay the storage fee. Multiple payment methods are available.
             </div>
             <div className="text-lightgrey pb-2">
-              That’s all! Snapshots will be automatically taken until the
-              prepayment has been completely used.
+              That&apos;s all! The snapshots will be automatically taken and
+              saved on the permaweb.
             </div>
           </div>
         </div>
         <div className="grid lg:grid-cols-2 sm:grid-cols-1 px-24 gap-4 justify-center content-center w-full pb-16">
           <div>
-            <div className="text-3xl font-bold pb-8">
+            <div className="text-3xl font-bold pb-8 ">
               Archive what matters to you
             </div>
             <div className="text-lightgrey">
-              This is an open archive for all to contribute to regardless of
-              your political, religious or ideological beliefs. We hope that by
-              working together, a diverse and unbiased set of information will
-              be preserved here for future historical purposes.
+              Archive the Web is an open archive for all to contribute to,
+              regardless of your political, religious, or ideological beliefs.
+              Working together allows us to compile a diverse and unbiased set
+              of information preserved for future historical purposes.
               <br />
               <br />
-              From news to important artworks to public facing governmental
+              From news to important artworks to public-facing governmental
               information, we believe that by working together, we can create a
-              strong archive of our digital footprint.
+              resilient and substantial archive of our digital footprint.
             </div>
           </div>
           <div className="flex justify-center">
@@ -393,18 +419,19 @@ export default function Home() {
           <div>
             <div className="text-3xl font-bold pb-8">Built to last</div>
             <div className="text-lightgrey">
-              All website snapshots taken are stored on the permaweb which
-              exists on the Arweave network.
-              <br />
-              <br /> This network charges an upfront fee or an “endowment” to
-              have data added to the network. The fee is calculated so that the
-              data is estimated to be stored for a period of at least 200 years.{" "}
+              All website snapshots are stored on Arweave, a permanent data
+              storage protocol. All content is available via the permaweb, an
+              immutable and community-owned web that lives on top of Arweave.
               <br />
               <br />
-              People or “nodes” are incentivized to store data saved on the
-              network with rewards issued by Arweave in their native currency,
-              AR. After XX years, no new AR will be issued and nodes will be
-              paid by the endowment fees the network has accrued.
+              Data added to Arweave is replicated amongst hundreds or thousands
+              of computers or &quot;miners&quot; making it resilient and easily
+              retrievable. To permanently save data, the Arweave network charges
+              an upfront fee or an &quot;endowment fee&quot;. The cost is
+              estimated to incentivize these miners to continue to store the
+              data for at least 200 years. The cost is calculated based on
+              conservative estimates around price reductions for storage over
+              time.
             </div>
           </div>
         </div>
@@ -416,16 +443,14 @@ export default function Home() {
               Frequently Asked Questions
             </div>
             <div className="text-lightgrey">
-              {faq.map((x) => (
-                <div key={x.question}>
+              {faq.map((x, i) => (
+                <div key={i}>
                   <div className="collapse collapse-arrow">
                     <input type="checkbox" />
-                    <div className="collapse-title font-medium text-lightgrey">
+                    <div className="collapse-title font-bold text-[#000000]">
                       {x.question}
                     </div>
-                    <div className="collapse-content">
-                      <div>{x.answer}</div>
-                    </div>
+                    <div className="collapse-content">{x.answer}</div>
                   </div>
                   <div className="divider m-0  before:bg-[#D9D9D9]  after:before:bg-[#D9D9D9]"></div>
                 </div>
@@ -449,19 +474,19 @@ export default function Home() {
               Help build Archive the Web
             </div>
             <div className="text-lightgrey">
-              Archive the Web is an open source project. Anyone is welcome to
+              Archive the Web is an open-source project. Anyone is welcome to
               contribute to the project. Start getting involved by visiting our
-              github repository!
+              GitHub repository!
               <br />
               <br />
               <button
                 onClick={() =>
                   window.open("https://github.com/archivetheweb/archivetheweb")
                 }
-                className="btn btn-outline  text-funpurple hover:bg-funpurple/75 border-funpurple h-16 "
+                className="btn btn-outline normal-case  text-funpurple hover:bg-funpurple/75 border-funpurple h-16 "
               >
-                <Image src={gh} height={24} width={24} alt="github" />
-                <span className="pl-2">Github</span>
+                {/* <Image src={gh} height={24} width={24} alt="github" /> */}
+                <span className="">Github</span>
               </button>
             </div>
             <div className="text-3xl font-bold pb-8 pt-10">
@@ -469,8 +494,9 @@ export default function Home() {
             </div>
             <div className="text-lightgrey">
               Another way you can contribute to Archive the Web is by donating
-              to support the platform’s open source development. Any donation is
-              greatly appreciated. Our ETH and AR addresses are included below.
+              to support the platform&apos;s open-source development. Any
+              donation is greatly appreciated. Our ETH and AR addresses are
+              below.
             </div>
             <br />
             <br />
@@ -536,24 +562,25 @@ const faq = [
     question: "How does Archive the Web work?",
     answer: (
       <div>
-        <ol>
-          <li>Find a website you want to archive.</li>
-          <li>
-            Enter the website URL on archive the web. At first you will be able
-            to archive a website one time. In the future, you will be able to
-            set up long term archiving so that snapshots are taken at pre-set
-            intervals (i.e. once per day at noon)
-          </li>
-          <li>
-            Pay the storage fee. You can pay via Metamask, Wallet Connect, or
-            Arweave directly. This includes payment with ETH and ERC-20s on
-            multiple chains. Via Metamask, you can pay with a credit card to
-            purchase ETH to be able to save the content.
-          </li>
-          <br />
-          That’s all! The snapshots will be automatically taken and saved on the
-          permaweb.
-        </ol>
+        <div className="pb-1">
+          <b>1.</b> Find a website you want to archive permanently.
+        </div>
+        <div className="pb-1">
+          <b>2.</b> Enter the website URL on Archive the Web. Initially, you
+          will be able to archive a website one time. In the future, you will be
+          able to set up long-term archiving, which automatically takes
+          snapshots at pre-set intervals (ex. every 24 hours)
+        </div>
+        <div className="pb-1">
+          <b>3.</b> Pay the storage fee calculated by the Arweave network. You
+          can pay via Metamask, Wallet Connect, or Arweave directly. Payment
+          methods include AR, ETH, and ERC-20s on multiple chains (ex. Polygon,
+          Arbitrum, and so on). Via Metamask, you can pay with a credit card to
+          purchase ETH to save the content.
+        </div>
+        <br />
+        That&apos;s all! The snapshots will be automatically taken and saved on
+        the permaweb.
       </div>
     ),
   },
@@ -561,9 +588,9 @@ const faq = [
     question: "What can I store? ",
     answer: (
       <div>
-        Currently you can store interactive website snapshots. These capture the
-        websites as they are in real time. In the future, you will be able to
-        archive other mediums as well.
+        Currently, you can store interactive website snapshots. These capture
+        the websites as they are in real-time. In the future, you will also be
+        able to archive other mediums.
       </div>
     ),
   },
@@ -572,10 +599,13 @@ const faq = [
     answer: (
       <div>
         All website snapshots are saved on Arweave, a permanent data storage
-        protocol. This new type of technology does not allow data to be deleted
-        or changed once saved. This adds a great deal of security to the
-        websites archived via Archive the Web. A great primer on What Arweave is
-        can be found on Ardrive, a decentralized version of dropbox{" "}
+        protocol. This new technology does not allow data to be deleted or
+        changed once saved, adding a great deal of security to the websites
+        archived via Archive the Web.
+        <br />
+        <br />
+        An excellent primer on Arweave, written by ArDrive, a decentralized
+        version of DropBox, can be found{" "}
         <a
           className="underline"
           href="https://ardrive.io/what-is-arweave/"
@@ -593,12 +623,13 @@ const faq = [
     question: "Why do I have to pay and how is the cost calculated?",
     answer: (
       <div>
-        To permanently save data on Arweave, a small fee called an “endowment
-        fee” must be sent to the network to pay data storers to keep it for 200+
-        years. The fee charged is solely the Arweave network fee. Archive the
-        Web does not charge a fee. The cost is calculated based on the real-time
-        Arweave network pricing which takes into account a conservative estimate
-        of the cost of data storage over the next 200 years.
+        To permanently save data on Arweave, a small fee called an
+        &quot;endowment fee&quot; must be sent to the network to pay data
+        storers to keep it for approximately 200+ years. The fee is solely the
+        Arweave network fee. Archive the Web does not charge a fee.
+        <br />
+        <br />
+        The cost is calculated based on the real-time Arweave network pricing.
       </div>
     ),
   },
@@ -606,19 +637,22 @@ const faq = [
     question: "What is Archive the Web’s content moderation policy? ",
     answer: (
       <div>
-        Archive the Web is a decentralized open source project that allows
-        anyone to trustlessly upload content to the Arweave network. Once
-        content has been uploaded to the Arweave network, that data becomes
-        subject to Arweave’s content moderation policies. They take this
-        potential for abuse seriously and have implemented a democratic
-        moderation tool at the core of the protocol. When someone submits a
-        transaction to the Arweave network, data storers are given the choice of
-        whether to replicate the associated data. The maintainers of the network
-        are able to filter and screen the transaction in whichever manner they
-        choose, checking against known illicit material, scanning the data with
-        computer vision software, et cetera. Complainants can contact gateways
-        who serve said data to request its removal from the network. You can
-        read more about their content moderation policy on their{" "}
+        Archive the Web is a decentralized open-source project that allows
+        anyone to upload content to the Arweave network. Once the content is
+        uploaded to Arweave, that data becomes subject to Arweave&apos;s content
+        moderation policies. They take this potential for abuse seriously and
+        have implemented a democratic moderation tool at the protocol&apos;s
+        core.
+        <br />
+        <br />
+        When someone submits a transaction to the network, data storers can
+        choose to replicate the associated data. The network maintainers can
+        filter and screen the transaction in any manner they prefer. For
+        example: checking against known illicit material, scanning the data with
+        computer vision software, and so on. Complainants can contact gateways
+        that serve said data to request its removal from the network.
+        <br />
+        <br /> You can read more about their content moderation policy on their{" "}
         <a
           className="underline"
           href="https://www.arweave.org/technology#content-moderation"

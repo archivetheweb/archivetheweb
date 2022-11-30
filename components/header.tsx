@@ -106,7 +106,8 @@ export const Header: React.FC<any> = (props) => {
         </div> */}
         <button
           onClick={() => window.open("https://twitter.com/archive_the_web")}
-          className="hidden md:inline btn bg-funpurple text-[#FFFFFF] hover:bg-funpurple/75 border-none"
+          style={{ borderRadius: "5px" }}
+          className="hidden md:inline btn bg-funpurple normal-case  text-[#FFFFFF] hover:bg-funpurple/75 border-none"
         >
           Follow us on Twitter
         </button>
