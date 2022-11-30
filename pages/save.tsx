@@ -26,10 +26,17 @@ export default function Save() {
   }, []);
 
   const handleURL = (e: React.FormEvent<HTMLInputElement>) => {
+    let valid = isValidUrl(e.currentTarget.value);
+
     setURL({
       url: e.currentTarget.value,
-      valid: isValidUrl(e.currentTarget.value),
+      valid,
     });
+    if (valid) {
+      setIsCheckout(true);
+    } else {
+      setIsCheckout(false);
+    }
   };
   return (
     <Container>
