@@ -119,6 +119,7 @@ export default function Home() {
                 src={mainHeader}
                 style={{ maxHeight: "413px", maxWidth: "353px" }}
                 alt="man fetching book in library"
+                priority
               />
             </div>
           </div>
@@ -501,7 +502,7 @@ export default function Home() {
                   alt="eth"
                 />
                 <div
-                  className="grow text-center text-lightgrey"
+                  className="grow text-sm xl:text-base text-center text-lightgrey"
                   onClick={handleCopyEthClick}
                 >
                   0x9655443B0DBA59d9125d2fEC98f84f4c9c0460BE
@@ -522,7 +523,7 @@ export default function Home() {
                 />
                 <div
                   id="ar_address"
-                  className="grow text-center text-lightgrey"
+                  className="grow text-sm xl:text-base  text-center text-lightgrey"
                 >
                   7BOgKhQMI3rxhTZRBqazmCY6AiSFN3etX_5w91Ks7sQ
                 </div>
