@@ -7,6 +7,7 @@ import info from "../public/info.png";
 import { useRouter } from "next/router";
 import { isValidUrl } from "../components/utils";
 import moment from "moment";
+import CustomIframe from "../components/iframe";
 
 export default function ArchivePage() {
   const router = useRouter();
@@ -27,7 +28,12 @@ export default function ArchivePage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap4">
           <div className="p-4 md:p-8">
             <div className="flex flex-col items-center  aspect-video w-full">
-              <iframe className="h-full shadow-2xl w-full " src={urlInfo.url} />
+              <CustomIframe
+                className="h-full shadow-2xl w-full "
+                src={urlInfo.url}
+              >
+                <></>
+              </CustomIframe>
             </div>
           </div>
           <div className="flex flex-col gap-4 p-8">

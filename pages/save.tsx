@@ -8,6 +8,7 @@ import { Container } from "../components/container";
 import { isValidUrl } from "../components/utils";
 import { useRouter } from "next/router";
 import info from "../public/info.png";
+import CustomIframe from "../components/iframe";
 
 export default function Save() {
   const router = useRouter();
@@ -72,7 +73,12 @@ export default function Save() {
 
           {urlInfo.valid ? (
             <div className="flex flex-col items-center  aspect-video  w-full">
-              <iframe className="h-5/6 shadow-2xl w-full " src={urlInfo.url} />
+              <CustomIframe
+                className="h-5/6 shadow-2xl w-full "
+                src={urlInfo.url}
+              >
+                <></>
+              </CustomIframe>
               <div className="flex justify-end w-full pt-2">
                 <Link
                   className="link link-primary link-hover"
