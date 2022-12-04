@@ -11,5 +11,3 @@ npm run dev
 # or
 yarn dev
 ```
-
-Made with Next.js, React.js and Tailwind.css and Daisy.ui
