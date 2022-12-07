@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import logo from "../public/logo.png";
 import { isValidUrl } from "../components/utils";
+import Script from "next/script";
 
 export default function Replay() {
   const router = useRouter();
@@ -21,6 +22,7 @@ export default function Replay() {
 
   return (
     <div className="flex flex-col h-screen w-full">
+      <Script strategy="beforeInteractive" src="./ui.js" />
       <div
         className="grid grid-cols-2 md:grid-cols-3 p-8 items-center w-full"
         style={{ color: "rgba(0, 0, 0, 0.6)" }}
@@ -69,8 +71,12 @@ export default function Replay() {
       </div>
 
       <div className="w-full h-full flex justify-center flex-col items-center">
-        <div>{urlInfo.url}</div>
-        <div>{urlInfo.ts}</div>
+        <replay-web-page
+          source="https://arweave.net/Pc0bvlWuS97mEIyaLmP8pZi9J3dQF9mQsbs1dMJgOtM/data.warc"
+          url="https://www.wikipedia.org"
+          embed="replayonly"
+          replayBase="./"
+        ></replay-web-page>
       </div>
     </div>
   );

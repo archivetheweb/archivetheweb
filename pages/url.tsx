@@ -43,19 +43,12 @@ export default function ArchivePage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap4">
           <div className="p-4 md:p-8">
             <div className="flex flex-col items-center  aspect-video w-full h-full">
-              {/* <CustomIframe
+              <CustomIframe
                 className="h-full shadow-2xl w-full "
                 src={urlInfo.url}
               >
                 <></>
-              </CustomIframe> */}
-              {/* //@ts-ignore */}
-              <replay-web-page
-                source="https://arweave.net/Pc0bvlWuS97mEIyaLmP8pZi9J3dQF9mQsbs1dMJgOtM/data.warc"
-                url="https://www.wikipedia.org"
-                embed="default"
-                replayBase="./"
-              ></replay-web-page>
+              </CustomIframe>
             </div>
           </div>
           <div className="flex flex-col gap-4 p-8">
