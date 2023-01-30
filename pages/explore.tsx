@@ -1,15 +1,25 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Container } from "../components/container";
 
 import { useRouter } from "next/router";
 import { isValidUrl } from "../components/utils";
 import { fetchLatestArchived } from "../http/fetcher";
 import moment from "moment";
+import ConnectorContext from "../context/connector";
 
 export default function Explore() {
   const router = useRouter();
   let [urlInfo, setURL] = useState({ url: "", valid: false });
+  const { contract } = useContext(ConnectorContext);
+
   const { data, isLoading } = fetchLatestArchived();
+
+  useEffect(() => {
+    (async () => {
+      let state = await contract.currentState();
+      console.log(state);
+    })();
+  });
 
   const handleURL = (e: React.FormEvent<HTMLInputElement>) => {
     setURL({
