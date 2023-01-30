@@ -3,23 +3,47 @@ import { Container } from "../components/container";
 
 import { useRouter } from "next/router";
 import { isValidUrl } from "../components/utils";
-import { fetchLatestArchived } from "../http/fetcher";
 import moment from "moment";
 import ConnectorContext from "../context/connector";
+import { ArchiveInfo } from "../types/types";
 
 export default function Explore() {
   const router = useRouter();
   let [urlInfo, setURL] = useState({ url: "", valid: false });
   const { contract } = useContext(ConnectorContext);
 
-  const { data, isLoading } = fetchLatestArchived();
+  const [data, setData] = useState({
+    data: [] as ArchiveInfo[],
+    isLoading: true,
+    isError: false,
+  });
 
   useEffect(() => {
     (async () => {
       let state = await contract.currentState();
-      console.log(state);
+      // TODO make this more performant
+
+      let res: ArchiveInfo[] = [];
+      for (let url in state.archives) {
+        let urlArchive = state.archives[url];
+        let last_archived_timestamp = Object.keys(urlArchive).reduce((a, b) => {
+          if (+a > +b) {
+            return a;
+          }
+          return b;
+        });
+
+        res.push({
+          screenshot_url: "./example_screenshot.png",
+          title: "TODO",
+          url: url,
+          last_archived_timestamp: +last_archived_timestamp,
+          archived_total: Object.keys(urlArchive).length,
+        } as ArchiveInfo);
+      }
+      setData({ data: res, isLoading: false, isError: false });
     })();
-  });
+  }, []);
 
   const handleURL = (e: React.FormEvent<HTMLInputElement>) => {
     setURL({
@@ -95,37 +119,38 @@ export default function Explore() {
             </div>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 pt-8 gap-4">
-            {data.map((x, i) => {
-              return (
-                <div className="card max-w-96 bg-base-100 shadow-xl" key={i}>
-                  <figure>
-                    <img src={x.screenshot_url} alt={x.title} />
-                  </figure>
-                  <div className="card-body p-4">
-                    <div className="card-title text-lg">{x.title}</div>
-                    <div className="text-lightgrey">
-                      <i>{x.url}</i>
-                    </div>
-                    <div className="text-lightgrey">
-                      <i>
-                        Last archived:{" "}
-                        {moment(x.last_archived_timestamp * 1000).format(
-                          "MMMM D YYYY [at] HH:mm:ss"
-                        )}
-                      </i>
-                    </div>
-                    <div className="card-actions justify-end">
-                      <button
-                        onClick={() => router.push(`/url?url=${x.url}`)}
-                        className="btn w-full bg-[#FFFFFF] text-funpurple border border-funpurple hover:bg-funpurple/75 normal-case"
-                      >
-                        View all snapshots
-                      </button>
+            {!data.isLoading &&
+              data.data.map((x, i) => {
+                return (
+                  <div className="card max-w-96 bg-base-100 shadow-xl" key={i}>
+                    <figure>
+                      <img src={x.screenshot_url} alt={x.title} />
+                    </figure>
+                    <div className="card-body p-4">
+                      <div className="card-title text-lg">{x.title}</div>
+                      <div className="text-lightgrey">
+                        <i>{x.url}</i>
+                      </div>
+                      <div className="text-lightgrey">
+                        <i>
+                          Last archived:{" "}
+                          {moment(x.last_archived_timestamp * 1000).format(
+                            "MMMM D YYYY [at] HH:mm:ss"
+                          )}
+                        </i>
+                      </div>
+                      <div className="card-actions justify-end">
+                        <button
+                          onClick={() => router.push(`/url?url=${x.url}`)}
+                          className="btn w-full bg-[#FFFFFF] text-funpurple border border-funpurple hover:bg-funpurple/75 normal-case"
+                        >
+                          View all snapshots
+                        </button>
+                      </div>
                     </div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })}
           </div>
         </div>
       </div>

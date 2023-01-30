@@ -23,62 +23,6 @@ export function fetchPrice() {
   };
 }
 
-export function fetchLatestArchived() {
-  let exampleInfo = [
-    {
-      screenshot_url: "./example_screenshot.png",
-      title: "BBC Webpage",
-      url: "https://bbc.com",
-      last_archived_timestamp: 1669816063,
-      archived_total: 2,
-    },
-    {
-      screenshot_url: "./example_screenshot.png",
-      title: "BBC Webpage",
-      url: "https://bbc.com",
-      last_archived_timestamp: 1669816063,
-      archived_total: 2,
-    },
-    {
-      screenshot_url: "./example_screenshot.png",
-      title: "BBC Webpage",
-      url: "https://bbc.com",
-      last_archived_timestamp: 1669816063,
-      archived_total: 2,
-    },
-    {
-      screenshot_url: "./example_screenshot.png",
-      title: "BBC Webpage",
-      url: "https://bbc.com",
-      last_archived_timestamp: 1669816063,
-      archived_total: 2,
-    },
-    {
-      screenshot_url: "./example_screenshot.png",
-      title: "BBC Webpage",
-      url: "https://bbc.com",
-      last_archived_timestamp: 1669816063,
-      archived_total: 2,
-    },
-    {
-      screenshot_url: "./example_screenshot.png",
-      title: "BBC Webpage",
-      url: "https://bbc.com",
-      last_archived_timestamp: 1669816063,
-      archived_total: 2,
-    },
-    {
-      screenshot_url: "./example_screenshot.png",
-      title: "BBC Webpage",
-      url: "https://bbc.com",
-      last_archived_timestamp: 1669816063,
-      archived_total: 2,
-    },
-  ];
-
-  return { data: exampleInfo, isLoading: false, isError: false };
-}
-
 export function fetchArchivedForURL(url: string) {
   let exampleInfo = {
     screenshot_url: "./example_screenshot.png",
