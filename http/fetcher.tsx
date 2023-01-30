@@ -25,32 +25,30 @@ export function fetchPrice() {
 
 export function fetchArchivedForURL(url: string) {
   let exampleInfo = {
-    screenshot_url: "./example_screenshot.png",
+    screenshot_tx: "./example_screenshot.png",
     title: "BBC Webpage",
     url: url,
     last_archived_timestamp: 1669816063,
-    next_snapshot_timestamp: Date.now() / 1000 + 1000,
-    snapshot_remaining: 300,
-    snapshots_taken: 300,
-    contributions: {
-      amount: "0.12",
-      currency: "AR",
-    },
+    // TODO change this
+    // contributions: {
+    //   amount: "0.12",
+    //   currency: "AR",
+    // },
     archived_info: [
       {
         arweave_tx: "AsdeER_dftsfewWDFGwGWEWE3234fWEF#@",
         timestamp: 1669816063,
-        archived_by: "BBBBBBBBBBBBBBBBBBBBBBBB",
+        uploader_address: "BBBBBBBBBBBBBBBBBBBBBBBB",
       },
       {
         arweave_tx: "AsdeER_dftsfewWDFGwGWEWE3234fWEF#@",
         timestamp: 1669816063,
-        archived_by: "BBBBBBBBBBBBBBBBBBBBBBBB",
+        uploader_address: "BBBBBBBBBBBBBBBBBBBBBBBB",
       },
       {
         arweave_tx: "AsdeER_dftsfewWDFGwGWEWE3234fWEF#@",
         timestamp: 1669816063,
-        archived_by: "BBBBBBBBBBBBBBBBBBBBBBBB",
+        uploader_address: "BBBBBBBBBBBBBBBBBBBBBBBB",
       },
     ],
   };

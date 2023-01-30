@@ -1,5 +1,5 @@
 export interface ArchiveInfo {
-  screenshot_url: string;
+  screenshot_tx: string;
   title: string;
   url: string;
   last_archived_timestamp: number;

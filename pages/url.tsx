@@ -71,7 +71,8 @@ export default function ArchivePage() {
                     <div className="text-lightgrey">Most recent snapshot</div>
                   </div>
                   <div>
-                    <div>{data.snapshots_taken}</div>
+                    {/* // TODO change this */}
+                    {/* <div>{data.snapshots_taken}</div> */}
                     <div>
                       <a className="underline" href="">
                         {moment(data.last_archived_timestamp * 1000).format(
@@ -88,10 +89,12 @@ export default function ArchivePage() {
                       Next Snapshot
                     </div>
                     <div className="p-6 ">
-                      <Countdown date={data.next_snapshot_timestamp * 1000} />
+                      {/* // TODO change this */}
+                      {/* <Countdown date={data.next_snapshot_timestamp * 1000} /> */}
                     </div>
                     <div className="p-6 ">
-                      {data.snapshot_remaining} snapshots remaining
+                      {/* // TODO change this */}
+                      {/* {data.snapshot_remaining} snapshots remaining */}
                     </div>
                     <div className="px-6 pb-6">
                       <button
@@ -113,7 +116,9 @@ export default function ArchivePage() {
                       </button>
                     </div>
                   </div>
-                  <div className="flex flex-col gap-4 border border-extralightgrey rounded">
+
+                  {/* TODO ADD THIS BACK */}
+                  {/* <div className="flex flex-col gap-4 border border-extralightgrey rounded">
                     <div className="p-6 border-b border-extralightgrey ">
                       Contributions
                     </div>
@@ -146,7 +151,7 @@ export default function ArchivePage() {
                         </div>
                       </button>
                     </div>
-                  </div>
+                  </div> */}
                 </div>
               </>
             ) : (
@@ -217,7 +222,7 @@ export default function ArchivePage() {
                             {moment(x.timestamp * 1000).format("hh:mm:ss")}
                           </td>
                           <td>1</td>
-                          <td>{x.archived_by}</td>
+                          <td>{x.uploader_address}</td>
                           <td>
                             <button className="underline">
                               <div className="flex gap-2 items-center">

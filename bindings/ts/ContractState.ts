@@ -24,16 +24,16 @@ export interface State {
   };
 }
 export interface ArchiveRequest {
-  crawlOptions: CrawlOptions;
   endTimestamp: number;
   frequency: string;
   id: string;
-  latestUploadTimestamp: number;
+  latestArchivedTimestamp: number;
+  options: Options;
   requestedBy: string;
   startTimestamp: number;
   uploaderAddress: string;
 }
-export interface CrawlOptions {
+export interface Options {
   depth: number;
   domainOnly: boolean;
   urls: string[];
@@ -43,8 +43,10 @@ export interface ArchiveSubmission {
   arweaveTx: string;
   fullUrl: string;
   options: ArchiveOptions;
+  screenshotTx: string;
   size: number;
   timestamp: number;
+  title: string;
   uploaderAddress: string;
 }
 export interface ArchiveOptions {

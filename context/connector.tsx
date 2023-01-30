@@ -2,6 +2,8 @@ import { Warp, Contract, WarpFactory } from "warp-contracts";
 import { createContext, useState, useContext, useMemo } from "react";
 import { AwtContract } from "../bindings/ts/AwtContract";
 
+const CONTRACT = "aBzGaWpXeOQqiVrtECdHrHO_Rn2YvZeeSLdxBOihYag";
+
 type Blockchain = {
   name: string;
   id: string;
@@ -19,10 +21,7 @@ export const emptyState = {
   isConnecting: false,
   connect: () => {},
   warp: warp,
-  contract: new AwtContract(
-    "aBzGaWpXeOQqiVrtECdHrHO_Rn2YvZeeSLdxBOihYag",
-    warp
-  ),
+  contract: new AwtContract(CONTRACT, warp),
 };
 
 const ConnectorContext = createContext(emptyState);

@@ -18,15 +18,24 @@ export interface ArchivesByURL {
   url: string;
 }
 export interface ArchivesByURLResult {
-  archives: ArchiveSubmission[];
+  archives: ArchivesByURLInfo;
+}
+export interface ArchivesByURLInfo {
+  archivedInfo: ArchiveSubmission[];
+  lastArchivedTimestamp: number;
+  screenshotTx: string;
+  title: string;
+  url: string;
 }
 export interface ArchiveSubmission {
   archiveRequestId: string;
   arweaveTx: string;
   fullUrl: string;
   options: ArchiveOptions;
+  screenshotTx: string;
   size: number;
   timestamp: number;
+  title: string;
   uploaderAddress: string;
 }
 export interface ArchiveOptions {
@@ -40,16 +49,16 @@ export interface ArchiveRequestsForResult {
   archivesRequests: ArchiveRequest[];
 }
 export interface ArchiveRequest {
-  crawlOptions: CrawlOptions;
   endTimestamp: number;
   frequency: string;
   id: string;
-  latestUploadTimestamp: number;
+  latestArchivedTimestamp: number;
+  options: Options;
   requestedBy: string;
   startTimestamp: number;
   uploaderAddress: string;
 }
-export interface CrawlOptions {
+export interface Options {
   depth: number;
   domainOnly: boolean;
   urls: string[];

@@ -34,7 +34,7 @@ export default function Explore() {
         });
 
         res.push({
-          screenshot_url: "./example_screenshot.png",
+          screenshot_tx: "./example_screenshot.png",
           title: "TODO",
           url: url,
           last_archived_timestamp: +last_archived_timestamp,
@@ -124,7 +124,7 @@ export default function Explore() {
                 return (
                   <div className="card max-w-96 bg-base-100 shadow-xl" key={i}>
                     <figure>
-                      <img src={x.screenshot_url} alt={x.title} />
+                      <img src={x.screenshot_tx} alt={x.title} />
                     </figure>
                     <div className="card-body p-4">
                       <div className="card-title text-lg">{x.title}</div>

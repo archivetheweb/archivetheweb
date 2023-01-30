@@ -17,13 +17,13 @@ export interface RegisterUploader {
   friendlyName: string;
 }
 export interface RequestArchiving {
-  crawlOptions: CrawlOptions;
   endTimestamp: number;
   frequency: string;
+  options: Options;
   startTimestamp: number;
   uploaderAddress: string;
 }
-export interface CrawlOptions {
+export interface Options {
   depth: number;
   domainOnly: boolean;
   urls: string[];
@@ -33,8 +33,10 @@ export interface SubmitArchive {
   arweaveTx: string;
   fullUrl: string;
   options: ArchiveOptions;
+  screenshotTx: string;
   size: number;
   timestamp: number;
+  title: string;
 }
 export interface ArchiveOptions {
   depth: number;
