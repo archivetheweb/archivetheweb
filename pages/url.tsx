@@ -1,5 +1,5 @@
 import Image from "next/image";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { Container } from "../components/container";
 import info from "../public/info.png";
@@ -13,56 +13,70 @@ import plus from "../public/plus.png";
 import saveWhite from "../public/save_white.png";
 import Countdown from "react-countdown";
 import Script from "next/script";
+import ConnectorContext from "../context/connector";
+import { ArchivesByURLInfo } from "../bindings/ts/View";
 const momentDurationFormatSetup = require("moment-duration-format");
 momentDurationFormatSetup(moment);
+
+type Data = ArchivesByURLInfo | null;
 
 export default function ArchivePage() {
   const router = useRouter();
   let [urlInfo, setURL] = useState({ url: "", valid: false });
-  let [data, setData] = useState(null as any);
+  const [data, setData] = useState({
+    data: null as Data,
+    isLoading: true,
+    isError: false,
+  });
+
   let { price, isLoading } = fetchPrice();
   let [nextSnap, setNextSnap] = useState(0);
+  const { contract } = useContext(ConnectorContext);
 
   useEffect(() => {
     let url = router.query.url as string;
     let valid = isValidUrl(url);
     if (url && valid) {
       setURL({ url: url, valid });
-      let { data } = fetchArchivedForURL(url);
-      setData(data);
+      (async () => {
+        let result = await contract.archivesByURL({ url: url, count: 10 });
+        console.log(result.archives);
+
+        setData({ data: result.archives, isLoading: false, isError: false });
+      })();
     } else if (url && !valid) {
       router.push("/");
     }
     return () => {};
   }, [router, router.query.url]);
 
-  return (
+  return data.isLoading ? (
+    <div></div>
+  ) : (
     <Container>
       <Script strategy="beforeInteractive" src="./ui.js" />
       <div className="w-full p-16">
         <div className="grid grid-cols-1 md:grid-cols-2 gap4">
           <div className="p-4 md:p-8">
             <div className="flex flex-col items-center  aspect-video w-full h-full">
-              <CustomIframe
-                className="h-full shadow-2xl w-full "
-                src={urlInfo.url}
-              >
-                <></>
-              </CustomIframe>
+              <img
+                src={`https://arweave.net/` + data.data.screenshotTx}
+                alt={data.data.title}
+              />
             </div>
           </div>
           <div className="flex flex-col gap-4 p-8">
             {data ? (
               <>
-                <div className="text-2xl ">{data.title}</div>
+                <div className="text-2xl ">{data.data?.title}</div>
                 <div className="">
                   <a
-                    href={data.url}
+                    href={"https://" + data.data.url}
                     target="_blank"
                     rel="noreferrer"
                     className="underline "
                   >
-                    {data.url}
+                    {data.data.url}
                   </a>
                 </div>
                 <div className="grid grid-cols-2 p-6 border border-extralightgrey rounded ">
@@ -75,7 +89,7 @@ export default function ArchivePage() {
                     {/* <div>{data.snapshots_taken}</div> */}
                     <div>
                       <a className="underline" href="">
-                        {moment(data.last_archived_timestamp * 1000).format(
+                        {moment(data.data.lastArchivedTimestamp * 1000).format(
                           "MMMM D YYYY [at] HH:mm:ss"
                         )}
                       </a>
@@ -90,11 +104,11 @@ export default function ArchivePage() {
                     </div>
                     <div className="p-6 ">
                       {/* // TODO change this */}
-                      {/* <Countdown date={data.next_snapshot_timestamp * 1000} /> */}
+                      {/* <Countdown date={data.data.next_snapshot_timestamp * 1000} /> */}
                     </div>
                     <div className="p-6 ">
                       {/* // TODO change this */}
-                      {/* {data.snapshot_remaining} snapshots remaining */}
+                      {/* {data.data.snapshot_remaining} snapshots remaining */}
                     </div>
                     <div className="px-6 pb-6">
                       <button
@@ -123,14 +137,14 @@ export default function ArchivePage() {
                       Contributions
                     </div>
                     <div className="p-6 ">
-                      {data.contributions.amount} {data.contributions.currency}
+                      {data.data.contributions.amount} {data.data.contributions.currency}
                     </div>
                     <div className="p-6 ">
                       {isLoading
                         ? ""
                         : `USD $${
                             Math.round(
-                              +price * +data.contributions.amount * 100
+                              +price * +data.data.contributions.amount * 100
                             ) / 100
                           }`}
                     </div>
@@ -212,7 +226,7 @@ export default function ArchivePage() {
                 </thead>
                 <tbody>
                   {data &&
-                    data.archived_info.map((x: any, i: number) => {
+                    data.data?.archivedInfo.map((x: any, i: number) => {
                       return (
                         <tr key={i}>
                           <td>
