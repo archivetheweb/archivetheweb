@@ -10,25 +10,27 @@ import {
   Warp,
   ArWallet,
   ContractError,
-  EvaluationOptions
-} from 'warp-contracts';
+  EvaluationOptions,
+} from "warp-contracts";
 import {
   ArchivesByURL,
   ArchivesByURLResult,
   ArchiveRequestsFor,
   ArchiveRequestsForResult,
   ArchiveRequestByID,
-  ArchiveRequestByIDResult
-} from './View';
+  ArchiveRequestByIDResult,
+  Archives,
+  ArchivesResult,
+} from "./View";
 import {
   RegisterUploader,
   RequestArchiving,
   SubmitArchive,
   DeleteArchiveRequest,
   DeRegisterUploader,
-  Evolve
-} from './WriteAction';
-import { State } from './ContractState';
+  Evolve,
+} from "./WriteAction";
+import { State } from "./ContractState";
 
 export interface BaseInput {
   function: string;
@@ -56,40 +58,71 @@ export class AwtContract {
     return cachedValue.state;
   }
 
-  async archivesByURL(archivesByURL: ArchivesByURL): Promise<ArchivesByURLResult> {
-    const interactionResult = await this.contract.viewState<BaseInput & ArchivesByURL, ArchivesByURLResult>({
-      function: 'archivesByURL',
-      ...archivesByURL
+  async archivesByURL(
+    archivesByURL: ArchivesByURL
+  ): Promise<ArchivesByURLResult> {
+    const interactionResult = await this.contract.viewState<
+      BaseInput & ArchivesByURL,
+      ArchivesByURLResult
+    >({
+      function: "archivesByURL",
+      ...archivesByURL,
     });
-    if (interactionResult.type == 'error') {
+    if (interactionResult.type == "error") {
       throw new ContractError(interactionResult.errorMessage);
-    } else if (interactionResult.type == 'exception') {
+    } else if (interactionResult.type == "exception") {
       throw Error(interactionResult.errorMessage);
     }
     return interactionResult.result;
   }
 
-  async archiveRequestsFor(archiveRequestsFor: ArchiveRequestsFor): Promise<ArchiveRequestsForResult> {
-    const interactionResult = await this.contract.viewState<BaseInput & ArchiveRequestsFor, ArchiveRequestsForResult>({
-      function: 'archiveRequestsFor',
-      ...archiveRequestsFor
+  async archiveRequestsFor(
+    archiveRequestsFor: ArchiveRequestsFor
+  ): Promise<ArchiveRequestsForResult> {
+    const interactionResult = await this.contract.viewState<
+      BaseInput & ArchiveRequestsFor,
+      ArchiveRequestsForResult
+    >({
+      function: "archiveRequestsFor",
+      ...archiveRequestsFor,
     });
-    if (interactionResult.type == 'error') {
+    if (interactionResult.type == "error") {
       throw new ContractError(interactionResult.errorMessage);
-    } else if (interactionResult.type == 'exception') {
+    } else if (interactionResult.type == "exception") {
       throw Error(interactionResult.errorMessage);
     }
     return interactionResult.result;
   }
 
-  async archiveRequestByID(archiveRequestByID: ArchiveRequestByID): Promise<ArchiveRequestByIDResult> {
-    const interactionResult = await this.contract.viewState<BaseInput & ArchiveRequestByID, ArchiveRequestByIDResult>({
-      function: 'archiveRequestByID',
-      ...archiveRequestByID
+  async archiveRequestByID(
+    archiveRequestByID: ArchiveRequestByID
+  ): Promise<ArchiveRequestByIDResult> {
+    const interactionResult = await this.contract.viewState<
+      BaseInput & ArchiveRequestByID,
+      ArchiveRequestByIDResult
+    >({
+      function: "archiveRequestByID",
+      ...archiveRequestByID,
     });
-    if (interactionResult.type == 'error') {
+    if (interactionResult.type == "error") {
       throw new ContractError(interactionResult.errorMessage);
-    } else if (interactionResult.type == 'exception') {
+    } else if (interactionResult.type == "exception") {
+      throw Error(interactionResult.errorMessage);
+    }
+    return interactionResult.result;
+  }
+
+  async archives(archives: Archives): Promise<ArchivesResult> {
+    const interactionResult = await this.contract.viewState<
+      BaseInput & Archives,
+      ArchivesResult
+    >({
+      function: "archives",
+      ...archives,
+    });
+    if (interactionResult.type == "error") {
+      throw new ContractError(interactionResult.errorMessage);
+    } else if (interactionResult.type == "exception") {
       throw Error(interactionResult.errorMessage);
     }
     return interactionResult.result;
@@ -100,7 +133,7 @@ export class AwtContract {
     options?: WriteInteractionOptions
   ): Promise<WriteInteractionResponse | null> {
     return await this.contract.writeInteraction<BaseInput & RegisterUploader>(
-      { function: 'registerUploader', ...registerUploader },
+      { function: "registerUploader", ...registerUploader },
       options
     );
   }
@@ -110,7 +143,7 @@ export class AwtContract {
     options?: WriteInteractionOptions
   ): Promise<WriteInteractionResponse | null> {
     return await this.contract.writeInteraction<BaseInput & RequestArchiving>(
-      { function: 'requestArchiving', ...requestArchiving },
+      { function: "requestArchiving", ...requestArchiving },
       options
     );
   }
@@ -120,7 +153,7 @@ export class AwtContract {
     options?: WriteInteractionOptions
   ): Promise<WriteInteractionResponse | null> {
     return await this.contract.writeInteraction<BaseInput & SubmitArchive>(
-      { function: 'submitArchive', ...submitArchive },
+      { function: "submitArchive", ...submitArchive },
       options
     );
   }
@@ -129,10 +162,9 @@ export class AwtContract {
     deleteArchiveRequest: DeleteArchiveRequest,
     options?: WriteInteractionOptions
   ): Promise<WriteInteractionResponse | null> {
-    return await this.contract.writeInteraction<BaseInput & DeleteArchiveRequest>(
-      { function: 'deleteArchiveRequest', ...deleteArchiveRequest },
-      options
-    );
+    return await this.contract.writeInteraction<
+      BaseInput & DeleteArchiveRequest
+    >({ function: "deleteArchiveRequest", ...deleteArchiveRequest }, options);
   }
 
   async deRegisterUploader(
@@ -140,12 +172,18 @@ export class AwtContract {
     options?: WriteInteractionOptions
   ): Promise<WriteInteractionResponse | null> {
     return await this.contract.writeInteraction<BaseInput & DeRegisterUploader>(
-      { function: 'deRegisterUploader', ...deRegisterUploader },
+      { function: "deRegisterUploader", ...deRegisterUploader },
       options
     );
   }
 
-  async evolve(evolve: Evolve, options?: WriteInteractionOptions): Promise<WriteInteractionResponse | null> {
-    return await this.contract.writeInteraction<BaseInput & Evolve>({ function: 'evolve', ...evolve }, options);
+  async evolve(
+    evolve: Evolve,
+    options?: WriteInteractionOptions
+  ): Promise<WriteInteractionResponse | null> {
+    return await this.contract.writeInteraction<BaseInput & Evolve>(
+      { function: "evolve", ...evolve },
+      options
+    );
   }
 }

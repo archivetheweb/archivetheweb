@@ -6,6 +6,7 @@ import { isValidUrl } from "../components/utils";
 import moment from "moment";
 import ConnectorContext from "../context/connector";
 import { ArchiveInfo } from "../types/types";
+import { ArchivesResult } from "../bindings/ts/View";
 
 export default function Explore() {
   const router = useRouter();
@@ -13,35 +14,17 @@ export default function Explore() {
   const { contract } = useContext(ConnectorContext);
 
   const [data, setData] = useState({
-    data: [] as ArchiveInfo[],
+    data: [] as ArchivesResult[],
     isLoading: true,
     isError: false,
   });
 
   useEffect(() => {
     (async () => {
-      let state = await contract.currentState();
-      // TODO make this more performant
+      let result = await contract.archives({});
+      console.log(result);
 
-      let res: ArchiveInfo[] = [];
-      for (let url in state.archives) {
-        let urlArchive = state.archives[url];
-        let last_archived_timestamp = Object.keys(urlArchive).reduce((a, b) => {
-          if (+a > +b) {
-            return a;
-          }
-          return b;
-        });
-
-        res.push({
-          screenshot_tx: "./example_screenshot.png",
-          title: "TODO",
-          url: url,
-          last_archived_timestamp: +last_archived_timestamp,
-          archived_total: Object.keys(urlArchive).length,
-        } as ArchiveInfo);
-      }
-      setData({ data: res, isLoading: false, isError: false });
+      setData({ data: result.archives, isLoading: false, isError: false });
     })();
   }, []);
 
@@ -124,7 +107,10 @@ export default function Explore() {
                 return (
                   <div className="card max-w-96 bg-base-100 shadow-xl" key={i}>
                     <figure>
-                      <img src={x.screenshot_tx} alt={x.title} />
+                      <img
+                        src={`https://arweave.net/${x.screenshotTx}`}
+                        alt={x.title}
+                      />
                     </figure>
                     <div className="card-body p-4">
                       <div className="card-title text-lg">{x.title}</div>
@@ -134,7 +120,7 @@ export default function Explore() {
                       <div className="text-lightgrey">
                         <i>
                           Last archived:{" "}
-                          {moment(x.last_archived_timestamp * 1000).format(
+                          {moment(x.lastArchivedTimestamp * 1000).format(
                             "MMMM D YYYY [at] HH:mm:ss"
                           )}
                         </i>
