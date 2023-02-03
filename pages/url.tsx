@@ -50,7 +50,7 @@ export default function ArchivePage() {
     return () => {};
   }, [router, router.query.url]);
 
-  return data.isLoading ? (
+  return data.isLoading && data.data !== null ? (
     <div></div>
   ) : (
     <Container>
@@ -60,8 +60,8 @@ export default function ArchivePage() {
           <div className="p-4 md:p-8">
             <div className="flex flex-col items-center  aspect-video w-full h-full">
               <img
-                src={`https://arweave.net/` + data.data.screenshotTx}
-                alt={data.data.title}
+                src={`https://arweave.net/` + data.data?.screenshotTx}
+                alt={data.data?.title}
               />
             </div>
           </div>
@@ -71,12 +71,12 @@ export default function ArchivePage() {
                 <div className="text-2xl ">{data.data?.title}</div>
                 <div className="">
                   <a
-                    href={"https://" + data.data.url}
+                    href={"https://" + data.data?.url}
                     target="_blank"
                     rel="noreferrer"
                     className="underline "
                   >
-                    {data.data.url}
+                    {data.data?.url}
                   </a>
                 </div>
                 <div className="grid grid-cols-2 p-6 border border-extralightgrey rounded ">
@@ -85,13 +85,14 @@ export default function ArchivePage() {
                     <div className="text-lightgrey">Most recent snapshot</div>
                   </div>
                   <div>
-                    {/* // TODO change this */}
-                    {/* <div>{data.snapshots_taken}</div> */}
+                    <div>{data.data?.archivedInfo.length}</div>
                     <div>
                       <a className="underline" href="">
-                        {moment(data.data.lastArchivedTimestamp * 1000).format(
-                          "MMMM D YYYY [at] HH:mm:ss"
-                        )}
+                        {data.data
+                          ? moment(
+                              data.data?.lastArchivedTimestamp * 1000
+                            ).format("MMMM D YYYY [at] HH:mm:ss")
+                          : ""}
                       </a>
                     </div>
                   </div>
