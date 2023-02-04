@@ -13,7 +13,9 @@ export type View =
   | ArchiveRequestByID
   | ArchiveRequestByIDResult
   | Archives
-  | ArchivesResult;
+  | ArchivesResult
+  | ArchivesByURLAndTimestamp
+  | ArchivesByURLAndTimestampResult;
 
 export interface ArchivesByURL {
   count: number;
@@ -81,4 +83,11 @@ export interface ArchiveInfo {
   screenshotTx: string;
   title: string;
   url: string;
+}
+export interface ArchivesByURLAndTimestamp {
+  timestamp: number;
+  url: string;
+}
+export interface ArchivesByURLAndTimestampResult {
+  archive: ArchiveSubmission;
 }
