@@ -7,8 +7,7 @@ import chevron from "../public/chevron.png";
 import { useRouter } from "next/router";
 import { isValidUrl } from "../components/utils";
 import moment from "moment";
-import CustomIframe from "../components/iframe";
-import { fetchArchivedForURL, fetchPrice } from "../http/fetcher";
+import { fetchPrice } from "../http/fetcher";
 import plus from "../public/plus.png";
 import saveWhite from "../public/save_white.png";
 import Countdown from "react-countdown";
@@ -39,10 +38,14 @@ export default function ArchivePage() {
     if (url && valid) {
       setURL({ url: url, valid });
       (async () => {
-        let result = await contract.archivesByURL({ url: url, count: 10 });
-        console.log(result.archives);
+        try {
+          let result = await contract.archivesByURL({ url: url, count: 10 });
+          console.log(result.archives);
 
-        setData({ data: result.archives, isLoading: false, isError: false });
+          setData({ data: result.archives, isLoading: false, isError: false });
+        } catch (e) {
+          console.error(e);
+        }
       })();
     } else if (url && !valid) {
       router.push("/");

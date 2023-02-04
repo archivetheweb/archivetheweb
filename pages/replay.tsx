@@ -1,24 +1,49 @@
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import logo from "../public/logo.png";
 import { isValidUrl } from "../components/utils";
 import Script from "next/script";
+import ConnectorContext from "../context/connector";
+import { ArchiveSubmission } from "../bindings/ts/View";
+
+type ArchiveSubmissionOrNull = ArchiveSubmission | null;
 
 export default function Replay() {
   const router = useRouter();
   let [urlInfo, setURL] = useState({ ts: "", url: "", valid: false });
+  const { contract } = useContext(ConnectorContext);
+  const [data, setData] = useState({
+    data: null as ArchiveSubmissionOrNull,
+    isLoading: true,
+    isError: false,
+  });
 
   useEffect(() => {
     let url = router.query.url as string;
     let ts = router.query.ts as string;
-    let valid = isValidUrl(url);
-    if (url && valid) {
-      setURL({ url, valid, ts });
+
+    console.log(ts, url);
+
+    if (url && ts && isValidUrl(url)) {
+      setURL({ url, valid: true, ts });
+
+      (async () => {
+        try {
+          let result = await contract.archivesByURLAndTimestamp({
+            url: url,
+            timestamp: +ts,
+          });
+          console.log(result.archive);
+
+          setData({ data: result.archive, isLoading: false, isError: false });
+        } catch (e) {
+          console.error(e);
+        }
+      })();
     }
-    return () => {};
-  }, [router, router.query.url]);
+  }, [router]);
 
   return (
     <div className="flex flex-col h-screen w-full">

@@ -5,8 +5,7 @@ import { useRouter } from "next/router";
 import { isValidUrl } from "../components/utils";
 import moment from "moment";
 import ConnectorContext from "../context/connector";
-import { ArchiveInfo } from "../types/types";
-import { ArchivesResult } from "../bindings/ts/View";
+import { ArchiveInfo } from "../bindings/ts/View";
 
 export default function Explore() {
   const router = useRouter();
@@ -14,7 +13,7 @@ export default function Explore() {
   const { contract } = useContext(ConnectorContext);
 
   const [data, setData] = useState({
-    data: [] as ArchivesResult[],
+    data: [] as ArchiveInfo[],
     isLoading: true,
     isError: false,
   });
