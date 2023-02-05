@@ -1,8 +1,8 @@
-import { Warp, Contract, WarpFactory } from "warp-contracts";
-import { createContext, useState, useContext, useMemo } from "react";
+import { WarpFactory } from "warp-contracts";
+import { createContext } from "react";
 import { AwtContract } from "../bindings/ts/AwtContract";
 
-const CONTRACT = "Q-Eb1-CrbZi_pszCec2QafJ6lDO5dtlC53KpoxeGzWM";
+const CONTRACT = "-27RfG2DJAI3ddQlrXkN1rmS5fBSC4eG8Zfhz8skYTU";
 
 type Blockchain = {
   name: string;
