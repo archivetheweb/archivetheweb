@@ -9,7 +9,7 @@ export const Footer: React.FC<any> = ({ props, className }) => {
       <div className="grid grid-cols-2 gap-4 items-center full-w py-4  shrink-0 px-16">
         <div className="flex gap-4 items-center ">
           <div>
-            <Link href={"https://twitter.com/archive_the_web"} target="_blank">
+            <Link href={"https://twitter.com/archivethewebhq"} target="_blank">
               <Image src={twitter} height={24} width={24} alt="twitter" />
             </Link>
           </div>
