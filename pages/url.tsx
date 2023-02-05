@@ -6,14 +6,14 @@ import info from "../public/info.png";
 import chevron from "../public/chevron.png";
 import { useRouter } from "next/router";
 import { isValidUrl } from "../components/utils";
-import moment from "moment";
 import { fetchPrice } from "../http/fetcher";
 import plus from "../public/plus.png";
 import saveWhite from "../public/save_white.png";
 import Countdown from "react-countdown";
 import Script from "next/script";
 import ConnectorContext from "../context/connector";
-import { ArchivesByURLInfo } from "../bindings/ts/View";
+import { ArchivesByURLInfo, ArchiveSubmission } from "../bindings/ts/View";
+import moment from "moment";
 const momentDurationFormatSetup = require("moment-duration-format");
 momentDurationFormatSetup(moment);
 
@@ -230,32 +230,41 @@ export default function ArchivePage() {
                 </thead>
                 <tbody>
                   {data &&
-                    data.data?.archivedInfo.map((x: any, i: number) => {
-                      return (
-                        <tr key={i}>
-                          <td>
-                            {moment(x.timestamp * 1000).format("MMMM DD, YYYY")}
-                          </td>
-                          <td>
-                            {moment(x.timestamp * 1000).format("hh:mm:ss")}
-                          </td>
-                          <td>1</td>
-                          <td>{x.uploader_address}</td>
-                          <td>
-                            <button className="underline">
-                              <div className="flex gap-2 items-center">
-                                Expand all snapshots{" "}
-                                <Image
-                                  src={chevron}
-                                  alt="chevron"
-                                  style={{ height: "24px", width: "24px" }}
-                                />
-                              </div>
-                            </button>
-                          </td>
-                        </tr>
-                      );
-                    })}
+                    data.data?.archivedInfo.map(
+                      (x: ArchiveSubmission, i: number) => {
+                        return (
+                          <tr key={i}>
+                            <td>
+                              <Link
+                                className="underline"
+                                href={`/replay?url=${data.data?.url}&ts=${x.timestamp}`}
+                              >
+                                {moment(x.timestamp * 1000).format(
+                                  "MMMM DD, YYYY"
+                                )}
+                              </Link>
+                            </td>
+                            <td>
+                              {moment(x.timestamp * 1000).format("hh:mm:ss")}
+                            </td>
+                            <td>1</td>
+                            <td>{x.uploaderAddress}</td>
+                            <td>
+                              <button className="underline">
+                                <div className="flex gap-2 items-center">
+                                  Expand all snapshots{" "}
+                                  <Image
+                                    src={chevron}
+                                    alt="chevron"
+                                    style={{ height: "24px", width: "24px" }}
+                                  />
+                                </div>
+                              </button>
+                            </td>
+                          </tr>
+                        );
+                      }
+                    )}
                 </tbody>
               </table>
             </div>
