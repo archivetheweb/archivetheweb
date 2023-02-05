@@ -90,13 +90,16 @@ export default function ArchivePage() {
                   <div>
                     <div>{data.data?.archivedInfo.length}</div>
                     <div>
-                      <a className="underline" href="">
+                      <Link
+                        className="underline"
+                        href={`/replay?url=${data.data?.url}&ts=${data.data?.lastArchivedTimestamp}`}
+                      >
                         {data.data
                           ? moment(
                               data.data?.lastArchivedTimestamp * 1000
                             ).format("MMMM D YYYY [at] HH:mm:ss")
                           : ""}
-                      </a>
+                      </Link>
                     </div>
                   </div>
                 </div>
@@ -117,7 +120,9 @@ export default function ArchivePage() {
                     <div className="px-6 pb-6">
                       <button
                         // disabled={!urlInfo.valid}
-                        // onClick={handleClick}
+                        onClick={() => {
+                          router.push(`/save?url=https://${urlInfo.url}`);
+                        }}
                         style={{ borderRadius: "5px" }}
                         className="btn w-full bg-[#C0ACFF] text-[#FFFFFF] normal-case hover:bg-funpurple/75 border-none h-16 "
                       >
@@ -224,7 +229,7 @@ export default function ArchivePage() {
                     <th className="bg-[#FFFFFF] py-1">Date</th>
                     <th className="bg-[#FFFFFF] py-1">Time</th>
                     <th className="bg-[#FFFFFF] py-1"># Snapshots</th>
-                    <th className="bg-[#FFFFFF] py-1">Sponsor</th>
+                    <th className="bg-[#FFFFFF] py-1">Uploader</th>
                     <th className="bg-[#FFFFFF] py-1">Expand all</th>
                   </tr>
                 </thead>
@@ -248,7 +253,15 @@ export default function ArchivePage() {
                               {moment(x.timestamp * 1000).format("hh:mm:ss")}
                             </td>
                             <td>1</td>
-                            <td>{x.uploaderAddress}</td>
+                            <td>
+                              <Link
+                                target={"_blank"}
+                                className="underline"
+                                href={`https://viewblock.io/arweave/address/${x.uploaderAddress}`}
+                              >
+                                {x.uploaderAddress}
+                              </Link>
+                            </td>
                             <td>
                               <button className="underline">
                                 <div className="flex gap-2 items-center">
