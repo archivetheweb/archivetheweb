@@ -67,7 +67,7 @@ export default function Home() {
   return (
     <div className="flex flex-col h-screen w-fit">
       <Header className="px-16 pb-16" />
-      <Toast message={toastMessage} />
+      <Toast message={toastMessage} severity="success" />
       <button
         onClick={() => router.push("/")}
         className="btn btn-circle bg-[#FFFFFF] active:bg-funpurple hover:bg-funpurple  right-2 bottom-2 fixed"

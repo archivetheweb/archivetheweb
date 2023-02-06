@@ -18,7 +18,13 @@ export const isValidUrl = (url: string) => {
   }
 };
 
-export const Toast = ({ message }: { message: JSX.Element }) => {
+export const Toast = ({
+  message,
+  severity,
+}: {
+  message: JSX.Element;
+  severity: string;
+}) => {
   let [isDiplayed, setIsDisplayed] = useState(false);
   let [m, setM] = useState(<></>);
 
@@ -40,7 +46,12 @@ export const Toast = ({ message }: { message: JSX.Element }) => {
 
   return (
     <div className="toast" style={{ display: isDiplayed ? "" : "none" }}>
-      <div className="alert alert-success">
+      {severity == "war"}
+      <div
+        className={
+          "alert " + (severity === "error" ? "alert-error" : "alert-success")
+        }
+      >
         <div>
           <span className="text-[#FFFFFF]">{message}</span>
         </div>
