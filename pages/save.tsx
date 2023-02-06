@@ -2,13 +2,14 @@ import Image from "next/image";
 import arweave from "../public/ar.png";
 import mm from "../public/mm.png";
 import wc from "../public/wc.png";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Link from "next/link";
 import { Container } from "../components/container";
-import { isValidUrl } from "../components/utils";
+import { isValidUrl, Toast } from "../components/utils";
 import { useRouter } from "next/router";
 import info from "../public/info.png";
 import CustomIframe from "../components/iframe";
+import ConnectorContext from "../context/connector";
 
 export default function Save() {
   const router = useRouter();
@@ -18,6 +19,8 @@ export default function Save() {
   let [duration, setDuration] = useState(0);
   let [terms, setTerms] = useState("short"); // short by default for now
   let [isCheckout, setIsCheckout] = useState(false); // short by default for now
+  const { contract, warp } = useContext(ConnectorContext);
+  let [toastMessage, setToastMessage] = useState(<></>);
 
   useEffect(() => {
     let url = router.query.url as string;
@@ -39,8 +42,43 @@ export default function Save() {
       setIsCheckout(false);
     }
   };
+
+  const handleContinueToPayment = async () => {
+    // open the modal for the payment
+    // for now just submit an archive request
+    if (!urlInfo.valid) {
+      // todo throw error
+      setToastMessage(
+        <span>
+          <b>URL</b> is not valid
+        </span>
+      );
+      return;
+    }
+
+    // we create a new wallet for a newcomer
+    console.log("generating wallet...");
+    let { jwk: wallet, address: walletAddress } = await warp.generateWallet();
+
+    let c = await contract.connect(wallet);
+    // this allows us to do a "once" only archive
+    let res = await c.requestArchiving({
+      startTimestamp: Math.floor(Date.now() / 1000),
+      // give an hour
+      endTimestamp: Math.floor(Date.now() / 1000) + 3600,
+      // freq is everyday, will never reach
+      frequency: "0 0 */24 * * *",
+      options: {
+        depth: 0,
+        domainOnly: false,
+        urls: [urlInfo.url],
+      },
+      uploaderAddress: "2NbYHgsuI8uQcuErDsgoRUCyj9X2wZ6PBN6WTz9xyu0",
+    });
+  };
   return (
     <Container>
+      <Toast message={toastMessage} severity="error" />
       <div className="grid grid-cols-1 border border-[#00000033] rounded-lg mx-8 md:mx-16 lg:mx-32 mt-16 pt-16 px-16 shadow-xl ">
         <div className="text-3xl">Save a website</div>
 
@@ -49,14 +87,14 @@ export default function Save() {
         </div>
 
         <div className="flex flex-col justify-center content-center items-center w-full gap-4">
-          {/* <div className="btn-group  grid grid-cols-2 w-full rounded-ful border rounded-full  border-[#00000033]">
+          <div className="btn-group  grid grid-cols-2 w-full rounded-ful border rounded-full  border-[#00000033]">
             <button className="rounded-l-full bg-[#1f94ee16] p-4 border-r border-[#00000033]">
               ✓ One Time
             </button>
             <button className="rounded-r-full bg-[#1f94ee16] disabled  ">
               Long Term
             </button>
-          </div> */}
+          </div>
 
           <div className="form-control w-full">
             <label className="label">
@@ -151,7 +189,10 @@ export default function Save() {
               </tbody>
             </table>
           </div>
-          <button className="btn w-full btn-primary bg-funpurple hover:bg-funmidpurple h-16">
+          <button
+            className="btn w-full btn-primary bg-funpurple hover:bg-funmidpurple h-16"
+            onClick={handleContinueToPayment}
+          >
             Continue to payment
           </button>
 
