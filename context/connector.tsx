@@ -24,6 +24,14 @@ export const emptyState = {
   contract: new AwtContract(CONTRACT, warp),
 };
 
+(async () => {
+  if (!localStorage.getItem("arweave_wallet")) {
+    console.debug("generating new wallet");
+    let { jwk: wallet, address: walletAddress } = await warp.generateWallet();
+    localStorage.setItem("arweave_wallet", JSON.stringify(wallet));
+    localStorage.setItem("arweave_address", walletAddress);
+  }
+})();
 const ConnectorContext = createContext(emptyState);
 
 export default ConnectorContext;
