@@ -47,8 +47,6 @@ export default function ArchivePage() {
           console.error(e);
         }
       })();
-    } else if (url && !valid) {
-      router.push("/");
     }
     return () => {};
   }, [router, router.query.url]);

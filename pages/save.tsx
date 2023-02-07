@@ -5,7 +5,7 @@ import wc from "../public/wc.png";
 import React, { useContext, useEffect, useState } from "react";
 import Link from "next/link";
 import { Container } from "../components/container";
-import { isValidUrl, Toast } from "../components/utils";
+import { isValidUrl, isValidUrlStrict, Toast } from "../components/utils";
 import { useRouter } from "next/router";
 import info from "../public/info.png";
 import CustomIframe from "../components/iframe";
@@ -15,10 +15,10 @@ export default function Save() {
   const router = useRouter();
 
   let [urlInfo, setURL] = useState({ url: "", valid: false });
-  let [frequency, setFrequency] = useState(0);
+  let [frequency, setFrequency] = useState("");
   let [duration, setDuration] = useState(0);
-  let [terms, setTerms] = useState("short"); // short by default for now
-  let [isCheckout, setIsCheckout] = useState(false); // short by default for now
+  let [terms, setTerms] = useState("onetime"); // onetime by default for now
+  let [isCheckout, setIsCheckout] = useState(false); // onetime by default for now
   const { contract, warp } = useContext(ConnectorContext);
   let [toastMessage, setToastMessage] = useState(<></>);
 
@@ -30,7 +30,7 @@ export default function Save() {
   }, [router, router.query.url]);
 
   const handleURL = (e: React.FormEvent<HTMLInputElement>) => {
-    let valid = isValidUrl(e.currentTarget.value);
+    let valid = isValidUrlStrict(e.currentTarget.value);
 
     setURL({
       url: e.currentTarget.value,

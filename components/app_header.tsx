@@ -19,7 +19,7 @@ export const AppHeader = () => {
       valid: isValidUrl(e.currentTarget.value),
     });
   };
-  const handleClick = () => {
+  const handleSearch = () => {
     if (!urlInfo.valid) {
       return;
     }
@@ -72,7 +72,7 @@ export const AppHeader = () => {
             value={urlInfo.url}
             onChange={handleURL}
             onKeyDown={(e) =>
-              e.key === "Enter" && urlInfo.valid && handleClick()
+              e.key === "Enter" && urlInfo.valid && handleSearch()
             }
             placeholder="Search for websites by URL"
             className="input input-bordered border-extralightgrey border-l-0 rounded-r-full focus:outline-none"

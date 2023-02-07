@@ -2,6 +2,24 @@ import { useEffect, useState } from "react";
 
 export const isValidUrl = (url: string) => {
   try {
+    let u = url.replace("www.", "");
+    u = u.replace(/^(https?:\/\/)?/, "https://");
+    // if it isn't, throws an error
+    new URL(u);
+
+    // then we regexp
+    var urlPattern = new RegExp(
+      "^(https?://)?(([da-z.-]+).)?([da-z.-]+).([a-z.]{2,6})([/w .-]*)*/?$"
+    );
+    return urlPattern.test(u);
+  } catch (e) {
+    console.error(e);
+    return false;
+  }
+};
+
+export const isValidUrlStrict = (url: string) => {
+  try {
     return isURL(url);
   } catch (e) {
     console.error(e);

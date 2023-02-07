@@ -21,11 +21,19 @@ export default function Explore() {
   useEffect(() => {
     (async () => {
       let result = await contract.archives({});
-      console.log(result);
 
       setData({ data: result.archives, isLoading: false, isError: false });
     })();
   }, []);
+
+  useEffect(() => {
+    let url = router.query.url as string;
+    let valid = isValidUrl(url);
+    if (url && valid) {
+      setURL({ url: url, valid });
+    }
+    return () => {};
+  }, [router, router.query.url]);
 
   const handleURL = (e: React.FormEvent<HTMLInputElement>) => {
     setURL({
@@ -102,40 +110,56 @@ export default function Explore() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 pt-8 gap-4">
             {!data.isLoading &&
-              data.data.map((x, i) => {
-                return (
-                  <div className="card max-w-96 bg-base-100 shadow-xl" key={i}>
-                    <figure>
-                      <img
-                        src={`https://arweave.net/${x.screenshotTx}`}
-                        alt={x.title}
-                      />
-                    </figure>
-                    <div className="card-body p-4">
-                      <div className="card-title text-lg">{x.title}</div>
-                      <div className="text-lightgrey">
-                        <i>{x.url}</i>
-                      </div>
-                      <div className="text-lightgrey">
-                        <i>
-                          Last archived:{" "}
-                          {moment(x.lastArchivedTimestamp * 1000).format(
-                            "MMMM D YYYY [at] HH:mm:ss"
-                          )}
-                        </i>
-                      </div>
-                      <div className="card-actions justify-end">
-                        <button
-                          onClick={() => router.push(`/url?url=${x.url}`)}
-                          className="btn w-full bg-[#FFFFFF] text-funpurple border border-funpurple hover:bg-funpurple/75 normal-case"
-                        >
-                          View all snapshots
-                        </button>
+              data.data
+                .filter((x) => {
+                  console.log(urlInfo);
+                  console.log(x);
+                  if (urlInfo.url && urlInfo.valid) {
+                    if (x.url == urlInfo.url) {
+                      return true;
+                    } else {
+                      return false;
+                    }
+                  }
+                  return true;
+                })
+                .map((x, i) => {
+                  return (
+                    <div
+                      className="card max-w-96 bg-base-100 shadow-xl"
+                      key={i}
+                    >
+                      <figure>
+                        <img
+                          src={`https://arweave.net/${x.screenshotTx}`}
+                          alt={x.title}
+                        />
+                      </figure>
+                      <div className="card-body p-4">
+                        <div className="card-title text-lg">{x.title}</div>
+                        <div className="text-lightgrey">
+                          <i>{x.url}</i>
+                        </div>
+                        <div className="text-lightgrey">
+                          <i>
+                            Last archived:{" "}
+                            {moment(x.lastArchivedTimestamp * 1000).format(
+                              "MMMM D YYYY [at] HH:mm:ss"
+                            )}
+                          </i>
+                        </div>
+                        <div className="card-actions justify-end">
+                          <button
+                            onClick={() => router.push(`/url?url=${x.url}`)}
+                            className="btn w-full bg-[#FFFFFF] text-funpurple border border-funpurple hover:bg-funpurple/75 normal-case"
+                          >
+                            View all snapshots
+                          </button>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
           </div>
         </div>
       </div>
