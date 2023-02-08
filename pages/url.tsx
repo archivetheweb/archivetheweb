@@ -19,11 +19,16 @@ momentDurationFormatSetup(moment);
 
 type Data = ArchivesByURLInfo | null;
 
+interface GroupedData {
+  [k: string]: ArchiveSubmission[];
+}
+
 export default function ArchivePage() {
   const router = useRouter();
   let [urlInfo, setURL] = useState({ url: "", valid: false });
   const [data, setData] = useState({
     data: null as Data,
+    groupedData: {} as GroupedData,
     isLoading: true,
     isError: false,
   });
@@ -42,7 +47,25 @@ export default function ArchivePage() {
           let result = await contract.archivesByURL({ url: url, count: 10 });
           console.log(result.archives);
 
-          setData({ data: result.archives, isLoading: false, isError: false });
+          let groupedArchivesByDate: GroupedData = {};
+          for (let archive of result.archives.archivedInfo) {
+            let ts = archive.timestamp;
+            let dayFormatted = moment(ts * 1000).format("MMMM DD, YYYY");
+            if (!groupedArchivesByDate[dayFormatted]) {
+              groupedArchivesByDate[dayFormatted] = [archive];
+            } else {
+              groupedArchivesByDate[dayFormatted].push(archive);
+            }
+          }
+
+          console.log(groupedArchivesByDate);
+
+          setData({
+            data: result.archives,
+            groupedData: groupedArchivesByDate,
+            isLoading: false,
+            isError: false,
+          });
         } catch (e) {
           console.error(e);
         }
@@ -102,40 +125,38 @@ export default function ArchivePage() {
                   </div>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 ">
-                  <div className="flex flex-col gap-4  border border-extralightgrey rounded">
-                    <div className="text-lg p-6 border-b border-extralightgrey">
+                  {/* <div className="flex flex-col gap-4  border border-extralightgrey rounded"> */}
+                  {/* <div className="text-lg p-6 border-b border-extralightgrey">
                       {" "}
                       Next Snapshot
                     </div>
                     <div className="p-6 ">
-                      {/* // TODO change this */}
-                      {/* <Countdown date={data.data.next_snapshot_timestamp * 1000} /> */}
+                      <Countdown date={data.data.next_snapshot_timestamp * 1000} />
                     </div>
                     <div className="p-6 ">
-                      {/* // TODO change this */}
-                      {/* {data.data.snapshot_remaining} snapshots remaining */}
-                    </div>
-                    <div className="px-6 pb-6">
-                      <button
-                        // disabled={!urlInfo.valid}
-                        onClick={() => {
-                          router.push(`/save?url=https://${urlInfo.url}`);
-                        }}
-                        style={{ borderRadius: "5px" }}
-                        className="btn w-full bg-[#C0ACFF] text-[#FFFFFF] normal-case hover:bg-funpurple/75 border-none h-16 "
-                      >
+                      {data.data.snapshot_remaining} snapshots remaining
+                    </div> */}
+                  <div className=" pb-6">
+                    <button
+                      // disabled={!urlInfo.valid}
+                      onClick={() => {
+                        router.push(`/save?url=https://${urlInfo.url}`);
+                      }}
+                      style={{ borderRadius: "5px" }}
+                      className="btn w-full bg-[#C0ACFF] text-[#FFFFFF] normal-case hover:bg-funpurple/75 border-none h-16 "
+                    >
+                      <div className="flex justify-center items-center gap-2">
                         <div className="flex justify-center items-center gap-2">
-                          <div className="flex justify-center items-center gap-2">
-                            <Image
-                              src={saveWhite}
-                              alt="save"
-                              style={{ width: "24px", height: "24px" }}
-                            />{" "}
-                            <div className="">Take snapshot now</div>
-                          </div>
+                          <Image
+                            src={saveWhite}
+                            alt="save"
+                            style={{ width: "24px", height: "24px" }}
+                          />{" "}
+                          <div className="">Take snapshot now</div>
                         </div>
-                      </button>
-                    </div>
+                      </div>
+                    </button>
+                    {/* </div> */}
                   </div>
 
                   {/* TODO ADD THIS BACK */}
@@ -233,37 +254,38 @@ export default function ArchivePage() {
                 </thead>
                 <tbody>
                   {data &&
-                    data.data?.archivedInfo.map(
-                      (x: ArchiveSubmission, i: number) => {
+                    Object.keys(data.groupedData).map(
+                      (x: string, i: number) => {
                         return (
                           <tr key={i}>
                             <td>
                               <Link
                                 className="underline"
-                                href={`/replay?url=${data.data?.url}&ts=${x.timestamp}`}
+                                href={`/replay?url=${data.data?.url}&ts=${data.groupedData[x][0].timestamp}`}
                               >
-                                {moment(x.timestamp * 1000).format(
-                                  "MMMM DD, YYYY"
-                                )}
+                                {x}
                               </Link>
                             </td>
                             <td>
-                              {moment(x.timestamp * 1000).format("hh:mm:ss")}
+                              {moment(
+                                data.groupedData[x][0].timestamp * 1000
+                              ).format("hh:mm:ss")}
                             </td>
-                            <td>1</td>
+                            <td>{data.groupedData[x].length}</td>
                             <td>
                               <Link
                                 target={"_blank"}
                                 className="underline"
-                                href={`https://viewblock.io/arweave/address/${x.uploaderAddress}`}
+                                href={`https://viewblock.io/arweave/address/${data.groupedData[x][0].uploaderAddress}`}
                               >
-                                {x.uploaderAddress}
+                                {data.groupedData[x][0].uploaderAddress}
                               </Link>
                             </td>
                             <td>
                               <button className="underline">
                                 <div className="flex gap-2 items-center">
                                   Expand all snapshots{" "}
+                                  {/* TODO add table here */}
                                   <Image
                                     src={chevron}
                                     alt="chevron"
