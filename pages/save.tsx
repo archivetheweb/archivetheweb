@@ -40,14 +40,11 @@ export default function Save() {
   const router = useRouter();
 
   let [urlInfo, setURL] = useState({ url: "", valid: false });
-  let [frequency, setFrequency] = useState("");
-  let [duration, setDuration] = useState(Duration.Hours);
   let [terms, setTerms] = useState(Terms.None);
   let [steps, setSteps] = useState(Steps.WebsiteInput);
-  let [hasBeenArchived, setHasBeenArchived] = useState(true);
   let [canMoveToPayment, setCanMoveToPayment] = useState(false);
-  const { contract, warp, getLocalAddress } = useContext(ConnectorContext);
   let [toastMessage, setToastMessage] = useState(<></>);
+  const { contract, getLocalAddress } = useContext(ConnectorContext);
 
   useEffect(() => {
     let url = router.query.url as string;
@@ -55,25 +52,6 @@ export default function Save() {
       setURL({ url: url, valid: true });
     }
   }, [router, router.query.url]);
-
-  useEffect(() => {
-    if (urlInfo.valid) {
-      (async () => {
-        try {
-          console.log(getDomain(urlInfo.url));
-          console.log(await contract.currentState());
-          let res = await contract.archivesByURL({
-            url: getDomain(urlInfo.url),
-            count: 1,
-          });
-          setHasBeenArchived(res.archives.archivedInfo.length > 0);
-        } catch (e) {
-          console.error(e);
-          setHasBeenArchived(false);
-        }
-      })();
-    }
-  }, [urlInfo]);
 
   useEffect(() => {
     if (
@@ -105,12 +83,6 @@ export default function Save() {
         setSteps(Steps.Payment);
         break;
     }
-  };
-
-  const handleSetDuration = (duration: number) => {
-    setDuration(duration);
-    // check if hours or days
-    // min 1 per day for now
   };
 
   const handleContinueToPayment = async () => {
@@ -147,16 +119,23 @@ export default function Save() {
   let toRender = <></>;
   switch (steps) {
     case Steps.WebsiteInput:
-      toRender = websiteInput(urlInfo, handleURL, handleNext, hasBeenArchived);
+      toRender = (
+        <WebsiteInput
+          urlInfo={urlInfo}
+          handleURL={handleURL}
+          handleNext={handleNext}
+        />
+      );
       break;
     case Steps.ArchivingOptions:
-      toRender = archivingOptions(
-        urlInfo,
-        terms,
-        handleNext,
-        canMoveToPayment,
-        setTerms,
-        handleSetDuration
+      toRender = (
+        <ArchivingOptions
+          urlInfo={urlInfo}
+          terms={terms}
+          handleNext={handleNext}
+          canMoveToPayment={canMoveToPayment}
+          setTerms={setTerms}
+        />
       );
   }
   return (
@@ -168,12 +147,27 @@ export default function Save() {
   );
 }
 
-let websiteInput = (
-  urlInfo: any,
-  handleURL: any,
-  handleNext: any,
-  hasBeenArchived: boolean
-) => {
+function WebsiteInput(props: any) {
+  let [hasBeenArchived, setHasBeenArchived] = useState(true);
+  const { contract } = useContext(ConnectorContext);
+
+  useEffect(() => {
+    if (props.urlInfo.valid) {
+      (async () => {
+        try {
+          let res = await contract.archivesByURL({
+            url: getDomain(props.urlInfo.url),
+            count: 1,
+          });
+          setHasBeenArchived(res.archives.archivedInfo.length > 0);
+        } catch (e) {
+          console.error(e);
+          setHasBeenArchived(false);
+        }
+      })();
+    }
+  }, [props.urlInfo]);
+
   return (
     <div className="grid grid-cols-1 border border-[#00000033] rounded-lg mx-8 md:mx-16 lg:mx-32 mt-16 pt-16 px-16 shadow-xl ">
       <div className="text-3xl">Archive a website</div>
@@ -185,14 +179,14 @@ let websiteInput = (
         <div className="form-control w-full">
           <input
             type="text"
-            value={urlInfo.url}
-            onChange={handleURL}
+            value={props.urlInfo.url}
+            onChange={props.handleURL}
             placeholder="Enter a website to save (ex. www.bbc.com)"
             className="input input-bordered w-full h-16"
           />
         </div>
 
-        {urlInfo.valid && !hasBeenArchived ? (
+        {props.urlInfo.valid && !hasBeenArchived ? (
           <div
             className="w-full flex items-center justify-center rounded-lg p-6 text-lg  text-[#FFFFFF]"
             style={{
@@ -207,18 +201,18 @@ let websiteInput = (
           <></>
         )}
 
-        {urlInfo.valid ? (
+        {props.urlInfo.valid ? (
           <div className="flex flex-col items-center  aspect-video  w-full">
             <CustomIframe
               className="h-5/6 shadow-2xl w-full "
-              src={urlInfo.url}
+              src={props.urlInfo.url}
             >
               <></>
             </CustomIframe>
             <div className="flex justify-end w-full pt-2">
               <Link
                 className="link link-primary link-hover"
-                href={urlInfo.url}
+                href={props.urlInfo.url}
                 target="_blank"
               >
                 Open website ↗{" "}
@@ -246,8 +240,8 @@ let websiteInput = (
         </div>
         <button
           className="btn w-full btn-primary bg-funpurple hover:bg-funmidpurple h-16"
-          disabled={!urlInfo.valid}
-          onClick={handleNext}
+          disabled={!props.urlInfo.valid}
+          onClick={props.handleNext}
         >
           Next
         </button>
@@ -255,15 +249,37 @@ let websiteInput = (
       </div>
     </div>
   );
-};
-let archivingOptions = (
-  urlInfo: any,
-  terms: Terms,
-  handleNext: any,
-  canMoveToPayment: boolean,
-  setTerms: any,
-  handleSetDuration: any
-) => {
+}
+
+function ArchivingOptions(props: any) {
+  let [frequency, setFrequency] = useState(0);
+  let [numberOfSnapshots, setNumberOfSnapshots] = useState(0);
+  let [duration, setDuration] = useState("");
+  let [timeIncrement, setTimeIncrement] = useState(Duration.Hours);
+
+  useEffect(() => {
+    let timeMultiplier = 24;
+    switch (+timeIncrement) {
+      case Duration.Hours:
+        timeMultiplier = 1;
+        break;
+      case Duration.Days:
+        timeMultiplier = 24;
+        break;
+    }
+
+    let duration = Math.floor(
+      ((frequency * timeMultiplier) / 24) * numberOfSnapshots
+    );
+    if (duration === 0) {
+      setDuration(
+        `~ ${Math.floor(frequency * timeMultiplier * numberOfSnapshots)} hours`
+      );
+    } else {
+      setDuration(`~ ${duration} days`);
+    }
+  }, [numberOfSnapshots, frequency, timeIncrement]);
+
   return (
     <div className="grid grid-cols-1 border border-[#00000033] rounded-lg mx-8 md:mx-16 lg:mx-32 mt-16 pt-16 px-16 shadow-xl gap-3 ">
       <div className="text-3xl">Set up Archiving</div>
@@ -273,7 +289,7 @@ let archivingOptions = (
           alt="monitor"
           style={{ width: "24px", height: "24px" }}
         />
-        {urlInfo.url}
+        {props.urlInfo.url}
       </div>
       <div className="flex w-full p-4 items-center gap-1 bg-funlightpurple rounded-lg">
         <Image
@@ -287,9 +303,9 @@ let archivingOptions = (
       <div className="flex flex-col justify-center content-center items-center w-full gap-4">
         <div className="btn-group  grid grid-cols-2 w-full border rounded-lg  shadow-xl border-[#00000033]">
           <button
-            onClick={() => setTerms(Terms.Once)}
+            onClick={() => props.setTerms(Terms.Once)}
             className={
-              terms === Terms.Once
+              props.terms === Terms.Once
                 ? "p-4 border-r border-[#00000033] bg-funpurple"
                 : "p-4 border-r border-[#00000033]"
             }
@@ -297,9 +313,9 @@ let archivingOptions = (
             <b>One Time</b>
           </button>
           <button
-            onClick={() => setTerms(Terms.Multiple)}
+            onClick={() => props.setTerms(Terms.Multiple)}
             className={
-              terms === Terms.Multiple
+              props.terms === Terms.Multiple
                 ? "p-4 border-r border-[#00000033] bg-funpurple"
                 : "p-4 border-r border-[#00000033]"
             }
@@ -308,7 +324,7 @@ let archivingOptions = (
           </button>
         </div>
 
-        {terms === Terms.Multiple && (
+        {props.terms === Terms.Multiple && (
           <>
             <div className="flex form-control w-full flex-row gap-4   ">
               <div className="w-full">
@@ -320,6 +336,8 @@ let archivingOptions = (
                 <input
                   type="number"
                   placeholder="Enter a number"
+                  value={frequency}
+                  onChange={(e: any) => setFrequency(e.target.value)}
                   className="input input-bordered w-full h-16 "
                 />
               </div>
@@ -330,14 +348,17 @@ let archivingOptions = (
                     <br></br>
                   </span>
                 </label>
-                <select className="select select-bordered w-full  h-16">
-                  <option
-                    selected
-                    onClick={() => handleSetDuration(Duration.Hours)}
-                  >
+                <select
+                  className="select select-bordered w-full h-16"
+                  value={timeIncrement}
+                  onChange={(e: any) => {
+                    setTimeIncrement(e.target.value);
+                  }}
+                >
+                  <option key={Duration.Hours} value={Duration.Hours} selected>
                     Hours
                   </option>
-                  <option onClick={() => handleSetDuration(Duration.Days)}>
+                  <option key={Duration.Days} value={Duration.Days}>
                     Days
                   </option>
                 </select>
@@ -351,8 +372,10 @@ let archivingOptions = (
                 </label>
                 <input
                   type="number"
+                  value={numberOfSnapshots}
+                  onChange={(e: any) => setNumberOfSnapshots(e.target.value)}
                   placeholder="Enter a number"
-                  className="input input-bordered h-16 w-full  "
+                  className="input input-bordered h-16 w-full"
                 />
               </div>
               <div className="w-full">
@@ -360,8 +383,8 @@ let archivingOptions = (
                   <span className="label-text">Duration:</span>
                 </label>
                 <input
-                  type="number"
                   disabled={true}
+                  value={duration}
                   className="input input-bordered h-16 w-full "
                 />
               </div>
@@ -373,7 +396,7 @@ let archivingOptions = (
           <table className="table w-full ">
             <thead></thead>
             <tbody className="">
-              {canMoveToPayment ? (
+              {props.canMoveToPayment ? (
                 <tr className="">
                   <td className="bg-extralightgrey">Total Cost</td>
                   <td className="bg-extralightgrey">-</td>
@@ -393,8 +416,8 @@ let archivingOptions = (
         </div>
         <button
           className="btn w-full btn-primary bg-funpurple hover:bg-funmidpurple h-16"
-          onClick={handleNext}
-          disabled={!canMoveToPayment}
+          onClick={props.handleNext}
+          disabled={!props.canMoveToPayment}
         >
           Next
         </button>
@@ -402,7 +425,7 @@ let archivingOptions = (
       </div>
     </div>
   );
-};
+}
 
 let payWith = () => (
   <div>
