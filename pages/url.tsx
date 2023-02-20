@@ -8,6 +8,7 @@ import { useRouter } from "next/router";
 import { isValidUrl, shortenAddress } from "../components/utils";
 import { fetchPrice } from "../http/fetcher";
 import plus from "../public/plus.png";
+import arrowTopRight from "../public/arrow_top_right.png";
 import link from "../public/link.png";
 import saveWhite from "../public/save_white.png";
 import Countdown from "react-countdown";
@@ -130,25 +131,49 @@ export default function ArchivePage() {
             className="flex gap-2 items-center "
           >
             {total === 0 ? (
-              <Link
-                className="underline"
-                href={`/replay?url=${url}&ts=${data.timestamp}`}
-              >
-                View this snapshot
-              </Link>
+              <div className="flex items-center gap-1">
+                <Link
+                  className="underline"
+                  href={`/replay?url=${url}&ts=${data.timestamp}`}
+                  target="_blank"
+                >
+                  View this snapshot
+                </Link>
+                <Image
+                  src={arrowTopRight}
+                  alt="arrowTopRight"
+                  style={{
+                    height: "24px",
+                    width: "24px",
+                  }}
+                />
+              </div>
             ) : getTimeKey(data.timestamp) === toExpand ? (
-              <div>Collapse all snapshots</div>
+              <div className="flex items-center underline">
+                Collapse all snapshots{" "}
+                <Image
+                  src={chevron}
+                  className="rotate-180"
+                  alt="chevron"
+                  style={{
+                    height: "24px",
+                    width: "24px",
+                  }}
+                />
+              </div>
             ) : (
-              <div>Expand all snapshots</div>
+              <div className="flex items-center underline">
+                Expand all snapshots{" "}
+                <Image
+                  src={chevron}
+                  alt="chevron"
+                  style={{
+                    height: "24px",
+                    width: "24px",
+                  }}
+                />
+              </div>
             )}
-            <Image
-              src={chevron}
-              alt="chevron"
-              style={{
-                height: "24px",
-                width: "24px",
-              }}
-            />
           </div>
         </td>
       </tr>
