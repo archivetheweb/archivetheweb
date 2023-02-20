@@ -17,6 +17,11 @@ export default function Explore() {
     isLoading: true,
     isError: false,
   });
+  enum Sorted {
+    Title = 1,
+    Timestamp = 2,
+  }
+  const [sorting, setSorting] = useState(Sorted.Title);
 
   useEffect(() => {
     (async () => {
@@ -42,6 +47,45 @@ export default function Explore() {
     });
   };
 
+  useEffect(() => {
+    if (sorting === Sorted.Timestamp) {
+      setData({
+        data: data.data.sort((a, b) => {
+          if (a.lastArchivedTimestamp > b.lastArchivedTimestamp) {
+            return -1;
+          } else if (a.lastArchivedTimestamp < b.lastArchivedTimestamp) {
+            return 1;
+          } else {
+            return 0;
+          }
+        }),
+        isLoading: false,
+        isError: false,
+      });
+    } else if (sorting === Sorted.Title) {
+      setData({
+        data: data.data.sort((a, b) => {
+          if (a.title > b.title) {
+            return 1;
+          } else if (a.title < b.title) {
+            return -1;
+          } else {
+            return 0;
+          }
+        }),
+        isLoading: false,
+        isError: false,
+      });
+    }
+  }, [sorting]);
+
+  const handleRecentlyAdded = () => {
+    if (sorting == Sorted.Timestamp) {
+      setSorting(Sorted.Title);
+    } else {
+      setSorting(Sorted.Timestamp);
+    }
+  };
   const handleClick = () => {
     if (!urlInfo.valid) {
       return;
@@ -104,7 +148,10 @@ export default function Explore() {
                 See which websites have been archived so far.{" "}
               </div>
             </div>
-            <div className="btn normal-case bg-[#FFFFFF] border-extralightgrey p-4 hover:bg-[#FFFFFF] hover:outline-none hover:border-extralightgrey justify-end text-lightgrey">
+            <div
+              onClick={() => handleRecentlyAdded()}
+              className="btn normal-case bg-[#FFFFFF] border-extralightgrey p-4 hover:bg-[#FFFFFF] hover:outline-none hover:border-extralightgrey justify-end text-lightgrey"
+            >
               Recently Added
             </div>
           </div>
@@ -136,7 +183,9 @@ export default function Explore() {
                         />
                       </figure>
                       <div className="card-body p-4">
-                        <div className="card-title text-lg">{x.title}</div>
+                        <div className="card-title text-lg">
+                          {x.title || "N/A"}
+                        </div>
                         <div className="text-lightgrey">
                           <i>{x.url}</i>
                         </div>
