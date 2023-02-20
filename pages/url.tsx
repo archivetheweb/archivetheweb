@@ -14,6 +14,7 @@ import Script from "next/script";
 import ConnectorContext from "../context/connector";
 import { ArchivesByURLInfo, ArchiveSubmission } from "../bindings/ts/View";
 import moment from "moment";
+import CustomIframe from "../components/iframe";
 const momentDurationFormatSetup = require("moment-duration-format");
 momentDurationFormatSetup(moment);
 
@@ -39,6 +40,9 @@ export default function ArchivePage() {
 
   useEffect(() => {
     let url = router.query.url as string;
+    if (!url) {
+      return;
+    }
     let valid = isValidUrl(url);
     if (url && valid) {
       setURL({ url: url, valid });
@@ -58,39 +62,55 @@ export default function ArchivePage() {
             }
           }
 
-          console.log(groupedArchivesByDate);
-
           setData({
             data: result.archives,
             groupedData: groupedArchivesByDate,
             isLoading: false,
             isError: false,
           });
-        } catch (e) {
+        } catch (e: any) {
           console.error(e);
         }
       })();
     }
     return () => {};
-  }, [router, router.query.url]);
+  }, [router.query.url]);
 
-  return data.isLoading && data.data !== null ? (
-    <div></div>
-  ) : (
+  const handleClick = () => {
+    if (!urlInfo.valid) {
+      return;
+    }
+    router.push("/save?url=" + urlInfo.url);
+  };
+
+  return (
     <Container>
       <Script strategy="beforeInteractive" src="./ui.js" />
       <div className="w-full p-16">
         <div className="grid grid-cols-1 md:grid-cols-2 gap4">
-          <div className="p-4 md:p-8">
-            <div className="flex flex-col items-center  aspect-video w-full h-full">
-              <img
-                src={`https://arweave.net/` + data.data?.screenshotTx}
-                alt={data.data?.title}
-              />
+          {data.data === null ? (
+            <div className="p-4 md:p-8">
+              <div className="flex flex-col items-center  aspect-video w-full h-full">
+                <CustomIframe
+                  className="h-full shadow-2xl w-full "
+                  src={"https://" + urlInfo.url}
+                >
+                  <></>
+                </CustomIframe>
+              </div>
             </div>
-          </div>
+          ) : (
+            <div className="p-4 md:p-8">
+              <div className="flex flex-col items-center  aspect-video w-full h-full">
+                <img
+                  src={`https://arweave.net/` + data.data?.screenshotTx}
+                  alt={data.data?.title}
+                />
+              </div>
+            </div>
+          )}
           <div className="flex flex-col gap-4 p-8">
-            {data ? (
+            {data.data !== null ? (
               <>
                 <div className="text-2xl ">{data.data?.title}</div>
                 <div className="">
@@ -103,6 +123,7 @@ export default function ArchivePage() {
                     {data.data?.url}
                   </a>
                 </div>
+
                 <div className="grid grid-cols-2 p-6 border border-extralightgrey rounded ">
                   <div className="flex flex-col">
                     <div className="text-lightgrey">Snapshots taken</div>
@@ -124,6 +145,7 @@ export default function ArchivePage() {
                     </div>
                   </div>
                 </div>
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 ">
                   {/* <div className="flex flex-col gap-4  border border-extralightgrey rounded"> */}
                   {/* <div className="text-lg p-6 border-b border-extralightgrey">
@@ -224,9 +246,9 @@ export default function ArchivePage() {
                   <div>Would you like to archive this site now?</div>
                   <button
                     // disabled={!urlInfo.valid}
-                    // onClick={handleClick}
+                    onClick={handleClick}
                     style={{ borderRadius: "5px" }}
-                    className="btn bg-[#C0ACFF] text-[#FFFFFF] normal-case hover:bg-funpurple/75 border-none h-16 "
+                    className="btn bg-[#8B66FF] text-[#FFFFFF] normal-case hover:bg-funpurple/75 border-none h-16 "
                   >
                     Archive this site
                   </button>
@@ -235,74 +257,78 @@ export default function ArchivePage() {
             )}
           </div>
         </div>
-        <div className="flex w-full ">
-          <div className="w-full">
-            <div className="border-b p-4 border border-extralightgrey ">
-              Snapshot history
-            </div>
+        {data.data !== null ? (
+          <div className="flex w-full ">
+            <div className="w-full">
+              <div className="border-b p-4 border border-extralightgrey ">
+                Snapshot history
+              </div>
 
-            <div className="overflow-x-auto">
-              <table className="table w-full">
-                <thead>
-                  <tr className="">
-                    <th className="bg-[#FFFFFF] py-1">Date</th>
-                    <th className="bg-[#FFFFFF] py-1">Time</th>
-                    <th className="bg-[#FFFFFF] py-1"># Snapshots</th>
-                    <th className="bg-[#FFFFFF] py-1">Uploader</th>
-                    <th className="bg-[#FFFFFF] py-1">Expand all</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {data &&
-                    Object.keys(data.groupedData).map(
-                      (x: string, i: number) => {
-                        return (
-                          <tr key={i}>
-                            <td>
-                              <Link
-                                className="underline"
-                                href={`/replay?url=${data.data?.url}&ts=${data.groupedData[x][0].timestamp}`}
-                              >
-                                {x}
-                              </Link>
-                            </td>
-                            <td>
-                              {moment(
-                                data.groupedData[x][0].timestamp * 1000
-                              ).format("hh:mm:ss")}
-                            </td>
-                            <td>{data.groupedData[x].length}</td>
-                            <td>
-                              <Link
-                                target={"_blank"}
-                                className="underline"
-                                href={`https://viewblock.io/arweave/address/${data.groupedData[x][0].uploaderAddress}`}
-                              >
-                                {data.groupedData[x][0].uploaderAddress}
-                              </Link>
-                            </td>
-                            <td>
-                              <button className="underline">
-                                <div className="flex gap-2 items-center">
-                                  Expand all snapshots{" "}
-                                  {/* TODO add table here */}
-                                  <Image
-                                    src={chevron}
-                                    alt="chevron"
-                                    style={{ height: "24px", width: "24px" }}
-                                  />
-                                </div>
-                              </button>
-                            </td>
-                          </tr>
-                        );
-                      }
-                    )}
-                </tbody>
-              </table>
+              <div className="overflow-x-auto">
+                <table className="table w-full">
+                  <thead>
+                    <tr className="">
+                      <th className="bg-[#FFFFFF] py-1">Date</th>
+                      <th className="bg-[#FFFFFF] py-1">Time</th>
+                      <th className="bg-[#FFFFFF] py-1"># Snapshots</th>
+                      <th className="bg-[#FFFFFF] py-1">Uploader</th>
+                      <th className="bg-[#FFFFFF] py-1">Expand all</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {data &&
+                      Object.keys(data.groupedData).map(
+                        (x: string, i: number) => {
+                          return (
+                            <tr key={i}>
+                              <td>
+                                <Link
+                                  className="underline"
+                                  href={`/replay?url=${data.data?.url}&ts=${data.groupedData[x][0].timestamp}`}
+                                >
+                                  {x}
+                                </Link>
+                              </td>
+                              <td>
+                                {moment(
+                                  data.groupedData[x][0].timestamp * 1000
+                                ).format("hh:mm:ss")}
+                              </td>
+                              <td>{data.groupedData[x].length}</td>
+                              <td>
+                                <Link
+                                  target={"_blank"}
+                                  className="underline"
+                                  href={`https://viewblock.io/arweave/address/${data.groupedData[x][0].uploaderAddress}`}
+                                >
+                                  {data.groupedData[x][0].uploaderAddress}
+                                </Link>
+                              </td>
+                              <td>
+                                <button className="underline">
+                                  <div className="flex gap-2 items-center">
+                                    Expand all snapshots{" "}
+                                    {/* TODO add table here */}
+                                    <Image
+                                      src={chevron}
+                                      alt="chevron"
+                                      style={{ height: "24px", width: "24px" }}
+                                    />
+                                  </div>
+                                </button>
+                              </td>
+                            </tr>
+                          );
+                        }
+                      )}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
-        </div>
+        ) : (
+          <></>
+        )}
       </div>
     </Container>
   );

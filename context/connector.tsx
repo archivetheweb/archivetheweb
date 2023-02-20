@@ -25,6 +25,7 @@ export const emptyState = {
 };
 
 (async () => {
+  // @ts-nocheck
   if (!localStorage.getItem("arweave_wallet")) {
     console.debug("generating new wallet");
     let { jwk: wallet, address: walletAddress } = await warp.generateWallet();

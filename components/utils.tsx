@@ -9,8 +9,9 @@ export const isValidUrl = (url: string) => {
 
     // then we regexp
     var urlPattern = new RegExp(
-      "^(https?://)?(([da-z.-]+).)?([da-z.-]+).([a-z.]{2,6})([/w .-]*)*/?$"
+      /^https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&\/=]*)$/
     );
+
     return urlPattern.test(u);
   } catch (e) {
     console.error(e);

@@ -86,12 +86,12 @@ export default function Explore() {
       setSorting(Sorted.Timestamp);
     }
   };
-  const handleClick = () => {
+  const handleSearch = () => {
     if (!urlInfo.valid) {
       return;
     }
 
-    router.push(`/explore?url=${urlInfo.url}`);
+    router.push(`/url?url=${urlInfo.url}`);
   };
 
   {
@@ -122,7 +122,7 @@ export default function Explore() {
                   value={urlInfo.url}
                   onChange={handleURL}
                   onKeyDown={(e) =>
-                    e.key === "Enter" && urlInfo.valid && handleClick()
+                    e.key === "Enter" && urlInfo.valid && handleSearch()
                   }
                   placeholder="Search for archived websites by URL (ex. www.bbc.com)"
                   className="input input-bordered w-full h-16 shadow-lg text-[#000000]"
@@ -130,7 +130,7 @@ export default function Explore() {
 
                 <button
                   disabled={!urlInfo.valid}
-                  onClick={handleClick}
+                  onClick={handleSearch}
                   style={{ borderRadius: "5px" }}
                   className="btn bg-[#C0ACFF] text-[#FFFFFF] normal-case hover:bg-funpurple/75 border-none h-16 "
                 >
