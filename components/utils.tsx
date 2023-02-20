@@ -19,6 +19,14 @@ export const isValidUrl = (url: string) => {
   }
 };
 
+export const shortenAddress = (address: String) => {
+  return (
+    address.substring(0, 5) +
+    "..." +
+    address.substring(address.length - 6, address.length - 1)
+  );
+};
+
 export const isValidUrlStrict = (url: string) => {
   try {
     return isURL(url);

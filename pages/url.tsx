@@ -5,9 +5,10 @@ import { Container } from "../components/container";
 import info from "../public/info.png";
 import chevron from "../public/chevron.png";
 import { useRouter } from "next/router";
-import { isValidUrl } from "../components/utils";
+import { isValidUrl, shortenAddress } from "../components/utils";
 import { fetchPrice } from "../http/fetcher";
 import plus from "../public/plus.png";
+import link from "../public/link.png";
 import saveWhite from "../public/save_white.png";
 import Countdown from "react-countdown";
 import Script from "next/script";
@@ -33,6 +34,8 @@ export default function ArchivePage() {
     isLoading: true,
     isError: false,
   });
+
+  const [toExpand, setToExpand] = useState("");
 
   let { price, isLoading } = fetchPrice();
   let [nextSnap, setNextSnap] = useState(0);
@@ -76,11 +79,80 @@ export default function ArchivePage() {
     return () => {};
   }, [router.query.url]);
 
+  const getTimeKey = (timestamp: number): string => {
+    return moment(timestamp * 1000).format("MMMM DD, YYYY");
+  };
+
   const handleClick = () => {
     if (!urlInfo.valid) {
       return;
     }
-    router.push("/save?url=" + urlInfo.url);
+    router.push("/save?url=https://" + urlInfo.url);
+  };
+
+  const createTableData = (
+    url: string,
+    data: ArchiveSubmission,
+    total: number,
+    key: number
+  ) => {
+    return (
+      <tr key={key}>
+        <td>
+          <Link
+            className="underline"
+            href={`/replay?url=${url}&ts=${data.timestamp}`}
+          >
+            {getTimeKey(data.timestamp)}
+          </Link>
+        </td>
+        <td>{moment(data.timestamp * 1000).format("hh:mm:ss")}</td>
+        <td>{total === 0 || total}</td>
+        <td>
+          <Link
+            target={"_blank"}
+            className="underline"
+            href={`https://viewblock.io/arweave/address/${data.uploaderAddress}`}
+          >
+            {shortenAddress(data.uploaderAddress)}
+          </Link>
+        </td>
+        <td>
+          <div
+            onClick={() => {
+              let t = getTimeKey(data.timestamp);
+              if (toExpand == t) {
+                setToExpand("");
+              } else {
+                setToExpand(t);
+              }
+            }}
+            className="flex gap-2 items-center "
+          >
+            {total === 0 ? (
+              <Link
+                className="underline"
+                href={`/replay?url=${url}&ts=${data.timestamp}`}
+              >
+                View this snapshot
+              </Link>
+            ) : getTimeKey(data.timestamp) === toExpand ? (
+              <div>Collapse all snapshots</div>
+            ) : (
+              <div>Expand all snapshots</div>
+            )}
+            <Image
+              src={chevron}
+              alt="chevron"
+              style={{
+                height: "24px",
+                width: "24px",
+              }}
+            />
+          </div>
+        </td>
+      </tr>
+    );
   };
 
   return (
@@ -221,9 +293,14 @@ export default function ArchivePage() {
             ) : (
               <>
                 <div className="text-2xl ">{urlInfo.url}</div>
-                <div className="">
+                <div className="flex align-items gap-1 items-center">
+                  <Image
+                    style={{ width: "14px", height: "14px" }}
+                    src={link}
+                    alt={"link"}
+                  />
                   <a
-                    href={urlInfo.url}
+                    href={"https://" + urlInfo.url}
                     target="_blank"
                     rel="noreferrer"
                     className="underline "
@@ -258,66 +335,53 @@ export default function ArchivePage() {
           </div>
         </div>
         {data.data !== null ? (
-          <div className="flex w-full ">
+          <div className="flex w-full  ">
             <div className="w-full">
               <div className="border-b p-4 border border-extralightgrey ">
                 Snapshot history
               </div>
 
               <div className="overflow-x-auto">
-                <table className="table w-full">
+                <table className="table w-full border-b border border-extralightgrey">
                   <thead>
-                    <tr className="">
-                      <th className="bg-[#FFFFFF] py-1">Date</th>
-                      <th className="bg-[#FFFFFF] py-1">Time</th>
-                      <th className="bg-[#FFFFFF] py-1"># Snapshots</th>
-                      <th className="bg-[#FFFFFF] py-1">Uploader</th>
-                      <th className="bg-[#FFFFFF] py-1">Expand all</th>
+                    <tr className="border-b p-4 border border-extralightgrey">
+                      <th className="bg-[#FFFFFF] text-lightgrey py-1">Date</th>
+                      <th className="bg-[#FFFFFF] text-lightgrey py-1">Time</th>
+                      <th className="bg-[#FFFFFF] text-lightgrey py-1">
+                        # Snapshots
+                      </th>
+                      <th className="bg-[#FFFFFF] text-lightgrey py-1">
+                        Uploader
+                      </th>
+                      <th className="bg-[#FFFFFF] text-lightgrey py-1">
+                        Expand all
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
                     {data &&
                       Object.keys(data.groupedData).map(
                         (x: string, i: number) => {
+                          // determine if we need to expand more here
+                          console.log("x is" + x);
                           return (
-                            <tr key={i}>
-                              <td>
-                                <Link
-                                  className="underline"
-                                  href={`/replay?url=${data.data?.url}&ts=${data.groupedData[x][0].timestamp}`}
-                                >
-                                  {x}
-                                </Link>
-                              </td>
-                              <td>
-                                {moment(
-                                  data.groupedData[x][0].timestamp * 1000
-                                ).format("hh:mm:ss")}
-                              </td>
-                              <td>{data.groupedData[x].length}</td>
-                              <td>
-                                <Link
-                                  target={"_blank"}
-                                  className="underline"
-                                  href={`https://viewblock.io/arweave/address/${data.groupedData[x][0].uploaderAddress}`}
-                                >
-                                  {data.groupedData[x][0].uploaderAddress}
-                                </Link>
-                              </td>
-                              <td>
-                                <button className="underline">
-                                  <div className="flex gap-2 items-center">
-                                    Expand all snapshots{" "}
-                                    {/* TODO add table here */}
-                                    <Image
-                                      src={chevron}
-                                      alt="chevron"
-                                      style={{ height: "24px", width: "24px" }}
-                                    />
-                                  </div>
-                                </button>
-                              </td>
-                            </tr>
+                            <>
+                              {createTableData(
+                                data.data?.url || "",
+                                data.groupedData[x][0],
+                                data.groupedData[x].length,
+                                i
+                              )}
+                              {toExpand === x &&
+                                data.groupedData[x].map((elem, index) => {
+                                  return createTableData(
+                                    data.data?.url || "",
+                                    elem,
+                                    0,
+                                    index
+                                  );
+                                })}
+                            </>
                           );
                         }
                       )}
