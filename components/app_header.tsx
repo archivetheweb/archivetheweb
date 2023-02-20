@@ -80,16 +80,6 @@ export const AppHeader = () => {
         </div>
       </div>
       <div className="flex justify-end content-center items-center">
-        <div className="pr-4 tooltip tooltip-bottom" data-tip="Save a website">
-          <Link className="flex gap-2" href={"/save"}>
-            <Image
-              src={saveWebsite}
-              alt="logo"
-              style={{ height: "24px", width: "24px" }}
-            />
-            <div className="hidden lg:inline">Save a Website</div>
-          </Link>
-        </div>
         <div
           className="pr-4 tooltip tooltip-bottom"
           data-tip="Archive all websites"
@@ -103,8 +93,16 @@ export const AppHeader = () => {
             <div className="hidden lg:inline">All archived websites</div>
           </Link>
         </div>
-        <button className="btn btn-primary bg-funpurple hover:bg-funmidpurple">
-          Connect Wallet
+        <button
+          onClick={() => router.push("/save")}
+          className="flex gap-2 btn btn-primary bg-funpurple hover:bg-funmidpurple"
+        >
+          <Image
+            src={saveWebsite}
+            alt="logo"
+            style={{ height: "24px", width: "24px" }}
+          />
+          Archive a website
         </button>
       </div>
     </div>

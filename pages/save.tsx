@@ -453,9 +453,9 @@ let payWith = () => (
 const faq = () => (
   <div className="grid grid-cols-1 mx-8 md:mx-16 lg:mx-32 mt-4 py-8 gap-3 ">
     <div className="border border-[#00000033] rounded-lg">
-      <div tabIndex={0} className="collapse">
+      <div tabIndex={0} className="collapse collapse-arrow">
         <input type="checkbox" />
-        <div className="collapse-title flex items-center gap-2">
+        <div className="collapse-title flex items-center gap-2 ">
           <Image
             src={questionMark}
             alt="info 1"
@@ -474,7 +474,7 @@ const faq = () => (
       </div>
     </div>
     <div className="border border-[#00000033] rounded-lg">
-      <div tabIndex={1} className="collapse">
+      <div tabIndex={1} className="collapse collapse-arrow">
         <input type="checkbox" />
         <div className="collapse-title flex items-center gap-2">
           <Image
@@ -497,7 +497,7 @@ const faq = () => (
     </div>
     <div className="flex gap-4">
       <div className="border border-[#00000033] rounded-lg">
-        <div tabIndex={2} className="collapse">
+        <div tabIndex={2} className="collapse collapse-arrow">
           <input type="checkbox" />
           <div className="collapse-title flex items-center gap-2">
             <Image
