@@ -11,6 +11,7 @@ module.exports = {
       funpurple: "#8B66FF",
       funbrightpurple: "#80B2FF",
       funmidpurple: "#8788F8",
+      funlightpurple: "rgba(139, 102, 255, 0.1)",
       lightgrey: "#737B7D",
       extralightgrey: "rgba(0, 0, 0, 0.1)",
     },

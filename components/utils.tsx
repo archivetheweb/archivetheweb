@@ -19,6 +19,12 @@ export const isValidUrl = (url: string) => {
   }
 };
 
+export const getDomain = (url: string): string => {
+  let a = document.createElement("a");
+  a.setAttribute("href", url);
+  return a.hostname;
+};
+
 export const shortenAddress = (address: String) => {
   return (
     address.substring(0, 5) +

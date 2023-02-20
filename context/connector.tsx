@@ -10,6 +10,9 @@ type Blockchain = {
 };
 let warp = WarpFactory.forMainnet();
 
+const ARWEAVE_WALLET = "arweave_wallet";
+const ARWEAVE_ADDRESS = "arweave_address";
+
 export const emptyState = {
   address: "",
   blockchain: {
@@ -22,16 +25,33 @@ export const emptyState = {
   connect: () => {},
   warp: warp,
   contract: new AwtContract(CONTRACT, warp),
+  getLocalAddress: async () => {
+    return await getWallet();
+  },
 };
 
-(async () => {
+async function getWallet() {
+  let jwk = localStorage.getItem(ARWEAVE_WALLET);
+  let address = localStorage.getItem(ARWEAVE_ADDRESS);
+
   // @ts-nocheck
-  if (!localStorage.getItem("arweave_wallet")) {
+  if (!jwk || !address) {
     console.debug("generating new wallet");
     let { jwk: wallet, address: walletAddress } = await warp.generateWallet();
-    localStorage.setItem("arweave_wallet", JSON.stringify(wallet));
-    localStorage.setItem("arweave_address", walletAddress);
+    localStorage.setItem(ARWEAVE_WALLET, JSON.stringify(wallet));
+    localStorage.setItem(ARWEAVE_ADDRESS, walletAddress);
+    jwk = JSON.stringify(wallet);
+    address = walletAddress;
   }
+
+  return {
+    jwk,
+    address,
+  };
+}
+
+(async () => {
+  await getWallet();
 })();
 const ConnectorContext = createContext(emptyState);
 
