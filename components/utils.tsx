@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
+import { TimeUnit } from "./types";
 
 // An educated guess at first
 export const AVERAGE_WEBSITE_DEPTH_1_IN_MB = 100;
 export const AVERAGE_WEBSITE_DEPTH_0_IN_MB = 5;
 export const MB = 1048576;
 
+export const UPLOADER = "2NbYHgsuI8uQcuErDsgoRUCyj9X2wZ6PBN6WTz9xyu0";
 export const isValidUrl = (url: string) => {
   try {
     let u = url.replace("www.", "");
@@ -34,7 +36,38 @@ export const getDomain = (url: string): string => {
   return a.hostname;
 };
 
+/* 
+sec  min   hour   day of month   month   day of week   year
+ 0   30   9,12,15     1,15       May-Aug  Mon,Wed,Fri  2018/2 
+*/
+export const translateToCronFrequency = (
+  value: number,
+  unit: TimeUnit
+): string => {
+  // this amounts to once a day at 0 sec 0 mins past the hour
+  let cronFrequency = "0 0 */24 * * * *";
+  if (value === 0) {
+    return cronFrequency;
+  }
+  switch (unit) {
+    case TimeUnit.Days:
+      // per day
+      cronFrequency = `0 0 0 */${value} * * *`;
+
+      break;
+    case TimeUnit.Hours:
+      // At 0 minutes past the hour, every ${value} hours
+      cronFrequency = `0 0 */${value} * * * *`;
+      break;
+  }
+
+  return cronFrequency;
+};
+
 export const shortenAddress = (address: String) => {
+  if (address.length < 12) {
+    return address;
+  }
   return (
     address.substring(0, 5) +
     "..." +

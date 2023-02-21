@@ -159,8 +159,6 @@ export default function Explore() {
             {!data.isLoading &&
               data.data
                 .filter((x) => {
-                  console.log(urlInfo);
-                  console.log(x);
                   if (urlInfo.url && urlInfo.valid) {
                     if (x.url == urlInfo.url) {
                       return true;

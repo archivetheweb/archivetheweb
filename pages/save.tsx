@@ -1,5 +1,7 @@
 import Image from "next/image";
 import arweave from "../public/ar.png";
+import floppy from "../public/floppy.webp";
+import dance from "../public/success_dance.gif";
 import mm from "../public/mm.png";
 import wc from "../public/wc.png";
 import React, { useContext, useEffect, useState } from "react";
@@ -13,7 +15,10 @@ import {
   isValidUrlStrict,
   MB,
   pluralize,
+  shortenAddress,
   Toast,
+  translateToCronFrequency,
+  UPLOADER,
 } from "../components/utils";
 import { useRouter } from "next/router";
 import infinity from "../public/infinity.png";
@@ -23,38 +28,17 @@ import ConnectorContext from "../context/connector";
 import { fetchPrice } from "../http/fetcher";
 import { Faq } from "../components/FAQ";
 import { Paywith } from "../components/PayWith";
-
-enum Steps {
-  WebsiteInput,
-  ArchivingOptions,
-  Payment,
-}
-
-enum Terms {
-  None,
-  Once,
-  Multiple,
-}
-
-enum Duration {
-  Hours,
-  Days,
-}
-
-enum Depth {
-  PageOnly,
-  PageAndLinks,
-}
+import { Depth, TimeUnit, ModalStep, Steps, Terms } from "../components/types";
 
 export default function Save() {
   const router = useRouter();
 
-  let [urlInfo, setURL] = useState({ url: "", valid: false });
-  let [terms, setTerms] = useState(Terms.None);
+  let [urlInfo, setURL] = useState({ url: "", valid: false, domain: "" });
+  let [terms, setTerms] = useState(Terms.Once);
   let [depth, setDepth] = useState(Depth.PageOnly);
   let [steps, setSteps] = useState(Steps.WebsiteInput);
   let [toastMessage, setToastMessage] = useState(<></>);
-  const { contract, getLocalAddress, warp } = useContext(ConnectorContext);
+  const { warp } = useContext(ConnectorContext);
   const priceInfo = fetchPrice();
   const [arweaveFeeForMB, setarweaveFeeForMB] = useState("");
   let [costPerSnapshot, setCostPerSnapshot] = useState({
@@ -89,7 +73,7 @@ export default function Save() {
   useEffect(() => {
     let url = router.query.url as string;
     if (url && isValidUrl(url)) {
-      setURL({ url: url, valid: true });
+      setURL({ url: url, valid: true, domain: getDomain(url) });
     }
   }, [router, router.query.url]);
 
@@ -99,6 +83,7 @@ export default function Save() {
     setURL({
       url: e.currentTarget.value,
       valid,
+      domain: getDomain(e.currentTarget.value),
     });
   };
 
@@ -113,42 +98,6 @@ export default function Save() {
     }
   };
 
-  const handleConfirmArchiving = async (frequency: number, depth: number) => {
-    // open the modal for the payment
-    // for now just submit an archive request
-    if (!urlInfo.valid) {
-      // todo throw error
-      setToastMessage(
-        <span>
-          <b>URL</b> is not valid
-        </span>
-      );
-      return;
-    }
-
-    console.log("here");
-    // figure out frequency
-
-    // get
-
-    // let { jwk: wallet, address: walletAddress } = await getLocalAddress();
-
-    // let c = await contract.connect(JSON.parse(wallet));
-    // // this allows us to do a "once" only archive
-    // let res = await c.requestArchiving({
-    //   startTimestamp: Math.floor(Date.now() / 1000),
-    //   // give an hour
-    //   endTimestamp: Math.floor(Date.now() / 1000) + 3600,
-    //   // freq is everyday, will never reach
-    //   frequency: "0 0 */24 * * *",
-    //   options: {
-    //     depth: 0,
-    //     domainOnly: false,
-    //     urls: [urlInfo.url],
-    //   },
-    //   uploaderAddress: "2NbYHgsuI8uQcuErDsgoRUCyj9X2wZ6PBN6WTz9xyu0",
-    // });
-  };
   let toRender = <></>;
   switch (steps) {
     case Steps.WebsiteInput:
@@ -172,7 +121,6 @@ export default function Save() {
           depth={depth}
           setDepth={setDepth}
           setToastMessage={setToastMessage}
-          handleConfirmArchiving={handleConfirmArchiving}
         />
       );
   }
@@ -291,28 +239,23 @@ function WebsiteInput(props: any) {
   );
 }
 
-enum ModalStep {
-  Connect,
-  Review,
-  Pending,
-  Success,
-  Failure,
-}
-
 function ArchivingOptions(props: any) {
   let [frequency, setFrequency] = useState({
     value: 0,
-    timeIncrement: Duration.Hours,
+    unit: TimeUnit.Hours,
   });
   let [numberOfSnapshots, setNumberOfSnapshots] = useState(0);
   let [duration, setDuration] = useState({
     value: "",
-    timeIncrement: Duration.Days,
+    unit: TimeUnit.Days,
   });
   let [totalCost, setTotalCost] = useState("");
   let [canMoveToPayment, setCanMoveToPayment] = useState(false);
-  let [openModal, setOpenModal] = useState(true);
+  let [openModal, setOpenModal] = useState(false);
   let [modalStep, setModalStep] = useState(ModalStep.Connect);
+  const { contract, getLocalAddress, warp } = useContext(ConnectorContext);
+  let [interactionTxID, setInteractionTxID] = useState("");
+  let [paymentTxID, setPaymentTxID] = useState("");
 
   useEffect(() => {
     if (props.urlInfo.valid && props.terms === Terms.Once) {
@@ -345,12 +288,11 @@ function ArchivingOptions(props: any) {
 
   useEffect(() => {
     let timeMultiplier = 24;
-    console.log("hi");
-    switch (frequency.timeIncrement) {
-      case Duration.Hours:
+    switch (frequency.unit) {
+      case TimeUnit.Hours:
         timeMultiplier = 1;
         break;
-      case Duration.Days:
+      case TimeUnit.Days:
         timeMultiplier = 24;
         break;
     }
@@ -363,10 +305,10 @@ function ArchivingOptions(props: any) {
         value: `${Math.floor(
           frequency.value * timeMultiplier * numberOfSnapshots
         )}`,
-        timeIncrement: Duration.Hours,
+        unit: TimeUnit.Hours,
       });
     } else {
-      setDuration({ value: `${duration}`, timeIncrement: Duration.Days });
+      setDuration({ value: `${duration}`, unit: TimeUnit.Days });
     }
   }, [numberOfSnapshots, frequency]);
 
@@ -394,6 +336,69 @@ function ArchivingOptions(props: any) {
     setModalStep(ModalStep.Review);
   };
 
+  const handleConfirmArchiving = async () => {
+    if (!props.urlInfo.valid) {
+      props.setToastMessage(
+        <span>
+          <b>URL</b> is not valid
+        </span>
+      );
+      console.error("url is not valid");
+      return;
+    }
+
+    try {
+      let cronFreq = translateToCronFrequency(frequency.value, frequency.unit);
+
+      let costInWinston =
+        numberOfSnapshots === 0
+          ? +props.costPerSnapshot.winston
+          : numberOfSnapshots * +props.costPerSnapshot.winston;
+
+      let c = await contract.connect("use_wallet");
+      let res = await c.requestArchiving({
+        startTimestamp: Math.floor(Date.now() / 1000),
+        // TODO calculate this
+        endTimestamp: Math.floor(Date.now() / 1000) + 3600,
+        frequency: cronFreq,
+        options: {
+          depth: props.depth,
+          domainOnly: false,
+          urls: [props.urlInfo.url],
+        },
+        uploaderAddress: UPLOADER,
+      });
+
+      let interactionTxID = res?.originalTxId || "";
+      setInteractionTxID(interactionTxID);
+      console.debug("Interaction result", res);
+
+      let tx = await warp.arweave.createTransaction({
+        target: UPLOADER,
+        quantity: costInWinston.toString(),
+      });
+      tx.addTag("App-Name", "atw_frontend");
+      tx.addTag("App-Name", "0.0.1_beta");
+      tx.addTag("Reason", "archive_payment");
+      tx.addTag("Interaction-Id", interactionTxID);
+      await warp.arweave.transactions.sign(tx);
+      let paymentTxStatus = await warp.arweave.transactions.post(tx);
+      console.debug("Payment status", paymentTxStatus);
+
+      let paymentTxID = tx.id;
+      setPaymentTxID(paymentTxID);
+      console.log("Payment ID", paymentTxID);
+
+      setModalStep(ModalStep.Pending);
+
+      setTimeout(() => {
+        setModalStep(ModalStep.Success);
+      }, 2000);
+    } catch (e: any) {
+      console.error("Could not confirm archiving", e);
+    }
+  };
+
   let modalToRender = <></>;
   switch (modalStep) {
     case ModalStep.Connect:
@@ -410,13 +415,19 @@ function ArchivingOptions(props: any) {
           totalCost={totalCost}
           depth={props.depth}
           frequency={frequency}
-          handleConfirmArchiving={props.handleConfirmArchiving}
+          handleConfirmArchiving={handleConfirmArchiving}
         />
       );
       break;
     case ModalStep.Pending:
+      modalToRender = (
+        <PendingModal urlInfo={props.urlInfo} txID={paymentTxID} />
+      );
       break;
     case ModalStep.Success:
+      modalToRender = (
+        <SuccessModal txID={paymentTxID} urlInfo={props.urlInfo} />
+      );
       break;
     case ModalStep.Failure:
       break;
@@ -504,7 +515,7 @@ function ArchivingOptions(props: any) {
                   onChange={(e: any) =>
                     setFrequency({
                       value: e.target.value,
-                      timeIncrement: frequency.timeIncrement,
+                      unit: frequency.unit,
                     })
                   }
                   className="input input-bordered w-full h-16 "
@@ -519,18 +530,18 @@ function ArchivingOptions(props: any) {
                 </label>
                 <select
                   className="select select-bordered w-full h-16"
-                  value={frequency.timeIncrement}
+                  value={frequency.unit}
                   onChange={(e: any) => {
                     setFrequency({
                       value: frequency.value,
-                      timeIncrement: +e.target.value,
+                      unit: +e.target.value,
                     });
                   }}
                 >
-                  <option key={Duration.Hours} value={Duration.Hours} selected>
+                  <option key={TimeUnit.Hours} value={TimeUnit.Hours} selected>
                     Hours
                   </option>
-                  <option key={Duration.Days} value={Duration.Days}>
+                  <option key={TimeUnit.Days} value={TimeUnit.Days}>
                     Days
                   </option>
                 </select>
@@ -557,7 +568,7 @@ function ArchivingOptions(props: any) {
                 <input
                   disabled={true}
                   value={`~ ${duration.value} ${
-                    duration.timeIncrement === Duration.Days
+                    duration.unit === TimeUnit.Days
                       ? pluralize("day", +duration.value)
                       : pluralize("hour", +duration.value)
                   }`}
@@ -599,7 +610,7 @@ function ArchivingOptions(props: any) {
           onClick={() => setOpenModal(true)}
           disabled={
             !canMoveToPayment ||
-            (+duration.value > 3 && duration.timeIncrement === Duration.Days)
+            (+duration.value > 3 && duration.unit === TimeUnit.Days)
           }
         >
           Next
@@ -701,7 +712,7 @@ function ReviewModal(props: any) {
                 ? "Once"
                 : `Every ${props.frequency.value}
              ${
-               props.frequency.timeIncrement === Duration.Hours
+               props.frequency.unit === TimeUnit.Hours
                  ? pluralize("hour", props.frequency.value)
                  : pluralize("day", props.frequency.value)
              }`}
@@ -714,6 +725,16 @@ function ReviewModal(props: any) {
             <b>{props.numberOfSnapshots === 0 ? 1 : props.numberOfSnapshots}</b>
           </div>
         </div>
+        <div className="flex items-center justify-between p-2">
+          <div>Depth</div>
+          <div>
+            <b>
+              {props.depth === Depth.PageOnly
+                ? "Page only"
+                : "Page and links included"}
+            </b>
+          </div>
+        </div>
         {props.numberOfSnapshots === 0 ? (
           <></>
         ) : (
@@ -724,7 +745,7 @@ function ReviewModal(props: any) {
                 ~
                 {props.duration.value +
                   " " +
-                  (props.duration.timeIncrement === Duration.Days
+                  (props.duration.unit === TimeUnit.Days
                     ? pluralize("day", props.duration.value)
                     : pluralize("hour", props.duration.value))}
               </b>
@@ -742,9 +763,7 @@ function ReviewModal(props: any) {
 
       <button
         className="btn w-full btn-primary bg-funpurple hover:bg-funmidpurple h-16 normal-case"
-        onClick={() =>
-          props.handleConfirmArchiving(props.frequency, props.depth)
-        }
+        onClick={props.handleConfirmArchiving}
       >
         Confirm Archiving
       </button>
@@ -752,6 +771,63 @@ function ReviewModal(props: any) {
         The actual duration and final total number of snapshots may vary
         depending on the market value of AR.
       </div>
+    </div>
+  );
+}
+
+function PendingModal(props: any) {
+  return (
+    <div className="flex flex-col  gap-4">
+      <div className="font-bold text-xl">Archiving in progress</div>
+
+      <div className="flex flex-col gap-4 items-center">
+        <Image src={floppy} alt="floppy" />
+      </div>
+      <div>
+        Contacting the permaweb to set up archiving of{" "}
+        <b>{props.urlInfo.url}</b>. This may take some time.
+      </div>
+      <div className="flex items-center justify-between p-4 border border-[#00000033] rounded-lg bg-extralightgrey">
+        <div>Tx ID</div>
+        <Link
+          className="text-[#1F94EE]"
+          href={"https://viewblock.io/arweave/tx/" + props.txID}
+        >
+          <b>{shortenAddress(props.txID)}</b>
+        </Link>
+      </div>
+    </div>
+  );
+}
+
+function SuccessModal(props: any) {
+  const router = useRouter();
+
+  return (
+    <div className="flex flex-col  gap-4">
+      <div className="font-bold text-xl">Success!</div>
+
+      <div className="flex flex-col gap-4 items-center">
+        <Image src={dance} alt="dance" />
+      </div>
+      <div>Thank you for contributing to Archive the Web!</div>
+      <div className="flex items-center justify-between p-4 border border-[#00000033] rounded-lg bg-extralightgrey">
+        <div>Tx ID</div>
+        <Link
+          className="text-[#1F94EE]"
+          href={"https://viewblock.io/arweave/tx/" + props.txID}
+        >
+          <b>{shortenAddress(props.txID)}</b>
+        </Link>
+      </div>
+      <button
+        className="btn w-full btn-primary bg-funpurple hover:bg-funmidpurple h-16 normal-case"
+        onClick={() => {
+          router.push(`/url?url=${props.urlInfo.domain}`);
+        }}
+      >
+        Go to {props.urlInfo.url} Archive
+      </button>
     </div>
   );
 }

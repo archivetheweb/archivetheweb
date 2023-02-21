@@ -53,7 +53,6 @@ export default function ArchivePage() {
       (async () => {
         try {
           let result = await contract.archivesByURL({ url: url, count: 10 });
-          console.log(result.archives);
 
           let groupedArchivesByDate: GroupedData = {};
           for (let archive of result.archives.archivedInfo) {
@@ -388,7 +387,6 @@ export default function ArchivePage() {
                       Object.keys(data.groupedData).map(
                         (x: string, i: number) => {
                           // determine if we need to expand more here
-                          console.log("x is" + x);
                           return (
                             <>
                               {createTableData(

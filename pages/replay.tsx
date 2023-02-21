@@ -25,8 +25,6 @@ export default function Replay() {
     let url = router.query.url as string;
     let ts = router.query.ts as string;
 
-    console.log(ts, url);
-
     if (url && ts && isValidUrl(url)) {
       setURL({ url, valid: true, ts });
 
@@ -36,7 +34,6 @@ export default function Replay() {
             url: url,
             timestamp: +ts,
           });
-          console.log(result.archive);
 
           setData({ data: result.archive, isLoading: false, isError: false });
         } catch (e) {
