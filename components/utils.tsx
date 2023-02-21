@@ -1,5 +1,10 @@
 import { useEffect, useState } from "react";
 
+// An educated guess at first
+export const AVERAGE_WEBSITE_DEPTH_1_IN_MB = 100;
+export const AVERAGE_WEBSITE_DEPTH_0_IN_MB = 5;
+export const MB = 1048576;
+
 export const isValidUrl = (url: string) => {
   try {
     let u = url.replace("www.", "");

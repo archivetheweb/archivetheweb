@@ -6,9 +6,12 @@ import React, { useContext, useEffect, useState } from "react";
 import Link from "next/link";
 import { Container } from "../components/container";
 import {
+  AVERAGE_WEBSITE_DEPTH_0_IN_MB,
+  AVERAGE_WEBSITE_DEPTH_1_IN_MB,
   getDomain,
   isValidUrl,
   isValidUrlStrict,
+  MB,
   Toast,
 } from "../components/utils";
 import { useRouter } from "next/router";
@@ -18,6 +21,7 @@ import monitor from "../public/monitor.png";
 import questionMark from "../public/question_mark.png";
 import CustomIframe from "../components/iframe";
 import ConnectorContext from "../context/connector";
+import { fetchPrice } from "../http/fetcher";
 
 enum Steps {
   WebsiteInput,
@@ -36,15 +40,30 @@ enum Duration {
   Days,
 }
 
+enum Depth {
+  PageOnly,
+  PageAndLinks,
+}
+
 export default function Save() {
   const router = useRouter();
 
   let [urlInfo, setURL] = useState({ url: "", valid: false });
   let [terms, setTerms] = useState(Terms.None);
+  let [depth, setDepth] = useState(Depth.PageOnly);
   let [steps, setSteps] = useState(Steps.WebsiteInput);
   let [canMoveToPayment, setCanMoveToPayment] = useState(false);
   let [toastMessage, setToastMessage] = useState(<></>);
-  const { contract, getLocalAddress } = useContext(ConnectorContext);
+  const { contract, getLocalAddress, warp } = useContext(ConnectorContext);
+  const priceInfo = fetchPrice();
+  const [arweaveFeeForMB, setarweaveFeeForMB] = useState("");
+
+  useEffect(() => {
+    (async () => {
+      let res = await warp.arweave.transactions.getPrice(MB);
+      setarweaveFeeForMB(res);
+    })();
+  }, []);
 
   useEffect(() => {
     let url = router.query.url as string;
@@ -124,6 +143,8 @@ export default function Save() {
           urlInfo={urlInfo}
           handleURL={handleURL}
           handleNext={handleNext}
+          priceInfo={priceInfo}
+          arweaveFeeForMB={arweaveFeeForMB}
         />
       );
       break;
@@ -135,6 +156,10 @@ export default function Save() {
           handleNext={handleNext}
           canMoveToPayment={canMoveToPayment}
           setTerms={setTerms}
+          priceInfo={priceInfo}
+          arweaveFeeForMB={arweaveFeeForMB}
+          depth={depth}
+          setDepth={setDepth}
         />
       );
   }
@@ -232,7 +257,17 @@ function WebsiteInput(props: any) {
                   Average price per snapshot
                 </td>
                 <td className=" font-bold rounded-tr-lg bg-extralightgrey text-right m-4 ">
-                  USD $0.007
+                  {props.priceInfo.isLoading && props.arweaveFeeForMB !== ""
+                    ? ""
+                    : "USD $" +
+                      Math.round(
+                        (+props.priceInfo.price *
+                          +props.arweaveFeeForMB *
+                          AVERAGE_WEBSITE_DEPTH_0_IN_MB *
+                          1000) /
+                          1000000000000
+                      ) /
+                        1000}
                 </td>
               </tr>
             </tbody>
@@ -245,7 +280,7 @@ function WebsiteInput(props: any) {
         >
           Next
         </button>
-        {payWith()}
+        <Paywith />
       </div>
     </div>
   );
@@ -321,6 +356,28 @@ function ArchivingOptions(props: any) {
             }
           >
             <b>Long Term</b>
+          </button>
+        </div>
+        <div className="btn-group  grid grid-cols-2 w-full border rounded-lg  shadow-xl border-[#00000033]">
+          <button
+            onClick={() => props.setDepth(Depth.PageOnly)}
+            className={
+              props.depth === Depth.PageOnly
+                ? "p-4 border-r border-[#00000033] bg-funpurple"
+                : "p-4 border-r border-[#00000033]"
+            }
+          >
+            <b>This page only</b>
+          </button>
+          <button
+            onClick={() => props.setDepth(Depth.PageAndLinks)}
+            className={
+              props.depth === Depth.PageAndLinks
+                ? "p-4 border-r border-[#00000033] bg-funpurple"
+                : "p-4 border-r border-[#00000033]"
+            }
+          >
+            <b>This page and linked pages</b>
           </button>
         </div>
 
@@ -407,7 +464,19 @@ function ArchivingOptions(props: any) {
                     Average price per snapshot
                   </td>
                   <td className=" font-bold rounded-tr-lg bg-extralightgrey text-right m-4 ">
-                    USD $0.007
+                    {props.priceInfo.isLoading && props.arweaveFeeForMB !== ""
+                      ? ""
+                      : "USD $" +
+                        Math.round(
+                          (+props.priceInfo.price *
+                            +props.arweaveFeeForMB *
+                            (props.depth === Depth.PageOnly
+                              ? AVERAGE_WEBSITE_DEPTH_0_IN_MB
+                              : AVERAGE_WEBSITE_DEPTH_1_IN_MB) *
+                            1000) /
+                            1000000000000
+                        ) /
+                          1000}
                   </td>
                 </tr>
               )}
@@ -421,35 +490,36 @@ function ArchivingOptions(props: any) {
         >
           Next
         </button>
-        {payWith()}
+        <Paywith />
       </div>
     </div>
   );
 }
 
-let payWith = () => (
-  <div>
-    <div className="flex gap-2 p-8 grayscale">
-      Pay for archiving with
-      <Image
-        src={arweave}
-        style={{ height: "25px", width: "25px" }}
-        alt="arweave"
-      />
-      <Image
-        src={mm}
-        style={{ height: "25px", width: "25px" }}
-        alt="metamask"
-      />
-      <Image
-        src={wc}
-        style={{ height: "23px", width: "41px" }}
-        alt="walletconnect"
-      />
+function Paywith() {
+  return (
+    <div>
+      <div className="flex gap-2 p-8 grayscale">
+        Pay for archiving with
+        <Image
+          src={arweave}
+          style={{ height: "25px", width: "25px" }}
+          alt="arweave"
+        />
+        <Image
+          src={mm}
+          style={{ height: "25px", width: "25px" }}
+          alt="metamask"
+        />
+        <Image
+          src={wc}
+          style={{ height: "23px", width: "41px" }}
+          alt="walletconnect"
+        />
+      </div>
     </div>
-  </div>
-);
-
+  );
+}
 const faq = () => (
   <div className="grid grid-cols-1 mx-8 md:mx-16 lg:mx-32 mt-4 py-8 gap-3 ">
     <div className="border border-[#00000033] rounded-lg">
