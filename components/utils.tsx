@@ -24,6 +24,10 @@ export const isValidUrl = (url: string) => {
   }
 };
 
+export const pluralize = (word: string, amount: number): string => {
+  return `${word}${amount > 1 ? "s" : ""}`;
+};
+
 export const getDomain = (url: string): string => {
   let a = document.createElement("a");
   a.setAttribute("href", url);

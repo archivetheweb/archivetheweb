@@ -12,16 +12,17 @@ import {
   isValidUrl,
   isValidUrlStrict,
   MB,
+  pluralize,
   Toast,
 } from "../components/utils";
 import { useRouter } from "next/router";
-import info from "../public/info.png";
 import infinity from "../public/infinity.png";
 import monitor from "../public/monitor.png";
-import questionMark from "../public/question_mark.png";
 import CustomIframe from "../components/iframe";
 import ConnectorContext from "../context/connector";
 import { fetchPrice } from "../http/fetcher";
+import { Faq } from "../components/FAQ";
+import { Paywith } from "../components/PayWith";
 
 enum Steps {
   WebsiteInput,
@@ -56,24 +57,27 @@ export default function Save() {
   const { contract, getLocalAddress, warp } = useContext(ConnectorContext);
   const priceInfo = fetchPrice();
   const [arweaveFeeForMB, setarweaveFeeForMB] = useState("");
-  let [costPerSnapshot, setCostPerSnapshot] = useState("");
+  let [costPerSnapshot, setCostPerSnapshot] = useState({
+    usd: "",
+    winston: "",
+  });
 
   useEffect(() => {
     if (!priceInfo.isLoading && arweaveFeeForMB !== "") {
+      let priceInAr =
+        +arweaveFeeForMB *
+        (depth === Depth.PageOnly
+          ? AVERAGE_WEBSITE_DEPTH_0_IN_MB
+          : AVERAGE_WEBSITE_DEPTH_1_IN_MB);
       let pricePerSnapshot =
-        Math.round(
-          (+priceInfo.price *
-            +arweaveFeeForMB *
-            (depth === Depth.PageOnly
-              ? AVERAGE_WEBSITE_DEPTH_0_IN_MB
-              : AVERAGE_WEBSITE_DEPTH_1_IN_MB) *
-            1000) /
-            1000000000000
-        ) / 1000;
-
-      setCostPerSnapshot(pricePerSnapshot + "");
+        Math.round((+priceInfo.price * priceInAr * 1000) / 1000000000000) /
+        1000;
+      setCostPerSnapshot({
+        usd: pricePerSnapshot.toString(),
+        winston: priceInAr.toString(),
+      });
     }
-  }, [priceInfo, arweaveFeeForMB, depth]);
+  }, [priceInfo.price, arweaveFeeForMB, depth]);
 
   useEffect(() => {
     (async () => {
@@ -109,7 +113,7 @@ export default function Save() {
     }
   };
 
-  const handleContinueToPayment = async () => {
+  const handleConfirmArchiving = async (frequency: number, depth: number) => {
     // open the modal for the payment
     // for now just submit an archive request
     if (!urlInfo.valid) {
@@ -122,23 +126,28 @@ export default function Save() {
       return;
     }
 
-    let { jwk: wallet, address: walletAddress } = await getLocalAddress();
+    console.log("here");
+    // figure out frequency
 
-    let c = await contract.connect(JSON.parse(wallet));
-    // this allows us to do a "once" only archive
-    let res = await c.requestArchiving({
-      startTimestamp: Math.floor(Date.now() / 1000),
-      // give an hour
-      endTimestamp: Math.floor(Date.now() / 1000) + 3600,
-      // freq is everyday, will never reach
-      frequency: "0 0 */24 * * *",
-      options: {
-        depth: 0,
-        domainOnly: false,
-        urls: [urlInfo.url],
-      },
-      uploaderAddress: "2NbYHgsuI8uQcuErDsgoRUCyj9X2wZ6PBN6WTz9xyu0",
-    });
+    // get
+
+    // let { jwk: wallet, address: walletAddress } = await getLocalAddress();
+
+    // let c = await contract.connect(JSON.parse(wallet));
+    // // this allows us to do a "once" only archive
+    // let res = await c.requestArchiving({
+    //   startTimestamp: Math.floor(Date.now() / 1000),
+    //   // give an hour
+    //   endTimestamp: Math.floor(Date.now() / 1000) + 3600,
+    //   // freq is everyday, will never reach
+    //   frequency: "0 0 */24 * * *",
+    //   options: {
+    //     depth: 0,
+    //     domainOnly: false,
+    //     urls: [urlInfo.url],
+    //   },
+    //   uploaderAddress: "2NbYHgsuI8uQcuErDsgoRUCyj9X2wZ6PBN6WTz9xyu0",
+    // });
   };
   let toRender = <></>;
   switch (steps) {
@@ -162,6 +171,8 @@ export default function Save() {
           costPerSnapshot={costPerSnapshot}
           depth={depth}
           setDepth={setDepth}
+          setToastMessage={setToastMessage}
+          handleConfirmArchiving={handleConfirmArchiving}
         />
       );
   }
@@ -259,16 +270,16 @@ function WebsiteInput(props: any) {
                   Average price per snapshot
                 </td>
                 <td className=" font-bold rounded-tr-lg bg-extralightgrey text-right m-4 ">
-                  {props.costPerSnapshot === ""
+                  {props.costPerSnapshot.usd === ""
                     ? ""
-                    : "USD $" + props.costPerSnapshot}
+                    : "USD $" + props.costPerSnapshot.usd}
                 </td>
               </tr>
             </tbody>
           </table>
         </div>
         <button
-          className="btn w-full btn-primary bg-funpurple hover:bg-funmidpurple h-16"
+          className="btn w-full btn-primary bg-funpurple hover:bg-funmidpurple h-16 normal-case"
           disabled={!props.urlInfo.valid}
           onClick={props.handleNext}
         >
@@ -280,13 +291,28 @@ function WebsiteInput(props: any) {
   );
 }
 
+enum ModalStep {
+  Connect,
+  Review,
+  Pending,
+  Success,
+  Failure,
+}
+
 function ArchivingOptions(props: any) {
-  let [frequency, setFrequency] = useState(0);
+  let [frequency, setFrequency] = useState({
+    value: 0,
+    timeIncrement: Duration.Hours,
+  });
   let [numberOfSnapshots, setNumberOfSnapshots] = useState(0);
-  let [duration, setDuration] = useState("");
+  let [duration, setDuration] = useState({
+    value: "",
+    timeIncrement: Duration.Days,
+  });
   let [totalCost, setTotalCost] = useState("");
-  let [timeIncrement, setTimeIncrement] = useState(Duration.Hours);
   let [canMoveToPayment, setCanMoveToPayment] = useState(false);
+  let [openModal, setOpenModal] = useState(true);
+  let [modalStep, setModalStep] = useState(ModalStep.Connect);
 
   useEffect(() => {
     if (props.urlInfo.valid && props.terms === Terms.Once) {
@@ -294,7 +320,7 @@ function ArchivingOptions(props: any) {
     } else if (
       props.urlInfo.valid &&
       props.terms === Terms.Multiple &&
-      duration != ""
+      duration.value != ""
     ) {
       setCanMoveToPayment(true);
     } else {
@@ -305,19 +331,22 @@ function ArchivingOptions(props: any) {
   useEffect(() => {
     switch (props.terms) {
       case Terms.Once:
-        setTotalCost(props.costPerSnapshot);
+        setTotalCost(props.costPerSnapshot.usd);
         break;
       case Terms.Multiple:
         setTotalCost(
-          Math.floor(+props.costPerSnapshot * numberOfSnapshots * 1000) / 1000 +
-            ""
+          (
+            Math.floor(+props.costPerSnapshot.usd * numberOfSnapshots * 1000) /
+            1000
+          ).toString()
         );
     }
   }, [props.terms, props.costPerSnapshot, numberOfSnapshots]);
 
   useEffect(() => {
     let timeMultiplier = 24;
-    switch (+timeIncrement) {
+    console.log("hi");
+    switch (frequency.timeIncrement) {
       case Duration.Hours:
         timeMultiplier = 1;
         break;
@@ -327,16 +356,71 @@ function ArchivingOptions(props: any) {
     }
 
     let duration = Math.floor(
-      ((frequency * timeMultiplier) / 24) * numberOfSnapshots
+      ((frequency.value * timeMultiplier) / 24) * numberOfSnapshots
     );
     if (duration === 0) {
-      setDuration(
-        `~ ${Math.floor(frequency * timeMultiplier * numberOfSnapshots)} hours`
-      );
+      setDuration({
+        value: `${Math.floor(
+          frequency.value * timeMultiplier * numberOfSnapshots
+        )}`,
+        timeIncrement: Duration.Hours,
+      });
     } else {
-      setDuration(`~ ${duration} days`);
+      setDuration({ value: `${duration}`, timeIncrement: Duration.Days });
     }
-  }, [numberOfSnapshots, frequency, timeIncrement]);
+  }, [numberOfSnapshots, frequency]);
+
+  const handleConnectArweave = async () => {
+    if (!window.arweaveWallet) {
+      props.setToastMessage(
+        <div>No Arweave Wallet injected into the page</div>
+      );
+      return;
+    }
+
+    let arweaveWallet = window.arweaveWallet;
+
+    try {
+      let res = await arweaveWallet.connect([
+        "ACCESS_ADDRESS",
+        "SIGN_TRANSACTION",
+        "DISPATCH",
+      ]);
+    } catch (e) {
+      console.error("did not allow the connection " + e);
+      props.setToastMessage(<div>Connection to Arweave wallet refused</div>);
+    }
+    // we move on to the next step in the modal
+    setModalStep(ModalStep.Review);
+  };
+
+  let modalToRender = <></>;
+  switch (modalStep) {
+    case ModalStep.Connect:
+      modalToRender = (
+        <ConnectModal handleConnectArweave={handleConnectArweave} />
+      );
+      break;
+    case ModalStep.Review:
+      modalToRender = (
+        <ReviewModal
+          urlInfo={props.urlInfo}
+          duration={duration}
+          numberOfSnapshots={numberOfSnapshots}
+          totalCost={totalCost}
+          depth={props.depth}
+          frequency={frequency}
+          handleConfirmArchiving={props.handleConfirmArchiving}
+        />
+      );
+      break;
+    case ModalStep.Pending:
+      break;
+    case ModalStep.Success:
+      break;
+    case ModalStep.Failure:
+      break;
+  }
 
   return (
     <div className="grid grid-cols-1 border border-[#00000033] rounded-lg mx-8 md:mx-16 lg:mx-32 mt-16 pt-16 px-16 shadow-xl gap-3 ">
@@ -416,8 +500,13 @@ function ArchivingOptions(props: any) {
                 <input
                   type="number"
                   placeholder="Enter a number"
-                  value={frequency}
-                  onChange={(e: any) => setFrequency(e.target.value)}
+                  value={frequency.value}
+                  onChange={(e: any) =>
+                    setFrequency({
+                      value: e.target.value,
+                      timeIncrement: frequency.timeIncrement,
+                    })
+                  }
                   className="input input-bordered w-full h-16 "
                 />
               </div>
@@ -430,9 +519,12 @@ function ArchivingOptions(props: any) {
                 </label>
                 <select
                   className="select select-bordered w-full h-16"
-                  value={timeIncrement}
+                  value={frequency.timeIncrement}
                   onChange={(e: any) => {
-                    setTimeIncrement(e.target.value);
+                    setFrequency({
+                      value: frequency.value,
+                      timeIncrement: +e.target.value,
+                    });
                   }}
                 >
                   <option key={Duration.Hours} value={Duration.Hours} selected>
@@ -464,7 +556,11 @@ function ArchivingOptions(props: any) {
                 </label>
                 <input
                   disabled={true}
-                  value={duration}
+                  value={`~ ${duration.value} ${
+                    duration.timeIncrement === Duration.Days
+                      ? pluralize("day", +duration.value)
+                      : pluralize("hour", +duration.value)
+                  }`}
                   className="input input-bordered h-16 w-full "
                 />
               </div>
@@ -489,9 +585,9 @@ function ArchivingOptions(props: any) {
                     Average price per snapshot
                   </td>
                   <td className=" font-bold rounded-tr-lg bg-extralightgrey text-right m-4 ">
-                    {props.costPerSnapshot === ""
+                    {props.costPerSnapshot.usd === ""
                       ? ""
-                      : "USD $" + props.costPerSnapshot}
+                      : "USD $" + props.costPerSnapshot.usd}
                   </td>
                 </tr>
               )}
@@ -500,109 +596,161 @@ function ArchivingOptions(props: any) {
         </div>
         <button
           className="btn w-full btn-primary bg-funpurple hover:bg-funmidpurple h-16"
-          onClick={props.handleNext}
-          disabled={!canMoveToPayment}
+          onClick={() => setOpenModal(true)}
+          disabled={
+            !canMoveToPayment ||
+            (+duration.value > 3 && duration.timeIncrement === Duration.Days)
+          }
         >
           Next
         </button>
         <Paywith />
       </div>
+
+      <div
+        className={
+          `modal modal-bottom sm:modal-middle ` +
+          (openModal ? `modal-open` : "")
+        }
+      >
+        <div className="modal-box relative p-8 ">
+          <label
+            htmlFor="payment-modal"
+            onClick={() => setOpenModal(false)}
+            className="btn btn-sm btn-ghost absolute right-2 top-2"
+          >
+            X
+          </label>
+          {modalToRender}
+        </div>
+      </div>
     </div>
   );
 }
 
-function Paywith() {
+function ConnectModal(props: any) {
   return (
     <div>
-      <div className="flex gap-2 p-8 grayscale">
-        Pay for archiving with
-        <Image
-          src={arweave}
-          style={{ height: "25px", width: "25px" }}
-          alt="arweave"
-        />
-        <Image
-          src={mm}
-          style={{ height: "25px", width: "25px" }}
-          alt="metamask"
-        />
-        <Image
-          src={wc}
-          style={{ height: "23px", width: "41px" }}
-          alt="walletconnect"
-        />
+      <div className="font-bold text-xl">Connect a wallet</div>
+      <p className="py-4 text-sm">
+        Connecting a wallet to Archive the Web is our version of signing in to
+        the service. Your wallet is your account and payment method.
+      </p>
+      <div className="flex flex-col gap-4">
+        <button
+          onClick={props.handleConnectArweave}
+          className="flex gap-4 items-center p-4 bg-extralightgrey rounded-lg hover:bg-funpurple hover:text-[#FFFFFF] "
+        >
+          <Image
+            src={arweave}
+            style={{ height: "25px", width: "25px" }}
+            alt="arweave"
+          />
+          <div>
+            <b>Arweave</b>
+          </div>
+        </button>
+        <button
+          disabled
+          className="flex gap-4 items-center p-4 bg-extralightgrey rounded-lg hover:bg-funpurple hover:text-[#FFFFFF] "
+        >
+          <Image
+            src={mm}
+            style={{ height: "25px", width: "25px" }}
+            alt="metamask"
+          />
+          <div>
+            <b>Metamask</b> (coming soon)
+          </div>
+        </button>
+        <button
+          disabled
+          className="flex gap-4 items-center p-4 bg-extralightgrey rounded-lg hover:bg-funpurple  hover:text-[#FFFFFF] "
+        >
+          <Image
+            src={wc}
+            style={{ height: "17px", width: "25px" }}
+            alt="walletconnect"
+          />
+          <div>
+            <b>WalletConnect</b> (coming soon)
+          </div>
+        </button>
       </div>
     </div>
   );
 }
-function Faq() {
+
+function ReviewModal(props: any) {
   return (
-    <div className="grid grid-cols-1 mx-8 md:mx-16 lg:mx-32 mt-4 py-8 gap-3 ">
-      <div className="border border-[#00000033] rounded-lg">
-        <div tabIndex={0} className="collapse collapse-arrow">
-          <input type="checkbox" />
-          <div className="collapse-title flex items-center gap-2 ">
-            <Image
-              src={questionMark}
-              alt="info 1"
-              style={{ width: "18px", height: "18px" }}
-            />
-            <span className="text-funpurple font-bold ">
-              Why do I need to pay to save a website?{" "}
-            </span>{" "}
-          </div>
-          <div className="collapse-content">
-            All website snapshots are saved on Arweave, a permanent data storage
-            protocol. A small fee is sent to the network to pay data storers to
-            add data to the network and keep it for 200+ years. Archive the Web
-            does not take a fee. Learn more here.
+    <div className="flex flex-col gap-4">
+      <div className="font-bold text-xl">Confirm Archiving</div>
+
+      <div className="flex flex-col gap-4 border border-[#00000033] rounded-lg">
+        <div className="flex items-center justify-between p-2">
+          <div>URL</div>
+          <div>
+            <b>{props.urlInfo.url}</b>
           </div>
         </div>
-      </div>
-      <div className="border border-[#00000033] rounded-lg">
-        <div tabIndex={1} className="collapse collapse-arrow">
-          <input type="checkbox" />
-          <div className="collapse-title flex items-center gap-2">
-            <Image
-              src={questionMark}
-              alt="info 2"
-              style={{ width: "18px", height: "18px" }}
-            />
-            <span className="text-funpurple font-bold ">
-              What payment methods are accepted?{" "}
-            </span>{" "}
-          </div>
-          <div className="collapse-content">
-            To archive on Arweave, the payment must be made in their native
-            currency, a token called “AR.” You can think of this as a digital
-            currency like Bitcoin and Ethereum. With Archive the Web, you can
-            pay for archiving with AR, ETH and ERC-20 tokens on different
-            blockchains (i.e. Polygon, Arbitrum, etc.).
+        <div className="flex items-center justify-between p-2">
+          <div>Snapshot frequency</div>
+          <div>
+            <b>
+              {props.frequency.value === 0
+                ? "Once"
+                : `Every ${props.frequency.value}
+             ${
+               props.frequency.timeIncrement === Duration.Hours
+                 ? pluralize("hour", props.frequency.value)
+                 : pluralize("day", props.frequency.value)
+             }`}
+            </b>
           </div>
         </div>
-      </div>
-      <div className="flex gap-4">
-        <div className="border border-[#00000033] rounded-lg">
-          <div tabIndex={2} className="collapse collapse-arrow">
-            <input type="checkbox" />
-            <div className="collapse-title flex items-center gap-2">
-              <Image
-                src={questionMark}
-                alt="info 3"
-                style={{ width: "18px", height: "18px" }}
-              />
-              <span className="text-funpurple font-bold ">
-                Is it possible to pay with credit card?{" "}
-              </span>{" "}
-            </div>
-            <div className="collapse-content">
-              Yes, you can pay for archiving with credit card. To do so, you
-              will need to use Metamask. You can buy ETH and ERC-20 tokens with
-              credit card there. You then will use the currency you purchased as
-              the final payment method.
+        <div className="flex items-center justify-between p-2">
+          <div>Total snapshots</div>
+          <div>
+            <b>{props.numberOfSnapshots === 0 ? 1 : props.numberOfSnapshots}</b>
+          </div>
+        </div>
+        {props.numberOfSnapshots === 0 ? (
+          <></>
+        ) : (
+          <div className="flex items-center justify-between p-2">
+            <div>Duration*</div>
+            <div>
+              <b>
+                ~
+                {props.duration.value +
+                  " " +
+                  (props.duration.timeIncrement === Duration.Days
+                    ? pluralize("day", props.duration.value)
+                    : pluralize("hour", props.duration.value))}
+              </b>
             </div>
           </div>
+        )}
+      </div>
+
+      <div className="flex items-center justify-between p-4 border border-[#00000033] rounded-lg bg-extralightgrey">
+        <div>Total cost</div>
+        <div>
+          <b>USD ${props.totalCost}</b>
         </div>
+      </div>
+
+      <button
+        className="btn w-full btn-primary bg-funpurple hover:bg-funmidpurple h-16 normal-case"
+        onClick={() =>
+          props.handleConfirmArchiving(props.frequency, props.depth)
+        }
+      >
+        Confirm Archiving
+      </button>
+      <div className="text-sm text-lightgrey">
+        The actual duration and final total number of snapshots may vary
+        depending on the market value of AR.
       </div>
     </div>
   );
