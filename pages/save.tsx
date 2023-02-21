@@ -52,11 +52,28 @@ export default function Save() {
   let [terms, setTerms] = useState(Terms.None);
   let [depth, setDepth] = useState(Depth.PageOnly);
   let [steps, setSteps] = useState(Steps.WebsiteInput);
-  let [canMoveToPayment, setCanMoveToPayment] = useState(false);
   let [toastMessage, setToastMessage] = useState(<></>);
   const { contract, getLocalAddress, warp } = useContext(ConnectorContext);
   const priceInfo = fetchPrice();
   const [arweaveFeeForMB, setarweaveFeeForMB] = useState("");
+  let [costPerSnapshot, setCostPerSnapshot] = useState("");
+
+  useEffect(() => {
+    if (!priceInfo.isLoading && arweaveFeeForMB !== "") {
+      let pricePerSnapshot =
+        Math.round(
+          (+priceInfo.price *
+            +arweaveFeeForMB *
+            (depth === Depth.PageOnly
+              ? AVERAGE_WEBSITE_DEPTH_0_IN_MB
+              : AVERAGE_WEBSITE_DEPTH_1_IN_MB) *
+            1000) /
+            1000000000000
+        ) / 1000;
+
+      setCostPerSnapshot(pricePerSnapshot + "");
+    }
+  }, [priceInfo, arweaveFeeForMB, depth]);
 
   useEffect(() => {
     (async () => {
@@ -71,18 +88,6 @@ export default function Save() {
       setURL({ url: url, valid: true });
     }
   }, [router, router.query.url]);
-
-  useEffect(() => {
-    if (
-      urlInfo.valid &&
-      steps == Steps.ArchivingOptions &&
-      terms === Terms.Once
-    ) {
-      setCanMoveToPayment(true);
-    } else {
-      setCanMoveToPayment(false);
-    }
-  }, [terms]);
 
   const handleURL = (e: React.FormEvent<HTMLInputElement>) => {
     let valid = isValidUrlStrict(e.currentTarget.value);
@@ -143,8 +148,7 @@ export default function Save() {
           urlInfo={urlInfo}
           handleURL={handleURL}
           handleNext={handleNext}
-          priceInfo={priceInfo}
-          arweaveFeeForMB={arweaveFeeForMB}
+          costPerSnapshot={costPerSnapshot}
         />
       );
       break;
@@ -154,10 +158,8 @@ export default function Save() {
           urlInfo={urlInfo}
           terms={terms}
           handleNext={handleNext}
-          canMoveToPayment={canMoveToPayment}
           setTerms={setTerms}
-          priceInfo={priceInfo}
-          arweaveFeeForMB={arweaveFeeForMB}
+          costPerSnapshot={costPerSnapshot}
           depth={depth}
           setDepth={setDepth}
         />
@@ -167,7 +169,7 @@ export default function Save() {
     <Container>
       <Toast message={toastMessage} severity="error" />
       {toRender}
-      {faq()}
+      <Faq />
     </Container>
   );
 }
@@ -257,17 +259,9 @@ function WebsiteInput(props: any) {
                   Average price per snapshot
                 </td>
                 <td className=" font-bold rounded-tr-lg bg-extralightgrey text-right m-4 ">
-                  {props.priceInfo.isLoading && props.arweaveFeeForMB !== ""
+                  {props.costPerSnapshot === ""
                     ? ""
-                    : "USD $" +
-                      Math.round(
-                        (+props.priceInfo.price *
-                          +props.arweaveFeeForMB *
-                          AVERAGE_WEBSITE_DEPTH_0_IN_MB *
-                          1000) /
-                          1000000000000
-                      ) /
-                        1000}
+                    : "USD $" + props.costPerSnapshot}
                 </td>
               </tr>
             </tbody>
@@ -290,7 +284,36 @@ function ArchivingOptions(props: any) {
   let [frequency, setFrequency] = useState(0);
   let [numberOfSnapshots, setNumberOfSnapshots] = useState(0);
   let [duration, setDuration] = useState("");
+  let [totalCost, setTotalCost] = useState("");
   let [timeIncrement, setTimeIncrement] = useState(Duration.Hours);
+  let [canMoveToPayment, setCanMoveToPayment] = useState(false);
+
+  useEffect(() => {
+    if (props.urlInfo.valid && props.terms === Terms.Once) {
+      setCanMoveToPayment(true);
+    } else if (
+      props.urlInfo.valid &&
+      props.terms === Terms.Multiple &&
+      duration != ""
+    ) {
+      setCanMoveToPayment(true);
+    } else {
+      setCanMoveToPayment(true);
+    }
+  }, [props.terms, props.urlInfo, duration]);
+
+  useEffect(() => {
+    switch (props.terms) {
+      case Terms.Once:
+        setTotalCost(props.costPerSnapshot);
+        break;
+      case Terms.Multiple:
+        setTotalCost(
+          Math.floor(+props.costPerSnapshot * numberOfSnapshots * 1000) / 1000 +
+            ""
+        );
+    }
+  }, [props.terms, props.costPerSnapshot, numberOfSnapshots]);
 
   useEffect(() => {
     let timeMultiplier = 24;
@@ -453,10 +476,12 @@ function ArchivingOptions(props: any) {
           <table className="table w-full ">
             <thead></thead>
             <tbody className="">
-              {props.canMoveToPayment ? (
+              {canMoveToPayment ? (
                 <tr className="">
                   <td className="bg-extralightgrey">Total Cost</td>
-                  <td className="bg-extralightgrey">-</td>
+                  <td className=" font-bold rounded-tr-lg bg-extralightgrey text-right m-4 ">
+                    {totalCost === "" ? "" : "USD $" + totalCost}
+                  </td>
                 </tr>
               ) : (
                 <tr className=" ">
@@ -464,19 +489,9 @@ function ArchivingOptions(props: any) {
                     Average price per snapshot
                   </td>
                   <td className=" font-bold rounded-tr-lg bg-extralightgrey text-right m-4 ">
-                    {props.priceInfo.isLoading && props.arweaveFeeForMB !== ""
+                    {props.costPerSnapshot === ""
                       ? ""
-                      : "USD $" +
-                        Math.round(
-                          (+props.priceInfo.price *
-                            +props.arweaveFeeForMB *
-                            (props.depth === Depth.PageOnly
-                              ? AVERAGE_WEBSITE_DEPTH_0_IN_MB
-                              : AVERAGE_WEBSITE_DEPTH_1_IN_MB) *
-                            1000) /
-                            1000000000000
-                        ) /
-                          1000}
+                      : "USD $" + props.costPerSnapshot}
                   </td>
                 </tr>
               )}
@@ -486,7 +501,7 @@ function ArchivingOptions(props: any) {
         <button
           className="btn w-full btn-primary bg-funpurple hover:bg-funmidpurple h-16"
           onClick={props.handleNext}
-          disabled={!props.canMoveToPayment}
+          disabled={!canMoveToPayment}
         >
           Next
         </button>
@@ -520,73 +535,75 @@ function Paywith() {
     </div>
   );
 }
-const faq = () => (
-  <div className="grid grid-cols-1 mx-8 md:mx-16 lg:mx-32 mt-4 py-8 gap-3 ">
-    <div className="border border-[#00000033] rounded-lg">
-      <div tabIndex={0} className="collapse collapse-arrow">
-        <input type="checkbox" />
-        <div className="collapse-title flex items-center gap-2 ">
-          <Image
-            src={questionMark}
-            alt="info 1"
-            style={{ width: "18px", height: "18px" }}
-          />
-          <span className="text-funpurple font-bold ">
-            Why do I need to pay to save a website?{" "}
-          </span>{" "}
-        </div>
-        <div className="collapse-content">
-          All website snapshots are saved on Arweave, a permanent data storage
-          protocol. A small fee is sent to the network to pay data storers to
-          add data to the network and keep it for 200+ years. Archive the Web
-          does not take a fee. Learn more here.
-        </div>
-      </div>
-    </div>
-    <div className="border border-[#00000033] rounded-lg">
-      <div tabIndex={1} className="collapse collapse-arrow">
-        <input type="checkbox" />
-        <div className="collapse-title flex items-center gap-2">
-          <Image
-            src={questionMark}
-            alt="info 2"
-            style={{ width: "18px", height: "18px" }}
-          />
-          <span className="text-funpurple font-bold ">
-            What payment methods are accepted?{" "}
-          </span>{" "}
-        </div>
-        <div className="collapse-content">
-          To archive on Arweave, the payment must be made in their native
-          currency, a token called “AR.” You can think of this as a digital
-          currency like Bitcoin and Ethereum. With Archive the Web, you can pay
-          for archiving with AR, ETH and ERC-20 tokens on different blockchains
-          (i.e. Polygon, Arbitrum, etc.).
-        </div>
-      </div>
-    </div>
-    <div className="flex gap-4">
+function Faq() {
+  return (
+    <div className="grid grid-cols-1 mx-8 md:mx-16 lg:mx-32 mt-4 py-8 gap-3 ">
       <div className="border border-[#00000033] rounded-lg">
-        <div tabIndex={2} className="collapse collapse-arrow">
+        <div tabIndex={0} className="collapse collapse-arrow">
+          <input type="checkbox" />
+          <div className="collapse-title flex items-center gap-2 ">
+            <Image
+              src={questionMark}
+              alt="info 1"
+              style={{ width: "18px", height: "18px" }}
+            />
+            <span className="text-funpurple font-bold ">
+              Why do I need to pay to save a website?{" "}
+            </span>{" "}
+          </div>
+          <div className="collapse-content">
+            All website snapshots are saved on Arweave, a permanent data storage
+            protocol. A small fee is sent to the network to pay data storers to
+            add data to the network and keep it for 200+ years. Archive the Web
+            does not take a fee. Learn more here.
+          </div>
+        </div>
+      </div>
+      <div className="border border-[#00000033] rounded-lg">
+        <div tabIndex={1} className="collapse collapse-arrow">
           <input type="checkbox" />
           <div className="collapse-title flex items-center gap-2">
             <Image
               src={questionMark}
-              alt="info 3"
+              alt="info 2"
               style={{ width: "18px", height: "18px" }}
             />
             <span className="text-funpurple font-bold ">
-              Is it possible to pay with credit card?{" "}
+              What payment methods are accepted?{" "}
             </span>{" "}
           </div>
           <div className="collapse-content">
-            Yes, you can pay for archiving with credit card. To do so, you will
-            need to use Metamask. You can buy ETH and ERC-20 tokens with credit
-            card there. You then will use the currency you purchased as the
-            final payment method.
+            To archive on Arweave, the payment must be made in their native
+            currency, a token called “AR.” You can think of this as a digital
+            currency like Bitcoin and Ethereum. With Archive the Web, you can
+            pay for archiving with AR, ETH and ERC-20 tokens on different
+            blockchains (i.e. Polygon, Arbitrum, etc.).
+          </div>
+        </div>
+      </div>
+      <div className="flex gap-4">
+        <div className="border border-[#00000033] rounded-lg">
+          <div tabIndex={2} className="collapse collapse-arrow">
+            <input type="checkbox" />
+            <div className="collapse-title flex items-center gap-2">
+              <Image
+                src={questionMark}
+                alt="info 3"
+                style={{ width: "18px", height: "18px" }}
+              />
+              <span className="text-funpurple font-bold ">
+                Is it possible to pay with credit card?{" "}
+              </span>{" "}
+            </div>
+            <div className="collapse-content">
+              Yes, you can pay for archiving with credit card. To do so, you
+              will need to use Metamask. You can buy ETH and ERC-20 tokens with
+              credit card there. You then will use the currency you purchased as
+              the final payment method.
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-);
+  );
+}
