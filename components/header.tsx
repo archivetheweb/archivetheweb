@@ -35,7 +35,7 @@ export const Header: React.FC<any> = (props) => {
   return (
     <div
       className={
-        "grid grid-cols-1 justify-center content-center items-center md:grid-cols-3 pt-4 w-full " +
+        "grid grid-cols-2 justify-center content-center items-center md:grid-cols-3 pt-4 w-full " +
         props.className
       }
       style={{ color: "rgba(0, 0, 0, 0.6)" }}
@@ -136,7 +136,7 @@ export const Header: React.FC<any> = (props) => {
         <button
           onClick={() => router.push("/save")}
           style={{ borderRadius: "5px" }}
-          className="hidden md:inline btn bg-funpurple normal-case  text-[#FFFFFF] hover:bg-funpurple/75 border-none"
+          className=" btn bg-funpurple normal-case  text-[#FFFFFF] hover:bg-funpurple/75 border-none"
         >
           Save a Website
         </button>

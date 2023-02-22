@@ -29,11 +29,11 @@ export const AppHeader = () => {
 
   return (
     <div
-      className="grid grid-cols-2 pt-8 px-8"
+      className="grid grid-cols-1 md:grid-cols-2 pt-8 px-8 gap-4 md:gap-0"
       style={{ color: "rgba(0, 0, 0, 0.6)" }}
     >
-      <div className="flex gap-8 ">
-        <div className="flex justify-center content-center items-center">
+      <div className="flex flex-col md:flex-row justify-center  md:justify-start items-center gap-4">
+        <div className="flex justify-center  content-center items-center">
           <Link href={"/"}>
             <Image
               src={logo}
@@ -48,7 +48,7 @@ export const AppHeader = () => {
           </Link>
         </div>
 
-        <div className="flex justify-center items-center content-center">
+        <div className="flex justify-center  items-center content-center">
           <div className="p-[11px] border rounded-l-full border-extralightgrey border-r-0">
             <span className="">
               <svg
@@ -75,11 +75,11 @@ export const AppHeader = () => {
               e.key === "Enter" && urlInfo.valid && handleSearch()
             }
             placeholder="Search for websites by URL"
-            className="input input-bordered border-extralightgrey border-l-0 rounded-r-full focus:outline-none"
+            className="input input-bordered border-extralightgrey border-l-0 rounded-r-full focus:outline-none w-full"
           />
         </div>
       </div>
-      <div className="flex justify-end content-center items-center">
+      <div className="flex flex-col md:flex-row justify-center  md:justify-end items-center gap-4">
         <div
           className="pr-4 tooltip tooltip-bottom"
           data-tip="Archive all websites"
@@ -90,20 +90,24 @@ export const AppHeader = () => {
               alt="logo"
               style={{ height: "24px", width: "24px" }}
             />
-            <div className="hidden lg:inline">All archived websites</div>
+            <div className="sm:inline md:hidden lg:inline">
+              All archived websites
+            </div>
           </Link>
         </div>
-        <button
-          onClick={() => router.push("/save")}
-          className="flex gap-2 btn btn-primary bg-funpurple hover:bg-funmidpurple"
-        >
-          <Image
-            src={saveWebsite}
-            alt="logo"
-            style={{ height: "24px", width: "24px" }}
-          />
-          Archive a website
-        </button>
+        <div>
+          <button
+            onClick={() => router.push("/save")}
+            className="flex gap-2 btn btn-primary bg-funpurple hover:bg-funmidpurple"
+          >
+            <Image
+              src={saveWebsite}
+              alt="logo"
+              style={{ height: "24px", width: "24px" }}
+            />
+            Archive a website
+          </button>
+        </div>
       </div>
     </div>
   );
