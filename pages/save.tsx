@@ -443,13 +443,13 @@ function ArchivingOptions(props: any) {
         />
         {props.urlInfo.url}
       </div>
-      <div className="flex w-full p-4 items-center gap-1 bg-funlightpurple rounded-lg">
+      <div className=" w-full p-4 items-center gap-1 bg-funlightpurple rounded-lg hidden sm:flex">
         <Image
           src={infinity}
           alt="infinity"
           style={{ width: "24px", height: "24px" }}
         />
-        Snapshot are saved for <b>200+ years</b> on Arweave.
+        Snapshots are saved for <b className="">200+ years</b> on Arweave.
       </div>
       <div>Take a snapshot:</div>
       <div className="flex flex-col justify-center content-center items-center w-full gap-4">
