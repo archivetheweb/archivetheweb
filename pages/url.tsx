@@ -214,7 +214,7 @@ export default function ArchivePage() {
           Loading....
         </div>
       ) : (
-        <div className="w-full p-16">
+        <div className="w-full p-8 md:p-16">
           <div className="grid grid-cols-1 md:grid-cols-2 gap4">
             {data.data === null ? (
               <div className="p-4 md:p-8">
@@ -239,7 +239,7 @@ export default function ArchivePage() {
                 </div>
               </div>
             )}
-            <div className="flex flex-col gap-4 p-8">
+            <div className="flex flex-col gap-4 p-4 md:p-8">
               {data.data !== null ? (
                 <>
                   <div className="text-2xl ">{data.data?.title}</div>
@@ -255,11 +255,11 @@ export default function ArchivePage() {
                   </div>
 
                   <div className="grid grid-cols-2 p-6 border border-extralightgrey rounded ">
-                    <div className="flex flex-col">
+                    <div className="flex flex-col gap-2">
                       <div className="text-lightgrey">Snapshots taken</div>
                       <div className="text-lightgrey">Most recent snapshot</div>
                     </div>
-                    <div>
+                    <div className="flex flex-col gap-2">
                       <div>{data.data?.archivedInfo.length}</div>
                       <div>
                         <Link
@@ -276,7 +276,8 @@ export default function ArchivePage() {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 ">
+                  <div className="grid  ">
+                    {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-4 "> */}
                     {/* <div className="flex flex-col gap-4  border border-extralightgrey rounded"> */}
                     {/* <div className="text-lg p-6 border-b border-extralightgrey">
                       {" "}

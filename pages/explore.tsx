@@ -40,13 +40,6 @@ export default function Explore() {
     return () => {};
   }, [router, router.query.url]);
 
-  const handleURL = (e: React.FormEvent<HTMLInputElement>) => {
-    setURL({
-      url: e.currentTarget.value,
-      valid: isValidUrl(e.currentTarget.value),
-    });
-  };
-
   useEffect(() => {
     if (sorting === Sorted.Timestamp) {
       setData({
@@ -79,6 +72,13 @@ export default function Explore() {
     }
   }, [sorting, data.data]);
 
+  const handleURL = (e: React.FormEvent<HTMLInputElement>) => {
+    setURL({
+      url: e.currentTarget.value,
+      valid: isValidUrl(e.currentTarget.value),
+    });
+  };
+
   const handleRecentlyAdded = () => {
     if (sorting == Sorted.Timestamp) {
       setSorting(Sorted.Title);
@@ -86,6 +86,12 @@ export default function Explore() {
       setSorting(Sorted.Timestamp);
     }
   };
+
+  const handleClearSearch = () => {
+    setURL({ url: "", valid: false });
+    router.push("/explore");
+  };
+
   const handleSearch = () => {
     if (!urlInfo.valid) {
       return;
@@ -94,8 +100,20 @@ export default function Explore() {
     router.push(`/url?url=${urlInfo.url}`);
   };
 
-  {
+  let filteredData = [] as ArchiveInfo[];
+  if (data.data && !data.isLoading) {
+    filteredData = data.data.filter((x) => {
+      if (urlInfo.url && urlInfo.valid) {
+        if (x.url == urlInfo.url) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+      return true;
+    });
   }
+
   return (
     <Container>
       <div className="flex flex-col pt-8 ">
@@ -146,8 +164,8 @@ export default function Explore() {
               Loading...
             </div>
           ) : (
-            <div className="w-full p-16">
-              <div className="flex flex-row w-full">
+            <div className="w-full p-8 md:p-16">
+              <div className="flex flex-col md:flex-row w-full gap-4 md:gap-0 ">
                 <div className="w-full">
                   <div className="text-2xl">Explore archive</div>
                   <div className="text-lightgrey">
@@ -156,25 +174,26 @@ export default function Explore() {
                 </div>
                 <div
                   onClick={() => handleRecentlyAdded()}
-                  className="btn normal-case bg-[#FFFFFF] border-extralightgrey p-4 hover:bg-[#FFFFFF] hover:outline-none hover:border-extralightgrey justify-end text-lightgrey"
+                  className="btn normal-case bg-[#FFFFFF] border-extralightgrey p-4 hover:bg-[#FFFFFF] hover:outline-none hover:border-extralightgrey justify-center md:justify-end text-lightgrey"
                 >
                   Recently Added
                 </div>
               </div>
+              {filteredData.length === 0 && (
+                <div className="flex flex-col items-center justify-center h-48 gap-4">
+                  <div>No archive found</div>
+                  <div
+                    onClick={handleClearSearch}
+                    className="btn normal-case bg-[#FFFFFF] border-extralightgrey p-4 hover:bg-[#FFFFFF] hover:outline-none hover:border-extralightgrey justify-center  text-lightgrey"
+                  >
+                    Clear search
+                  </div>
+                </div>
+              )}
 
               <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 pt-8 gap-4">
-                {data.data
-                  .filter((x) => {
-                    if (urlInfo.url && urlInfo.valid) {
-                      if (x.url == urlInfo.url) {
-                        return true;
-                      } else {
-                        return false;
-                      }
-                    }
-                    return true;
-                  })
-                  .map((x, i) => {
+                {filteredData.length > 0 &&
+                  filteredData.map((x, i) => {
                     return (
                       <div
                         className="card max-w-96 bg-base-100 shadow-xl "
