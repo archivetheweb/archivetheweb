@@ -39,26 +39,25 @@ export default function Save() {
   let [toastMessage, setToastMessage] = useState(<></>);
   const { warp } = useContext(ConnectorContext);
   const priceInfo = fetchPrice();
-  const [arweaveFeeForMB, setarweaveFeeForMB] = useState("");
   let [costPerSnapshot, setCostPerSnapshot] = useState({
     usd: "",
     winston: "",
   });
 
   useEffect(() => {
-    if (!priceInfo.isLoading && arweaveFeeForMB !== "") {
-      setCostPerSnapshot(
-        calculateUploadPrice(+arweaveFeeForMB, depth, +priceInfo.price)
-      );
+    if (!priceInfo.isLoading) {
+      (async () => {
+        let arweaveFeeForMB = await warp.arweave.transactions.getPrice(MB);
+        setCostPerSnapshot(
+          calculateUploadPrice(
+            +arweaveFeeForMB,
+            Depth.PageOnly,
+            +priceInfo.price
+          )
+        );
+      })();
     }
-  }, [priceInfo.price, priceInfo.isLoading, arweaveFeeForMB, depth]);
-
-  useEffect(() => {
-    (async () => {
-      let res = await warp.arweave.transactions.getPrice(MB);
-      setarweaveFeeForMB(res);
-    })();
-  }, [warp.arweave.transactions]);
+  }, [priceInfo.price, priceInfo.isLoading]);
 
   useEffect(() => {
     let url = router.query.url as string;

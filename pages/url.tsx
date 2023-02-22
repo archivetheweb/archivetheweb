@@ -42,20 +42,27 @@ export default function ArchivePage() {
   });
   const [toExpand, setToExpand] = useState("");
   const priceInfo = fetchPrice();
-  let [nextSnap, setNextSnap] = useState(0);
-  const [arweaveFeeForMB, setarweaveFeeForMB] = useState("");
+  // let [nextSnap, setNextSnap] = useState(0);
+  const { contract, warp } = useContext(ConnectorContext);
   let [costPerSnapshot, setCostPerSnapshot] = useState({
     usd: "",
     winston: "",
   });
-  const { contract, warp } = useContext(ConnectorContext);
 
   useEffect(() => {
-    (async () => {
-      let res = await warp.arweave.transactions.getPrice(MB);
-      setarweaveFeeForMB(res);
-    })();
-  }, [warp.arweave.transactions]);
+    if (!priceInfo.isLoading) {
+      (async () => {
+        let arweaveFeeForMB = await warp.arweave.transactions.getPrice(MB);
+        setCostPerSnapshot(
+          calculateUploadPrice(
+            +arweaveFeeForMB,
+            Depth.PageOnly,
+            +priceInfo.price
+          )
+        );
+      })();
+    }
+  }, [priceInfo.price, priceInfo.isLoading]);
 
   useEffect(() => {
     let url = router.query.url as string;
@@ -93,14 +100,6 @@ export default function ArchivePage() {
     }
     return () => {};
   }, [router.query.url, contract]);
-
-  useEffect(() => {
-    if (!priceInfo.isLoading && arweaveFeeForMB !== "") {
-      setCostPerSnapshot(
-        calculateUploadPrice(+arweaveFeeForMB, Depth.PageOnly, +priceInfo.price)
-      );
-    }
-  }, [priceInfo.price, priceInfo.isLoading, arweaveFeeForMB]);
 
   const getTimeKey = (timestamp: number): string => {
     return moment(timestamp * 1000).format("MMMM DD, YYYY");

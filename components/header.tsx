@@ -3,10 +3,34 @@ import Link from "next/link";
 import Image from "next/image";
 import { fetchPrice } from "../http/fetcher";
 import { useRouter } from "next/router";
+import { useContext, useEffect, useState } from "react";
+import { Depth } from "./types";
+import { calculateUploadPrice, MB } from "./utils";
+import ConnectorContext from "../context/connector";
 
 export const Header: React.FC<any> = (props) => {
   const router = useRouter();
-  const { price, isLoading } = fetchPrice();
+  const priceInfo = fetchPrice();
+  const { warp } = useContext(ConnectorContext);
+  let [costPerSnapshot, setCostPerSnapshot] = useState({
+    usd: "",
+    winston: "",
+  });
+
+  useEffect(() => {
+    if (!priceInfo.isLoading) {
+      (async () => {
+        let arweaveFeeForMB = await warp.arweave.transactions.getPrice(MB);
+        setCostPerSnapshot(
+          calculateUploadPrice(
+            +arweaveFeeForMB,
+            Depth.PageOnly,
+            +priceInfo.price
+          )
+        );
+      })();
+    }
+  }, [priceInfo.price, priceInfo.isLoading]);
 
   return (
     <div
@@ -98,13 +122,17 @@ export const Header: React.FC<any> = (props) => {
         </div>
       </div>
       <div className="flex col-span-1 justify-end content-center items-center gap-8 ">
-        <div className=" flex-col hidden lg:flex ">
-          <div>Average Snapshot Cost</div>
-          <div className="text-funpurple">
-            {" "}
-            {isLoading ? "" : "USD $" + Math.round(+price * 100) / 100}
+        {costPerSnapshot.usd === "" ? (
+          <></>
+        ) : (
+          <div className=" flex-col hidden lg:flex ">
+            <div>Average Snapshot Cost</div>
+            <div className="text-funpurple">
+              {" "}
+              {costPerSnapshot.usd === "" ? "" : `USD $${costPerSnapshot.usd}`}
+            </div>
           </div>
-        </div>
+        )}
         <button
           onClick={() => router.push("/save")}
           style={{ borderRadius: "5px" }}

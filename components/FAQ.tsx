@@ -38,11 +38,12 @@ export function Faq() {
             </span>{" "}
           </div>
           <div className="collapse-content">
+            {/* TODO */}
             To archive on Arweave, the payment must be made in their native
             currency, a token called “AR.” You can think of this as a digital
             currency like Bitcoin and Ethereum. With Archive the Web, you can
-            pay for archiving with AR, ETH and ERC-20 tokens on different
-            blockchains (i.e. Polygon, Arbitrum, etc.).
+            currently pay for archiving with AR. Soon, ETH and ERC-20 tokens on
+            different blockchains (i.e. Polygon, Arbitrum, etc.) will be added.
           </div>
         </div>
       </div>
@@ -61,10 +62,12 @@ export function Faq() {
               </span>{" "}
             </div>
             <div className="collapse-content">
-              Yes, you can pay for archiving with credit card. To do so, you
-              will need to use Metamask. You can buy ETH and ERC-20 tokens with
-              credit card there. You then will use the currency you purchased as
-              the final payment method.
+              {/* TODO */}
+              Yes, you will be able to pay for archiving with a credit card as
+              soon as we integrate with Metamask. To do so, you will need to use
+              Metamask. You can buy ETH and ERC-20 tokens with credit card
+              there. You then will use the currency you purchased as the final
+              payment method.
             </div>
           </div>
         </div>

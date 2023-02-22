@@ -12,7 +12,8 @@ export function Paywith() {
           style={{ height: "25px", width: "25px" }}
           alt="arweave"
         />
-        <Image
+        {/* // TODO */}
+        {/* <Image
           src={mm}
           style={{ height: "25px", width: "25px" }}
           alt="metamask"
@@ -21,7 +22,7 @@ export function Paywith() {
           src={wc}
           style={{ height: "23px", width: "41px" }}
           alt="walletconnect"
-        />
+        /> */}
       </div>
     </div>
   );
