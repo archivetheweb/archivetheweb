@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { TimeUnit } from "./types";
+import { Depth, TimeUnit } from "./types";
 
 // An educated guess at first
 export const AVERAGE_WEBSITE_DEPTH_1_IN_MB = 100;
@@ -34,6 +34,25 @@ export const getDomain = (url: string): string => {
   let a = document.createElement("a");
   a.setAttribute("href", url);
   return a.hostname;
+};
+
+export const calculateUploadPrice = (
+  arweaveFeeForMB: number,
+  depth: Depth,
+  price: number
+) => {
+  let priceInAr =
+    arweaveFeeForMB *
+    (depth === Depth.PageOnly
+      ? AVERAGE_WEBSITE_DEPTH_0_IN_MB
+      : AVERAGE_WEBSITE_DEPTH_1_IN_MB);
+  let pricePerSnapshot =
+    Math.round((+price * priceInAr * 1000) / 1000000000000) / 1000;
+
+  return {
+    usd: pricePerSnapshot.toString(),
+    winston: priceInAr.toString(),
+  };
 };
 
 /* 

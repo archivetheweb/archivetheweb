@@ -5,20 +5,25 @@ import { Container } from "../components/container";
 import info from "../public/info.png";
 import chevron from "../public/chevron.png";
 import { useRouter } from "next/router";
-import { isValidUrl, shortenAddress } from "../components/utils";
+import {
+  calculateUploadPrice,
+  isValidUrl,
+  MB,
+  shortenAddress,
+} from "../components/utils";
 import { fetchPrice } from "../http/fetcher";
-import plus from "../public/plus.png";
 import arrowTopRight from "../public/arrow_top_right.png";
 import link from "../public/link.png";
 import saveWhite from "../public/save_white.png";
-import Countdown from "react-countdown";
-import Script from "next/script";
 import ConnectorContext from "../context/connector";
 import { ArchivesByURLInfo, ArchiveSubmission } from "../bindings/ts/View";
 import moment from "moment";
 import CustomIframe from "../components/iframe";
+import { Depth } from "../components/types";
 const momentDurationFormatSetup = require("moment-duration-format");
 momentDurationFormatSetup(moment);
+// import plus from "../public/plus.png";
+// import Countdown from "react-countdown";
 
 type Data = ArchivesByURLInfo | null;
 
@@ -35,12 +40,22 @@ export default function ArchivePage() {
     isLoading: true,
     isError: false,
   });
-
   const [toExpand, setToExpand] = useState("");
-
-  let { price, isLoading } = fetchPrice();
+  const priceInfo = fetchPrice();
   let [nextSnap, setNextSnap] = useState(0);
-  const { contract } = useContext(ConnectorContext);
+  const [arweaveFeeForMB, setarweaveFeeForMB] = useState("");
+  let [costPerSnapshot, setCostPerSnapshot] = useState({
+    usd: "",
+    winston: "",
+  });
+  const { contract, warp } = useContext(ConnectorContext);
+
+  useEffect(() => {
+    (async () => {
+      let res = await warp.arweave.transactions.getPrice(MB);
+      setarweaveFeeForMB(res);
+    })();
+  }, [warp.arweave.transactions]);
 
   useEffect(() => {
     let url = router.query.url as string;
@@ -78,6 +93,14 @@ export default function ArchivePage() {
     }
     return () => {};
   }, [router.query.url, contract]);
+
+  useEffect(() => {
+    if (!priceInfo.isLoading && arweaveFeeForMB !== "") {
+      setCostPerSnapshot(
+        calculateUploadPrice(+arweaveFeeForMB, Depth.PageOnly, +priceInfo.price)
+      );
+    }
+  }, [priceInfo.price, priceInfo.isLoading, arweaveFeeForMB]);
 
   const getTimeKey = (timestamp: number): string => {
     return moment(timestamp * 1000).format("MMMM DD, YYYY");
@@ -343,7 +366,8 @@ export default function ArchivePage() {
                       alt="info 1"
                       style={{ width: "18px", height: "18px" }}
                     />
-                    It costs $0.007 USD to archive a website permanently.{" "}
+                    It costs on average ${costPerSnapshot.usd} USD to archive a
+                    website permanently.{" "}
                   </div>
                   <div>Would you like to archive this site now?</div>
                   <button

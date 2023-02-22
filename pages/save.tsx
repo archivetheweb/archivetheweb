@@ -8,8 +8,7 @@ import React, { useContext, useEffect, useState } from "react";
 import Link from "next/link";
 import { Container } from "../components/container";
 import {
-  AVERAGE_WEBSITE_DEPTH_0_IN_MB,
-  AVERAGE_WEBSITE_DEPTH_1_IN_MB,
+  calculateUploadPrice,
   getDomain,
   isValidUrl,
   isValidUrlStrict,
@@ -48,18 +47,9 @@ export default function Save() {
 
   useEffect(() => {
     if (!priceInfo.isLoading && arweaveFeeForMB !== "") {
-      let priceInAr =
-        +arweaveFeeForMB *
-        (depth === Depth.PageOnly
-          ? AVERAGE_WEBSITE_DEPTH_0_IN_MB
-          : AVERAGE_WEBSITE_DEPTH_1_IN_MB);
-      let pricePerSnapshot =
-        Math.round((+priceInfo.price * priceInAr * 1000) / 1000000000000) /
-        1000;
-      setCostPerSnapshot({
-        usd: pricePerSnapshot.toString(),
-        winston: priceInAr.toString(),
-      });
+      setCostPerSnapshot(
+        calculateUploadPrice(+arweaveFeeForMB, depth, +priceInfo.price)
+      );
     }
   }, [priceInfo.price, priceInfo.isLoading, arweaveFeeForMB, depth]);
 
