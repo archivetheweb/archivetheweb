@@ -61,14 +61,14 @@ export default function Save() {
         winston: priceInAr.toString(),
       });
     }
-  }, [priceInfo.price, arweaveFeeForMB, depth]);
+  }, [priceInfo.price, priceInfo.isLoading, arweaveFeeForMB, depth]);
 
   useEffect(() => {
     (async () => {
       let res = await warp.arweave.transactions.getPrice(MB);
       setarweaveFeeForMB(res);
     })();
-  }, []);
+  }, [warp.arweave.transactions]);
 
   useEffect(() => {
     let url = router.query.url as string;
@@ -152,7 +152,7 @@ function WebsiteInput(props: any) {
         }
       })();
     }
-  }, [props.urlInfo]);
+  }, [props.urlInfo, contract]);
 
   return (
     <div className="grid grid-cols-1 border border-[#00000033] rounded-lg mx-8 md:mx-16 lg:mx-32 mt-16 pt-16 px-16 shadow-xl ">
@@ -181,7 +181,7 @@ function WebsiteInput(props: any) {
                 "linear-gradient(89.94deg, #5EEAA7 -0.81%, #7CACF5 23.02%, #A186F8 43.06%, #FC79D5 59.85%, #F8A170 79.89%, #E3F95C 102.09%)",
             }}
           >
-            You'll be the first person to archive this site 🎉
+            You&apos;ll be the first person to archive this site 🎉
           </div>
         ) : (
           <></>

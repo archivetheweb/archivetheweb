@@ -6,6 +6,7 @@ import { isValidUrl } from "../components/utils";
 import moment from "moment";
 import ConnectorContext from "../context/connector";
 import { ArchiveInfo } from "../bindings/ts/View";
+import Image from "next/image";
 
 export default function Explore() {
   const router = useRouter();
@@ -29,7 +30,7 @@ export default function Explore() {
 
       setData({ data: result.archives, isLoading: false, isError: false });
     })();
-  }, []);
+  }, [contract]);
 
   useEffect(() => {
     let url = router.query.url as string;
@@ -77,7 +78,7 @@ export default function Explore() {
         isError: false,
       });
     }
-  }, [sorting]);
+  }, [sorting, data.data]);
 
   const handleRecentlyAdded = () => {
     if (sorting == Sorted.Timestamp) {
@@ -171,15 +172,19 @@ export default function Explore() {
                 .map((x, i) => {
                   return (
                     <div
-                      className="card max-w-96 bg-base-100 shadow-xl"
+                      className="card max-w-96 bg-base-100 shadow-xl "
                       key={i}
                     >
-                      <figure>
-                        <img
-                          src={`https://arweave.net/${x.screenshotTx}`}
-                          alt={x.title}
-                        />
-                      </figure>
+                      <div>
+                        <figure className="">
+                          <Image
+                            src={`https://arweave.net/${x.screenshotTx}`}
+                            alt={x.title}
+                            width={250}
+                            height={250}
+                          />
+                        </figure>
+                      </div>
                       <div className="card-body p-4">
                         <div className="card-title text-lg">
                           {x.title || "N/A"}

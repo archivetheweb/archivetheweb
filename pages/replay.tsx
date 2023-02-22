@@ -41,11 +41,11 @@ export default function Replay() {
         }
       })();
     }
-  }, [router]);
+  }, [router, contract]);
 
   return (
     <div>
-      <Script strategy="beforeInteractive" src="./ui.js" />
+      <Script strategy="afterInteractive" src="./ui.js" />
       {data.data === null ? (
         <div></div>
       ) : (

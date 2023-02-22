@@ -31,23 +31,24 @@ export const emptyState = {
 };
 
 async function getWallet() {
-  let jwk = localStorage.getItem(ARWEAVE_WALLET);
-  let address = localStorage.getItem(ARWEAVE_ADDRESS);
+  if (typeof window !== "undefined") {
+    let jwk = localStorage.getItem(ARWEAVE_WALLET);
+    let address = localStorage.getItem(ARWEAVE_ADDRESS);
 
-  // @ts-nocheck
-  if (!jwk || !address) {
-    console.debug("generating new wallet");
-    let { jwk: wallet, address: walletAddress } = await warp.generateWallet();
-    localStorage.setItem(ARWEAVE_WALLET, JSON.stringify(wallet));
-    localStorage.setItem(ARWEAVE_ADDRESS, walletAddress);
-    jwk = JSON.stringify(wallet);
-    address = walletAddress;
+    // @ts-nocheck
+    if (!jwk || !address) {
+      console.debug("generating new wallet");
+      let { jwk: wallet, address: walletAddress } = await warp.generateWallet();
+      localStorage.setItem(ARWEAVE_WALLET, JSON.stringify(wallet));
+      localStorage.setItem(ARWEAVE_ADDRESS, walletAddress);
+      jwk = JSON.stringify(wallet);
+      address = walletAddress;
+    }
+    return {
+      jwk,
+      address,
+    };
   }
-
-  return {
-    jwk,
-    address,
-  };
 }
 
 (async () => {

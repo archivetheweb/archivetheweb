@@ -77,7 +77,7 @@ export default function ArchivePage() {
       })();
     }
     return () => {};
-  }, [router.query.url]);
+  }, [router.query.url, contract]);
 
   const getTimeKey = (timestamp: number): string => {
     return moment(timestamp * 1000).format("MMMM DD, YYYY");
@@ -181,7 +181,6 @@ export default function ArchivePage() {
 
   return (
     <Container>
-      <Script strategy="beforeInteractive" src="./ui.js" />
       <div className="w-full p-16">
         <div className="grid grid-cols-1 md:grid-cols-2 gap4">
           {data.data === null ? (
@@ -198,9 +197,11 @@ export default function ArchivePage() {
           ) : (
             <div className="p-4 md:p-8">
               <div className="flex flex-col items-center  aspect-video w-full h-full">
-                <img
+                <Image
                   src={`https://arweave.net/` + data.data?.screenshotTx}
                   alt={data.data?.title}
+                  width={750}
+                  height={750}
                 />
               </div>
             </div>
@@ -401,7 +402,7 @@ export default function ArchivePage() {
                                     data.data?.url || "",
                                     elem,
                                     0,
-                                    index
+                                    index * 100
                                   );
                                 })}
                             </>
