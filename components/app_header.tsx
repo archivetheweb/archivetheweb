@@ -29,7 +29,7 @@ export const AppHeader = () => {
 
   return (
     <div
-      className="grid grid-cols-1 md:grid-cols-2 pt-8 px-8 gap-4 md:gap-0"
+      className="grid grid-cols-1 md:grid-cols-2 pt-8 px-4 md:px-8 lg:px-16 gap-4 md:gap-0 "
       style={{ color: "rgba(0, 0, 0, 0.6)" }}
     >
       <div className="flex flex-col md:flex-row justify-center  md:justify-start items-center gap-4">

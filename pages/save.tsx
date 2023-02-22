@@ -144,7 +144,7 @@ function WebsiteInput(props: any) {
   }, [props.urlInfo, contract]);
 
   return (
-    <div className="grid grid-cols-1 border border-[#00000033] rounded-lg mx-8 md:mx-16 lg:mx-32 mt-16 pt-16 px-8 md:px-16 shadow-xl ">
+    <div className="grid grid-cols-1 border border-[#00000033] rounded-lg mx-4 md:mx-8 lg:mx-16 mt-16 pt-16 px-8 md:px-16 shadow-xl ">
       <div className="text-3xl">Archive a website</div>
       <div className="text-[#0000008A] pb-3">
         Help create an open and decentralized backup of the world wide web.
@@ -423,7 +423,7 @@ function ArchivingOptions(props: any) {
   }
 
   return (
-    <div className="grid grid-cols-1 border border-[#00000033] rounded-lg mx-8 md:mx-16 lg:mx-32 mt-16 pt-16 px-16 shadow-xl gap-3 ">
+    <div className="grid grid-cols-1 border border-[#00000033] rounded-lg mx-4 md:mx-8 lg:mx-16 mt-16 pt-16 px-16 shadow-xl gap-3 ">
       <div className="text-3xl">Set up Archiving</div>
       <div className="flex w-full p-4 items-center gap-1 bg-extralightgrey rounded-lg">
         <Image

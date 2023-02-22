@@ -2,7 +2,7 @@ import Image from "next/image";
 import questionMark from "../public/question_mark.png";
 export function Faq() {
   return (
-    <div className="grid grid-cols-1 mx-8 md:mx-16 lg:mx-32 mt-4 py-8 gap-3 ">
+    <div className="grid grid-cols-1 mx-4 md:mx-8 lg:mx-16 mt-4 py-8 gap-3 ">
       <div className="border border-[#00000033] rounded-lg">
         <div tabIndex={0} className="collapse collapse-arrow">
           <input type="checkbox" />
