@@ -27,3 +27,8 @@ export enum ModalStep {
   Success,
   Failure,
 }
+
+export interface Duration {
+  value: string;
+  unit: TimeUnit;
+}

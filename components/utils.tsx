@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Depth, TimeUnit } from "./types";
+import { Depth, Duration, TimeUnit } from "./types";
 
 // An educated guess at first
 export const AVERAGE_WEBSITE_DEPTH_1_IN_MB = 100;
@@ -25,6 +25,22 @@ export const isValidUrl = (url: string) => {
     return false;
   }
 };
+
+export const isValidUrlStrict = (url: string) => {
+  try {
+    return isURL(url);
+  } catch (e) {
+    console.error(e);
+    return false;
+  }
+};
+
+function isURL(str: string) {
+  var urlRegex =
+    "^(?!mailto:)(?:(?:http|https|ftp)://)(?:\\S+(?::\\S*)?@)?(?:(?:(?:[1-9]\\d?|1\\d\\d|2[01]\\d|22[0-3])(?:\\.(?:1?\\d{1,2}|2[0-4]\\d|25[0-5])){2}(?:\\.(?:[0-9]\\d?|1\\d\\d|2[0-4]\\d|25[0-4]))|(?:(?:[a-z\\u00a1-\\uffff0-9]+-?)*[a-z\\u00a1-\\uffff0-9]+)(?:\\.(?:[a-z\\u00a1-\\uffff0-9]+-?)*[a-z\\u00a1-\\uffff0-9]+)*(?:\\.(?:[a-z\\u00a1-\\uffff]{2,})))|localhost)(?::\\d{2,5})?(?:(/|\\?|#)[^\\s]*)?$";
+  var url = new RegExp(urlRegex, "i");
+  return str.length < 2083 && url.test(str);
+}
 
 export const pluralize = (word: string, amount: number): string => {
   return `${word}${amount > 1 ? "s" : ""}`;
@@ -83,6 +99,19 @@ export const translateToCronFrequency = (
   return cronFrequency;
 };
 
+export const durationToSeconds = (duration: Duration): number => {
+  // if duration is small, we assume 1 hour
+  if (duration.value === "" || duration.value === "0") {
+    return 60 * 60;
+  }
+  switch (duration.unit) {
+    case TimeUnit.Days:
+      return +duration.value * 24 * 60 * 60;
+    case TimeUnit.Hours:
+      return +duration.value * 60 * 60;
+  }
+};
+
 export const shortenAddress = (address: String) => {
   if (address.length < 12) {
     return address;
@@ -93,22 +122,6 @@ export const shortenAddress = (address: String) => {
     address.substring(address.length - 6, address.length - 1)
   );
 };
-
-export const isValidUrlStrict = (url: string) => {
-  try {
-    return isURL(url);
-  } catch (e) {
-    console.error(e);
-    return false;
-  }
-};
-
-function isURL(str: string) {
-  var urlRegex =
-    "^(?!mailto:)(?:(?:http|https|ftp)://)(?:\\S+(?::\\S*)?@)?(?:(?:(?:[1-9]\\d?|1\\d\\d|2[01]\\d|22[0-3])(?:\\.(?:1?\\d{1,2}|2[0-4]\\d|25[0-5])){2}(?:\\.(?:[0-9]\\d?|1\\d\\d|2[0-4]\\d|25[0-4]))|(?:(?:[a-z\\u00a1-\\uffff0-9]+-?)*[a-z\\u00a1-\\uffff0-9]+)(?:\\.(?:[a-z\\u00a1-\\uffff0-9]+-?)*[a-z\\u00a1-\\uffff0-9]+)*(?:\\.(?:[a-z\\u00a1-\\uffff]{2,})))|localhost)(?::\\d{2,5})?(?:(/|\\?|#)[^\\s]*)?$";
-  var url = new RegExp(urlRegex, "i");
-  return str.length < 2083 && url.test(str);
-}
 
 export const Toast = ({
   message,

@@ -9,9 +9,9 @@ import Link from "next/link";
 import { Container } from "../components/container";
 import {
   calculateUploadPrice,
+  durationToSeconds,
   getDomain,
   isValidUrl,
-  isValidUrlStrict,
   MB,
   pluralize,
   shortenAddress,
@@ -49,15 +49,11 @@ export default function Save() {
       (async () => {
         let arweaveFeeForMB = await warp.arweave.transactions.getPrice(MB);
         setCostPerSnapshot(
-          calculateUploadPrice(
-            +arweaveFeeForMB,
-            Depth.PageOnly,
-            +priceInfo.price
-          )
+          calculateUploadPrice(+arweaveFeeForMB, depth, +priceInfo.price)
         );
       })();
     }
-  }, [priceInfo.price, priceInfo.isLoading, warp.arweave.transactions]);
+  }, [priceInfo.price, priceInfo.isLoading, warp.arweave.transactions, depth]);
 
   useEffect(() => {
     let url = router.query.url as string;
@@ -67,12 +63,17 @@ export default function Save() {
   }, [router, router.query.url]);
 
   const handleURL = (e: React.FormEvent<HTMLInputElement>) => {
-    let valid = isValidUrlStrict(e.currentTarget.value);
+    let url = e.currentTarget.value;
+    let valid = isValidUrl(url);
+
+    if (valid && !new RegExp(/^(https:\/\/)/).test(url)) {
+      url = "https://" + url;
+    }
 
     setURL({
-      url: e.currentTarget.value,
+      url: url,
       valid,
-      domain: getDomain(e.currentTarget.value),
+      domain: getDomain(url),
     });
   };
 
@@ -242,7 +243,7 @@ function ArchivingOptions(props: any) {
   let [canMoveToPayment, setCanMoveToPayment] = useState(false);
   let [openModal, setOpenModal] = useState(false);
   let [modalStep, setModalStep] = useState(ModalStep.Connect);
-  const { contract, getLocalAddress, warp } = useContext(ConnectorContext);
+  const { contract, warp, getLocalAddress } = useContext(ConnectorContext);
   let [interactionTxID, setInteractionTxID] = useState("");
   let [paymentTxID, setPaymentTxID] = useState("");
 
@@ -272,6 +273,7 @@ function ArchivingOptions(props: any) {
             1000
           ).toString()
         );
+        break;
     }
   }, [props.terms, props.costPerSnapshot, numberOfSnapshots]);
 
@@ -312,7 +314,7 @@ function ArchivingOptions(props: any) {
     let arweaveWallet = window.arweaveWallet;
 
     try {
-      let res = await arweaveWallet.connect([
+      await arweaveWallet.connect([
         "ACCESS_ADDRESS",
         "SIGN_TRANSACTION",
         "DISPATCH",
@@ -344,11 +346,13 @@ function ArchivingOptions(props: any) {
           ? +props.costPerSnapshot.winston
           : numberOfSnapshots * +props.costPerSnapshot.winston;
 
+      let secondsToAdd = durationToSeconds(duration);
+
       let c = await contract.connect("use_wallet");
       let res = await c.requestArchiving({
         startTimestamp: Math.floor(Date.now() / 1000),
         // TODO calculate this
-        endTimestamp: Math.floor(Date.now() / 1000) + 3600,
+        endTimestamp: Math.floor(Date.now() / 1000) + secondsToAdd,
         frequency: cronFreq,
         options: {
           depth: props.depth,
@@ -359,8 +363,10 @@ function ArchivingOptions(props: any) {
       });
 
       let interactionTxID = res?.originalTxId || "";
+      let bundlrID = res?.bundlrResponse?.id || "";
       setInteractionTxID(interactionTxID);
       console.debug("Interaction result", res);
+      console.debug("Interaction tx", interactionTxID);
 
       let tx = await warp.arweave.createTransaction({
         target: UPLOADER,
@@ -368,8 +374,10 @@ function ArchivingOptions(props: any) {
       });
       tx.addTag("App-Name", "atw_frontend");
       tx.addTag("App-Name", "0.0.1_beta");
-      tx.addTag("Reason", "archive_payment");
+      tx.addTag("Reason", "archive_request_payment");
       tx.addTag("Interaction-Id", interactionTxID);
+      tx.addTag("Bundlr-Id", bundlrID);
+      tx.addTag("Domain", props.urlInfo.domain);
       await warp.arweave.transactions.sign(tx);
       let paymentTxStatus = await warp.arweave.transactions.post(tx);
       console.debug("Payment status", paymentTxStatus);
@@ -378,11 +386,13 @@ function ArchivingOptions(props: any) {
       setPaymentTxID(paymentTxID);
       console.log("Payment ID", paymentTxID);
 
-      setModalStep(ModalStep.Pending);
+      let local = await getLocalAddress();
+      c.connect(JSON.parse(local?.jwk || "{}"));
 
+      setModalStep(ModalStep.Pending);
       setTimeout(() => {
         setModalStep(ModalStep.Success);
-      }, 2000);
+      }, 6000);
     } catch (e: any) {
       console.error("Could not confirm archiving", e);
     }
@@ -520,6 +530,7 @@ function ArchivingOptions(props: any) {
                 <select
                   className="select select-bordered w-full h-16"
                   value={frequency.unit}
+                  defaultValue={TimeUnit.Hours}
                   onChange={(e: any) => {
                     setFrequency({
                       value: frequency.value,
@@ -527,7 +538,7 @@ function ArchivingOptions(props: any) {
                     });
                   }}
                 >
-                  <option key={TimeUnit.Hours} value={TimeUnit.Hours} selected>
+                  <option key={TimeUnit.Hours} value={TimeUnit.Hours}>
                     Hours
                   </option>
                   <option key={TimeUnit.Days} value={TimeUnit.Days}>
@@ -773,8 +784,8 @@ function PendingModal(props: any) {
         <Image src={floppy} alt="floppy" />
       </div>
       <div>
-        Contacting the permaweb to set up archiving of{" "}
-        <b>{props.urlInfo.url}</b>. This may take some time.
+        Setting up the archiving of <b>{props.urlInfo.url}</b>. This may take
+        some time.
       </div>
       <div className="flex items-center justify-between p-4 border border-[#00000033] rounded-lg bg-extralightgrey">
         <div>Tx ID</div>
@@ -799,7 +810,10 @@ function SuccessModal(props: any) {
       <div className="flex flex-col gap-4 items-center">
         <Image src={dance} alt="dance" />
       </div>
-      <div>Thank you for contributing to Archive the Web!</div>
+      <div>
+        Your archive request is being processed! Thank you for contributing to
+        Archive the Web!
+      </div>
       <div className="flex items-center justify-between p-4 border border-[#00000033] rounded-lg bg-extralightgrey">
         <div>Tx ID</div>
         <Link
