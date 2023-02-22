@@ -500,7 +500,7 @@ function ArchivingOptions(props: any) {
 
         {props.terms === Terms.Multiple && (
           <>
-            <div className="flex form-control w-full flex-row gap-4   ">
+            <div className="flex form-control w-full items-center flex-col sm:flex-row gap-0 sm:gap-4   ">
               <div className="w-full">
                 <label className="label">
                   <span className="label-text">
@@ -548,7 +548,7 @@ function ArchivingOptions(props: any) {
               </div>
             </div>
 
-            <div className="flex form-control w-full flex-row gap-4  ">
+            <div className="flex form-control w-full items-center flex-col sm:flex-row gap-0 sm:gap-4">
               <div className="w-full">
                 <label className="label">
                   <span className="label-text">Total number of snapshots:</span>
