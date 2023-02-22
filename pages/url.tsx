@@ -122,7 +122,8 @@ export default function ArchivePage() {
     url: string,
     data: ArchiveSubmission,
     total: number,
-    key: number
+    key: number,
+    expansion: boolean
   ) => {
     return (
       <tr key={key}>
@@ -134,7 +135,7 @@ export default function ArchivePage() {
             {getTimeKey(data.timestamp)}
           </Link>
         </td>
-        <td>{moment(data.timestamp * 1000).format("hh:mm:ss")}</td>
+        <td>{moment(data.timestamp * 1000).format("HH:mm:ss")}</td>
         <td>{total === 0 || total}</td>
         <td>
           <Link
@@ -144,6 +145,13 @@ export default function ArchivePage() {
           >
             {shortenAddress(data.uploaderAddress)}
           </Link>
+        </td>
+        <td>
+          {expansion
+            ? data.options.depth === Depth.PageOnly
+              ? "No"
+              : "Yes"
+            : ""}
         </td>
         <td>
           <div
@@ -418,6 +426,9 @@ export default function ArchivePage() {
                           Uploader
                         </th>
                         <th className="bg-[#FFFFFF] text-lightgrey py-1">
+                          Linked Pages
+                        </th>
+                        <th className="bg-[#FFFFFF] text-lightgrey py-1">
                           Expand all
                         </th>
                       </tr>
@@ -433,7 +444,8 @@ export default function ArchivePage() {
                                   data.data?.url || "",
                                   data.groupedData[x][0],
                                   data.groupedData[x].length,
-                                  i
+                                  i,
+                                  false
                                 )}
                                 {toExpand === x &&
                                   data.groupedData[x].map((elem, index) => {
@@ -441,7 +453,8 @@ export default function ArchivePage() {
                                       data.data?.url || "",
                                       elem,
                                       0,
-                                      index * 100
+                                      index * 100,
+                                      true
                                     );
                                   })}
                               </>
