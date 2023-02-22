@@ -8,7 +8,7 @@ export const Container = ({
   children: React.ReactElement | any;
 }) => {
   return (
-    <div className="flex flex-col h-screen w-fit ">
+    <div className="flex flex-col h-screen ">
       <AppHeader />
       <div className="grow">{children}</div>
       <Footer />

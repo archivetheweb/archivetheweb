@@ -57,7 +57,7 @@ export default function Save() {
         );
       })();
     }
-  }, [priceInfo.price, priceInfo.isLoading]);
+  }, [priceInfo.price, priceInfo.isLoading, warp.arweave.transactions]);
 
   useEffect(() => {
     let url = router.query.url as string;

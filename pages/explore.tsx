@@ -27,7 +27,6 @@ export default function Explore() {
   useEffect(() => {
     (async () => {
       let result = await contract.archives({});
-
       setData({ data: result.archives, isLoading: false, isError: false });
     })();
   }, [contract]);
@@ -60,8 +59,8 @@ export default function Explore() {
             return 0;
           }
         }),
-        isLoading: false,
-        isError: false,
+        isLoading: data.isLoading,
+        isError: data.isError,
       });
     } else if (sorting === Sorted.Title) {
       setData({
@@ -74,8 +73,8 @@ export default function Explore() {
             return 0;
           }
         }),
-        isLoading: false,
-        isError: false,
+        isLoading: data.isLoading,
+        isError: data.isError,
       });
     }
   }, [sorting, data.data]);
@@ -99,9 +98,9 @@ export default function Explore() {
   }
   return (
     <Container>
-      <div className="flex flex-col pt-8">
+      <div className="flex flex-col pt-8 ">
         <div
-          className="hero w-full "
+          className="hero w-full"
           style={{
             backgroundImage:
               "linear-gradient(180deg, rgba(21, 0, 34, 0.69) 0%, rgba(10, 0, 124, 0.345) 100%),url('./library.png')",
@@ -141,78 +140,86 @@ export default function Explore() {
             </div>
           </div>
         </div>
-        <div className="w-full p-16">
-          <div className="flex flex-row w-full">
-            <div className="w-full">
-              <div className="text-2xl">Explore archive</div>
-              <div className="text-lightgrey">
-                See which websites have been archived so far.{" "}
+        <div>
+          {data.isLoading ? (
+            <div className="flex items-center justify-center h-48 loading btn bg-[#FFFFFF] border-none">
+              Loading...
+            </div>
+          ) : (
+            <div className="w-full p-16">
+              <div className="flex flex-row w-full">
+                <div className="w-full">
+                  <div className="text-2xl">Explore archive</div>
+                  <div className="text-lightgrey">
+                    See which websites have been archived so far.{" "}
+                  </div>
+                </div>
+                <div
+                  onClick={() => handleRecentlyAdded()}
+                  className="btn normal-case bg-[#FFFFFF] border-extralightgrey p-4 hover:bg-[#FFFFFF] hover:outline-none hover:border-extralightgrey justify-end text-lightgrey"
+                >
+                  Recently Added
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 pt-8 gap-4">
+                {data.data
+                  .filter((x) => {
+                    if (urlInfo.url && urlInfo.valid) {
+                      if (x.url == urlInfo.url) {
+                        return true;
+                      } else {
+                        return false;
+                      }
+                    }
+                    return true;
+                  })
+                  .map((x, i) => {
+                    return (
+                      <div
+                        className="card max-w-96 bg-base-100 shadow-xl "
+                        key={i}
+                      >
+                        <div>
+                          <figure className="">
+                            <Image
+                              src={`https://arweave.net/${x.screenshotTx}`}
+                              alt={x.title}
+                              width={250}
+                              height={250}
+                            />
+                          </figure>
+                        </div>
+                        <div className="card-body p-4">
+                          <div className="card-title text-lg">
+                            {x.title || "N/A"}
+                          </div>
+                          <div className="text-lightgrey">
+                            <i>{x.url}</i>
+                          </div>
+                          <div className="text-lightgrey">
+                            <i>
+                              Last archived:{" "}
+                              {moment(x.lastArchivedTimestamp * 1000).format(
+                                "MMMM D YYYY [at] HH:mm:ss"
+                              )}
+                            </i>
+                          </div>
+                          <div className="card-actions justify-end">
+                            <button
+                              onClick={() => router.push(`/url?url=${x.url}`)}
+                              className="btn w-full bg-[#FFFFFF] text-funpurple border border-funpurple hover:bg-funpurple/75 normal-case"
+                            >
+                              View all snapshots
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
               </div>
             </div>
-            <div
-              onClick={() => handleRecentlyAdded()}
-              className="btn normal-case bg-[#FFFFFF] border-extralightgrey p-4 hover:bg-[#FFFFFF] hover:outline-none hover:border-extralightgrey justify-end text-lightgrey"
-            >
-              Recently Added
-            </div>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 pt-8 gap-4">
-            {!data.isLoading &&
-              data.data
-                .filter((x) => {
-                  if (urlInfo.url && urlInfo.valid) {
-                    if (x.url == urlInfo.url) {
-                      return true;
-                    } else {
-                      return false;
-                    }
-                  }
-                  return true;
-                })
-                .map((x, i) => {
-                  return (
-                    <div
-                      className="card max-w-96 bg-base-100 shadow-xl "
-                      key={i}
-                    >
-                      <div>
-                        <figure className="">
-                          <Image
-                            src={`https://arweave.net/${x.screenshotTx}`}
-                            alt={x.title}
-                            width={250}
-                            height={250}
-                          />
-                        </figure>
-                      </div>
-                      <div className="card-body p-4">
-                        <div className="card-title text-lg">
-                          {x.title || "N/A"}
-                        </div>
-                        <div className="text-lightgrey">
-                          <i>{x.url}</i>
-                        </div>
-                        <div className="text-lightgrey">
-                          <i>
-                            Last archived:{" "}
-                            {moment(x.lastArchivedTimestamp * 1000).format(
-                              "MMMM D YYYY [at] HH:mm:ss"
-                            )}
-                          </i>
-                        </div>
-                        <div className="card-actions justify-end">
-                          <button
-                            onClick={() => router.push(`/url?url=${x.url}`)}
-                            className="btn w-full bg-[#FFFFFF] text-funpurple border border-funpurple hover:bg-funpurple/75 normal-case"
-                          >
-                            View all snapshots
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
-          </div>
+          )}
         </div>
       </div>
     </Container>

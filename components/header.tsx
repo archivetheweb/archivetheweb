@@ -30,7 +30,7 @@ export const Header: React.FC<any> = (props) => {
         );
       })();
     }
-  }, [priceInfo.price, priceInfo.isLoading]);
+  }, [priceInfo.price, priceInfo.isLoading, warp.arweave.transactions]);
 
   return (
     <div

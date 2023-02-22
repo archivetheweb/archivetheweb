@@ -45,7 +45,6 @@ export default function Replay() {
 
   return (
     <div>
-      <Script src="./ui.js" />
       {data.data === null ? (
         <div></div>
       ) : (
