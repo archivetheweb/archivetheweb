@@ -238,7 +238,7 @@ export default function ArchivePage() {
             ) : (
               <div className="p-4 md:p-8">
                 <div className="flex flex-col items-center  aspect-video w-full h-full">
-                  <Image
+                  <img
                     src={`https://arweave.net/` + data.data?.screenshotTx}
                     alt={data.data?.title}
                     width={750}

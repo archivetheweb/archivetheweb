@@ -210,7 +210,7 @@ export default function Explore() {
                       >
                         <div>
                           <figure className="">
-                            <Image
+                            <img
                               src={`https://arweave.net/${x.screenshotTx}`}
                               alt={x.title}
                               width={250}
