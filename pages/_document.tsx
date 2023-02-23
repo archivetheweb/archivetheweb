@@ -8,7 +8,7 @@ export default function Document() {
       <body>
         <Main />
         <NextScript />
-        <Script strategy="beforeInteractive" src="./ui.js" />
+        <Script strategy="lazyOnload" src="./ui.js" />
       </body>
     </Html>
   );
