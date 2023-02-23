@@ -7,6 +7,7 @@ import moment from "moment";
 import ConnectorContext from "../context/connector";
 import { ArchiveInfo } from "../bindings/ts/View";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Explore() {
   const router = useRouter();
@@ -181,7 +182,15 @@ export default function Explore() {
               </div>
               {filteredData.length === 0 && (
                 <div className="flex flex-col items-center justify-center h-48 gap-4">
-                  <div>No archive found</div>
+                  <div>
+                    This website has not been archived yet.{" "}
+                    <Link
+                      className="underline"
+                      href={`/save?url=${urlInfo.url}`}
+                    >
+                      Archive this site now.
+                    </Link>
+                  </div>
                   <div
                     onClick={handleClearSearch}
                     className="btn normal-case bg-[#FFFFFF] border-extralightgrey p-4 hover:bg-[#FFFFFF] hover:outline-none hover:border-extralightgrey justify-center  text-lightgrey"

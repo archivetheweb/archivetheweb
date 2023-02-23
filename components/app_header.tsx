@@ -74,7 +74,7 @@ export const AppHeader = () => {
             onKeyDown={(e) =>
               e.key === "Enter" && urlInfo.valid && handleSearch()
             }
-            placeholder="Search for websites by URL"
+            placeholder="Search for a URL"
             className="input input-bordered border-extralightgrey border-l-0 rounded-r-full focus:outline-none w-full"
           />
         </div>

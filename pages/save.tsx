@@ -458,7 +458,7 @@ function ArchivingOptions(props: any) {
             onClick={() => props.setTerms(Terms.Once)}
             className={
               props.terms === Terms.Once
-                ? "p-4 border-r border-[#00000033] bg-funpurple"
+                ? "p-4 border-r border-[#00000033] bg-funpurple text-[#FFFFFF]"
                 : "p-4 border-r border-[#00000033]"
             }
           >
@@ -468,7 +468,7 @@ function ArchivingOptions(props: any) {
             onClick={() => props.setTerms(Terms.Multiple)}
             className={
               props.terms === Terms.Multiple
-                ? "p-4 border-r border-[#00000033] bg-funpurple"
+                ? "p-4 border-r border-[#00000033] bg-funpurple text-[#FFFFFF]"
                 : "p-4 border-r border-[#00000033]"
             }
           >
@@ -480,7 +480,7 @@ function ArchivingOptions(props: any) {
             onClick={() => props.setDepth(Depth.PageOnly)}
             className={
               props.depth === Depth.PageOnly
-                ? "p-4 border-r border-[#00000033] bg-funpurple"
+                ? "p-4 border-r border-[#00000033] bg-funpurple text-[#FFFFFF]"
                 : "p-4 border-r border-[#00000033]"
             }
           >
@@ -490,7 +490,7 @@ function ArchivingOptions(props: any) {
             onClick={() => props.setDepth(Depth.PageAndLinks)}
             className={
               props.depth === Depth.PageAndLinks
-                ? "p-4 border-r border-[#00000033] bg-funpurple"
+                ? "p-4 border-r border-[#00000033] bg-funpurple text-[#FFFFFF]"
                 : "p-4 border-r border-[#00000033]"
             }
           >
@@ -613,7 +613,9 @@ function ArchivingOptions(props: any) {
             (+duration.value > 3 && duration.unit === TimeUnit.Days)
           }
         >
-          Next
+          {+duration.value > 3 && duration.unit === TimeUnit.Days
+            ? "Please limit your archiving to less than 3 days"
+            : "Next"}
         </button>
         <Paywith />
       </div>

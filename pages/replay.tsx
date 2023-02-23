@@ -48,12 +48,12 @@ export default function Replay() {
       {data.data === null ? (
         <div></div>
       ) : (
-        <div className="flex flex-col h-screen w-full">
+        <div className="flex flex-col h-screen w-full ">
           <div
-            className="grid grid-cols-2 md:grid-cols-3 p-8 items-center w-full"
+            className="grid grid-cols-2 md:grid-cols-3 p-8 items-center w-full  border-b border-[#00000033] "
             style={{ color: "rgba(0, 0, 0, 0.6)" }}
           >
-            <div className="flex gap-8 ">
+            <div className="flex gap-8  ">
               <div className="flex justify-center content-center items-center">
                 <Link href={"/"}>
                   <Image
@@ -110,7 +110,7 @@ export default function Replay() {
             </div>
           </div>
 
-          <div className="w-full h-full flex justify-center flex-col items-center">
+          <div className="w-full h-full flex justify-center flex-col items-center ">
             <replay-web-page
               source={`https://arweave.net/${data.data?.arweaveTx}/data.warc`}
               url={data.data?.fullUrl}
