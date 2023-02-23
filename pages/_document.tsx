@@ -8,7 +8,13 @@ export default function Document() {
       <body>
         <Main />
         <NextScript />
-        <Script strategy="afterInteractive" src="./ui.js" />
+        <Script
+          src="./replay/ui.js"
+          strategy="beforeInteractive"
+          onReady={() => {
+            console.log("ready in doc...");
+          }}
+        />
       </body>
     </Html>
   );

@@ -82,7 +82,7 @@ export const AppHeader = () => {
       <div className="flex flex-col md:flex-row justify-center  md:justify-end items-center gap-4">
         <div
           className="pr-4 tooltip tooltip-bottom"
-          data-tip="Archive all websites"
+          data-tip="All archived websites"
         >
           <Link className="flex gap-2" href={"/explore"}>
             <Image

@@ -115,7 +115,7 @@ export default function Replay() {
               source={`https://arweave.net/${data.data?.arweaveTx}/data.warc`}
               url={data.data?.fullUrl}
               embed="replayonly"
-              replayBase="./"
+              replayBase="./replay/"
             ></replay-web-page>
           </div>
         </div>
