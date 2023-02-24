@@ -28,7 +28,14 @@ export default function Explore() {
   useEffect(() => {
     (async () => {
       let result = await contract.archives({});
-      setData({ data: result.archives, isLoading: false, isError: false });
+      setData({
+        // TODO remove this, hack for now
+        data: result.archives.filter(
+          (archive) => !archive.url.includes("www.")
+        ),
+        isLoading: false,
+        isError: false,
+      });
     })();
   }, [contract]);
 
