@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { Container } from "../components/container";
 
 import { useRouter } from "next/router";
-import { isValidUrl } from "../components/utils";
+import { isValidUrl, shortenTitle } from "../components/utils";
 import moment from "moment";
 import ConnectorContext from "../context/connector";
 import { ArchiveInfo } from "../bindings/ts/View";
@@ -236,7 +236,12 @@ export default function Explore() {
                         </div>
                         <div className="card-body p-4">
                           <div className="card-title text-lg">
-                            {x.title || "N/A"}
+                            <div
+                              className="tooltip tooltip-top"
+                              data-tip={x.title}
+                            >
+                              {shortenTitle(x.title) || "N/A"}
+                            </div>
                           </div>
                           <div className="text-lightgrey">
                             <i>{x.url}</i>

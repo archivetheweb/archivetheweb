@@ -123,6 +123,13 @@ export const shortenAddress = (address: String) => {
   );
 };
 
+export const shortenTitle = (title: String) => {
+  if (title.length < 20) {
+    return title;
+  }
+  return title.substring(0, 19) + "...";
+};
+
 export const Toast = ({
   message,
   severity,
