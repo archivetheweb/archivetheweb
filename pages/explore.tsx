@@ -81,9 +81,18 @@ export default function Explore() {
   }, [sorting, data.data]);
 
   const handleURL = (e: React.FormEvent<HTMLInputElement>) => {
+    let url = e.currentTarget.value;
+    let valid = isValidUrl(url);
+    if (url.endsWith("/")) {
+      url = url.substring(0, url.length - 1);
+    }
+    if (valid && (url.includes("https") || url.includes("http"))) {
+      url = url.replace("https://", "");
+      url = url.replace("http://", "");
+    }
     setURL({
-      url: e.currentTarget.value,
-      valid: isValidUrl(e.currentTarget.value),
+      url: url,
+      valid: valid,
     });
   };
 
