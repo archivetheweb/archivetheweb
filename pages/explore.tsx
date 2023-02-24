@@ -150,7 +150,7 @@ export default function Explore() {
                   onKeyDown={(e) =>
                     e.key === "Enter" && urlInfo.valid && handleSearch()
                   }
-                  placeholder="Search for archived websites by URL (ex. www.bbc.com)"
+                  placeholder="Search for archived websites by URL (ex. https://bbc.com)"
                   className="input input-bordered w-full h-16 shadow-lg text-[#000000]"
                 />
 

@@ -68,6 +68,7 @@ export default function Save() {
 
     if (valid && !new RegExp(/^(https:\/\/)/).test(url)) {
       url = "https://" + url;
+      url = url.replace("www.", "");
     }
 
     setURL({
@@ -157,7 +158,7 @@ function WebsiteInput(props: any) {
             type="text"
             value={props.urlInfo.url}
             onChange={props.handleURL}
-            placeholder="Enter a website to save (ex. www.bbc.com)"
+            placeholder="Enter a website to save (ex. https://bbc.com)"
             className="input input-bordered w-full h-16"
           />
         </div>

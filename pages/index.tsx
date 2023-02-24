@@ -100,7 +100,7 @@ export default function Home() {
                   onKeyDown={(e) =>
                     e.key === "Enter" && urlInfo.valid && handleClick()
                   }
-                  placeholder="Enter a website to save (ex. www.bbc.com)"
+                  placeholder="Enter a website to save (ex. https://bbc.com)"
                   className="input input-bordered w-full h-16 shadow-lg"
                 />
 
@@ -171,7 +171,7 @@ export default function Home() {
                 impose this on others. For example{" "}
                 <a
                   className="underline"
-                  href="https://www.theguardian.com/world/2022/nov/28/china-censors-maskless-crowd-footage-in-world-cup-broadcasts"
+                  href="https://theguardian.com/world/2022/nov/28/china-censors-maskless-crowd-footage-in-world-cup-broadcasts"
                   target={"_blank"}
                   rel="noreferrer"
                 >
@@ -197,7 +197,7 @@ export default function Home() {
                 a change in government. In 2013, the{" "}
                 <a
                   className="underline"
-                  href="https://www.vice.com/en/article/78xzmb/the-conservative-party-tried-to-delete-their-old-speeches-from-the-web"
+                  href="https://vice.com/en/article/78xzmb/the-conservative-party-tried-to-delete-their-old-speeches-from-the-web"
                   target={"_blank"}
                   rel="noreferrer"
                 >
@@ -306,7 +306,7 @@ export default function Home() {
                 uploads, totalling 50+ million{" "}
                 <a
                   className="underline"
-                  href="https://www.bbc.com/news/technology-47610936"
+                  href="https://bbc.com/news/technology-47610936"
                   target={"_blank"}
                   rel="noreferrer"
                 >
@@ -649,7 +649,7 @@ const faq = [
         <br /> You can read more about their content moderation policy on their{" "}
         <a
           className="underline"
-          href="https://www.arweave.org/technology#content-moderation"
+          href="https://arwiki.arweave.dev/#/en/content-policies"
           target={"_blank"}
           rel="noreferrer"
         >
@@ -659,7 +659,7 @@ const faq = [
         or in greater detail in their{" "}
         <a
           className="underline"
-          href="https://www.arweave.org/yellow-paper.pdf"
+          href="https://yellow-paper.arweave.dev/"
           target={"_blank"}
           rel="noreferrer"
         >
