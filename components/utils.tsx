@@ -49,7 +49,7 @@ export const pluralize = (word: string, amount: number): string => {
 export const getDomain = (url: string): string => {
   let a = document.createElement("a");
   a.setAttribute("href", url);
-  return a.hostname;
+  return a.hostname.replace("www.", "");
 };
 
 export const calculateUploadPrice = (
