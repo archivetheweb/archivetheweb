@@ -79,20 +79,22 @@ export const translateToCronFrequency = (
   value: number,
   unit: TimeUnit
 ): string => {
-  // this amounts to once a day at 0 sec 0 mins past the hour
-  let cronFrequency = "0 0 */24 * * * *";
+  let mins = new Date().getMinutes();
+
+  // this amounts to once a day at 0 sec ${mins} mins past the hour
+  let cronFrequency = `0 ${mins} */24 * * * *`;
   if (value === 0) {
     return cronFrequency;
   }
   switch (unit) {
     case TimeUnit.Days:
       // per day
-      cronFrequency = `0 0 0 */${value} * * *`;
+      cronFrequency = `0 ${mins} 0 */${value} * * *`;
 
       break;
     case TimeUnit.Hours:
-      // At 0 minutes past the hour, every ${value} hours
-      cronFrequency = `0 0 */${value} * * * *`;
+      // At ${mins} minutes past the hour, every ${value} hours
+      cronFrequency = `0 ${mins} */${value} * * * *`;
       break;
   }
 
