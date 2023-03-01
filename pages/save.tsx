@@ -66,9 +66,18 @@ export default function Save() {
     let url = e.currentTarget.value;
     let valid = isValidUrl(url);
 
-    if (valid && !new RegExp(/^(https:\/\/)/).test(url)) {
-      url = "https://" + url;
-      url = url.replace("www.", "");
+    if (valid) {
+      if (url.includes("www.")) {
+        url = url.replace("www.", "");
+      }
+
+      if (!new RegExp(/^(https:\/\/)/).test(url)) {
+        url = "https://" + url;
+      }
+
+      if (url.endsWith("/")) {
+        url = url.substring(0, url.length - 1);
+      }
     }
 
     setURL({
