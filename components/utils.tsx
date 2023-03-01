@@ -6,7 +6,18 @@ export const AVERAGE_WEBSITE_DEPTH_1_IN_MB = 100;
 export const AVERAGE_WEBSITE_DEPTH_0_IN_MB = 5;
 export const MB = 1048576;
 
-export const UPLOADER = "2NbYHgsuI8uQcuErDsgoRUCyj9X2wZ6PBN6WTz9xyu0";
+export const UPLOADER =
+  process.env.NEXT_PUBLIC_ENVIRONMENT === "production"
+    ? "a_SDCVQa0B5QTobh5LWBzySpCdIm-3X9APrkmHZ-yV4"
+    : "2NbYHgsuI8uQcuErDsgoRUCyj9X2wZ6PBN6WTz9xyu0";
+
+export const CONTRACT_ADDRESS =
+  process.env.NEXT_PUBLIC_ENVIRONMENT === "production"
+    ? "dD1DuvgM_Vigtnv4vl2H1IYn9CgLvYuhbEWPOL-_4Mw"
+    : "-27RfG2DJAI3ddQlrXkN1rmS5fBSC4eG8Zfhz8skYTU";
+
+console.log(process.env);
+
 export const isValidUrl = (url: string) => {
   try {
     let u = url.replace("www.", "");
