@@ -16,8 +16,6 @@ export const CONTRACT_ADDRESS =
     ? "dD1DuvgM_Vigtnv4vl2H1IYn9CgLvYuhbEWPOL-_4Mw"
     : "-27RfG2DJAI3ddQlrXkN1rmS5fBSC4eG8Zfhz8skYTU";
 
-console.log(process.env);
-
 export const isValidUrl = (url: string) => {
   try {
     let u = url.replace("www.", "");
