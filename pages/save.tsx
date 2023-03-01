@@ -62,6 +62,17 @@ export default function Save() {
     }
   }, [router, router.query.url]);
 
+  useEffect(() => {
+    let clear = router.query.clear as string;
+    if (clear) {
+      setURL({ url: "", valid: false, domain: "" });
+      setTerms(Terms.Once);
+      setDepth(Depth.PageOnly);
+      setSteps(Steps.WebsiteInput);
+      router.push("/save");
+    }
+  }, [router, router.query.clear]);
+
   const handleURL = (e: React.FormEvent<HTMLInputElement>) => {
     let url = e.currentTarget.value;
     let valid = isValidUrl(url);

@@ -97,7 +97,7 @@ export const AppHeader = () => {
         </div>
         <div>
           <button
-            onClick={() => router.push("/save")}
+            onClick={() => router.push("/save?clear=true")}
             className="flex gap-2 btn btn-primary bg-funpurple hover:bg-funmidpurple"
           >
             <Image
