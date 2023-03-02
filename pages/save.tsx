@@ -145,21 +145,28 @@ export default function Save() {
 }
 
 function WebsiteInput(props: any) {
-  let [hasBeenArchived, setHasBeenArchived] = useState(true);
+  let [hasBeenArchived, setHasBeenArchived] = useState({
+    isLoading: false,
+    result: false,
+  });
   const { contract } = useContext(ConnectorContext);
 
   useEffect(() => {
     if (props.urlInfo.valid) {
       (async () => {
+        setHasBeenArchived({ isLoading: true, result: false });
         try {
           let res = await contract.archivesByURL({
             url: getDomain(props.urlInfo.url),
             count: 1,
           });
-          setHasBeenArchived(res.archives.archivedInfo.length > 0);
+          setHasBeenArchived({
+            isLoading: false,
+            result: res.archives.archivedInfo.length > 0,
+          });
         } catch (e) {
           console.error(e);
-          setHasBeenArchived(false);
+          setHasBeenArchived({ isLoading: false, result: false });
         }
       })();
     }
@@ -183,7 +190,9 @@ function WebsiteInput(props: any) {
           />
         </div>
 
-        {props.urlInfo.valid && !hasBeenArchived ? (
+        {props.urlInfo.valid &&
+        !hasBeenArchived.isLoading &&
+        !hasBeenArchived.result ? (
           <div
             className="w-full flex items-center justify-center rounded-lg p-6 text-lg  text-[#FFFFFF]"
             style={{
