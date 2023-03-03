@@ -38,7 +38,7 @@ export interface BaseInput {
   function: string;
 }
 
-export class AwtContract {
+export class AtwContract {
   readonly contract: Contract<State>;
 
   constructor(contractId: string, warp: Warp) {

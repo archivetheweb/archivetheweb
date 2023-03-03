@@ -1,6 +1,6 @@
 import { WarpFactory } from "warp-contracts";
 import { createContext } from "react";
-import { AwtContract } from "../bindings/ts/AwtContract";
+import { AtwContract } from "../bindings/ts/AtwContract";
 import { CONTRACT_ADDRESS } from "../components/utils";
 
 type Blockchain = {
@@ -23,7 +23,7 @@ export const emptyState = {
   isConnecting: false,
   connect: () => {},
   warp: warp,
-  contract: new AwtContract(CONTRACT_ADDRESS, warp),
+  contract: new AtwContract(CONTRACT_ADDRESS, warp),
   getLocalAddress: async () => {
     return await getWallet();
   },
