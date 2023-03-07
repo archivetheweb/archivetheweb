@@ -28,7 +28,7 @@ export const Footer: React.FC<any> = ({ props, className }) => {
           {/* TODO */}
           <div className="text-lightgrey text-xs text-right">
             This website does not use any cookies or trackers. <br />
-            Website last updated: February 22, 2022
+            Website last updated: March 7, 2023
           </div>
         </div>
       </div>
