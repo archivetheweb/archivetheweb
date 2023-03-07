@@ -126,7 +126,12 @@ export const Header: React.FC<any> = (props) => {
           <></>
         ) : (
           <div className=" flex-col hidden lg:flex ">
-            <div>Average Snapshot Cost</div>
+            <div
+              className="tooltip tooltip-bottom"
+              data-tip="Based on a 5mb upload"
+            >
+              Average Snapshot Cost
+            </div>
             <div className="text-funpurple">
               {" "}
               {costPerSnapshot.usd === "" ? "" : `USD $${costPerSnapshot.usd}`}

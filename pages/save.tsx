@@ -8,6 +8,8 @@ import React, { useContext, useEffect, useState } from "react";
 import Link from "next/link";
 import { Container } from "../components/container";
 import {
+  AVERAGE_WEBSITE_DEPTH_0_IN_MB,
+  AVERAGE_WEBSITE_DEPTH_1_IN_MB,
   calculateUploadPrice,
   durationToSeconds,
   getDomain,
@@ -118,6 +120,7 @@ export default function Save() {
           handleURL={handleURL}
           handleNext={handleNext}
           costPerSnapshot={costPerSnapshot}
+          depth={depth}
         />
       );
       break;
@@ -235,7 +238,16 @@ function WebsiteInput(props: any) {
             <tbody className="">
               <tr className=" ">
                 <td className=" rounded-tl-lg bg-extralightgrey ">
-                  Average price per snapshot
+                  <div
+                    className="tooltip tooltip-right"
+                    data-tip={`Based on a ${
+                      props.depth === Depth.PageOnly
+                        ? AVERAGE_WEBSITE_DEPTH_0_IN_MB
+                        : AVERAGE_WEBSITE_DEPTH_1_IN_MB
+                    }mb upload`}
+                  >
+                    Average price per snapshot
+                  </div>
                 </td>
                 <td className=" font-bold rounded-tr-lg bg-extralightgrey text-right m-4 ">
                   {props.costPerSnapshot.usd === ""
