@@ -5,6 +5,7 @@ import { Depth, Duration, TimeUnit } from "./types";
 export const AVERAGE_WEBSITE_DEPTH_1_IN_MB = 100;
 export const AVERAGE_WEBSITE_DEPTH_0_IN_MB = 5;
 export const MB = 1048576;
+export const BUNDLR_URL = "https://node1.bundlr.network";
 
 export const UPLOADER =
   process.env.NEXT_PUBLIC_ENVIRONMENT === "production"

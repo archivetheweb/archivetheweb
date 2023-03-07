@@ -1,7 +1,7 @@
 import logo from "../public/logo.png";
 import Link from "next/link";
 import Image from "next/image";
-import { fetchPrice } from "../http/fetcher";
+import { fetchArweaveMarketPrice, fetchBundlrPrice } from "../http/fetcher";
 import { useRouter } from "next/router";
 import { useContext, useEffect, useState } from "react";
 import { Depth } from "./types";
@@ -10,7 +10,8 @@ import ConnectorContext from "../context/connector";
 
 export const Header: React.FC<any> = (props) => {
   const router = useRouter();
-  const priceInfo = fetchPrice();
+  const priceInfo = fetchArweaveMarketPrice();
+  const bundlrPriceInfo = fetchBundlrPrice();
   const { warp } = useContext(ConnectorContext);
   let [costPerSnapshot, setCostPerSnapshot] = useState({
     usd: "",
@@ -18,9 +19,9 @@ export const Header: React.FC<any> = (props) => {
   });
 
   useEffect(() => {
-    if (!priceInfo.isLoading) {
+    if (!priceInfo.isLoading && !bundlrPriceInfo.isLoading) {
       (async () => {
-        let arweaveFeeForMB = await warp.arweave.transactions.getPrice(MB);
+        let arweaveFeeForMB = bundlrPriceInfo.price;
         setCostPerSnapshot(
           calculateUploadPrice(
             +arweaveFeeForMB,
@@ -30,7 +31,12 @@ export const Header: React.FC<any> = (props) => {
         );
       })();
     }
-  }, [priceInfo.price, priceInfo.isLoading, warp.arweave.transactions]);
+  }, [
+    priceInfo.price,
+    priceInfo.isLoading,
+    bundlrPriceInfo.price,
+    bundlrPriceInfo.isLoading,
+  ]);
 
   return (
     <div

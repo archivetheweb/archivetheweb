@@ -26,7 +26,7 @@ import infinity from "../public/infinity.png";
 import monitor from "../public/monitor.png";
 import CustomIframe from "../components/iframe";
 import ConnectorContext from "../context/connector";
-import { fetchPrice } from "../http/fetcher";
+import { fetchArweaveMarketPrice, fetchBundlrPrice } from "../http/fetcher";
 import { Faq } from "../components/FAQ";
 import { Paywith } from "../components/PayWith";
 import { Depth, TimeUnit, ModalStep, Steps, Terms } from "../components/types";
@@ -39,23 +39,29 @@ export default function Save() {
   let [depth, setDepth] = useState(Depth.PageOnly);
   let [steps, setSteps] = useState(Steps.WebsiteInput);
   let [toastMessage, setToastMessage] = useState(<></>);
-  const { warp } = useContext(ConnectorContext);
-  const priceInfo = fetchPrice();
+  const priceInfo = fetchArweaveMarketPrice();
+  const bundlrPriceInfo = fetchBundlrPrice();
   let [costPerSnapshot, setCostPerSnapshot] = useState({
     usd: "",
     winston: "",
   });
 
   useEffect(() => {
-    if (!priceInfo.isLoading) {
+    if (!priceInfo.isLoading && !bundlrPriceInfo.isLoading) {
       (async () => {
-        let arweaveFeeForMB = await warp.arweave.transactions.getPrice(MB);
+        let arweaveFeeForMB = bundlrPriceInfo.price;
         setCostPerSnapshot(
           calculateUploadPrice(+arweaveFeeForMB, depth, +priceInfo.price)
         );
       })();
     }
-  }, [priceInfo.price, priceInfo.isLoading, warp.arweave.transactions, depth]);
+  }, [
+    priceInfo.price,
+    priceInfo.isLoading,
+    bundlrPriceInfo.isLoading,
+    bundlrPriceInfo.price,
+    depth,
+  ]);
 
   useEffect(() => {
     let url = router.query.url as string;

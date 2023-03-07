@@ -11,7 +11,7 @@ import {
   MB,
   shortenAddress,
 } from "../components/utils";
-import { fetchPrice } from "../http/fetcher";
+import { fetchArweaveMarketPrice, fetchBundlrPrice } from "../http/fetcher";
 import arrowTopRight from "../public/arrow_top_right.png";
 import link from "../public/link.png";
 import saveWhite from "../public/save_white.png";
@@ -41,7 +41,8 @@ export default function ArchivePage() {
     isError: false,
   });
   const [toExpand, setToExpand] = useState("");
-  const priceInfo = fetchPrice();
+  const priceInfo = fetchArweaveMarketPrice();
+  const bundlrPriceInfo = fetchBundlrPrice();
   // let [nextSnap, setNextSnap] = useState(0);
   const { contract, warp } = useContext(ConnectorContext);
   let [costPerSnapshot, setCostPerSnapshot] = useState({
@@ -50,9 +51,9 @@ export default function ArchivePage() {
   });
 
   useEffect(() => {
-    if (!priceInfo.isLoading) {
+    if (!priceInfo.isLoading && !bundlrPriceInfo.isLoading) {
       (async () => {
-        let arweaveFeeForMB = await warp.arweave.transactions.getPrice(MB);
+        let arweaveFeeForMB = bundlrPriceInfo.price;
         setCostPerSnapshot(
           calculateUploadPrice(
             +arweaveFeeForMB,
@@ -62,7 +63,12 @@ export default function ArchivePage() {
         );
       })();
     }
-  }, [priceInfo.price, priceInfo.isLoading, warp.arweave.transactions]);
+  }, [
+    priceInfo.price,
+    priceInfo.isLoading,
+    bundlrPriceInfo.isLoading,
+    bundlrPriceInfo.price,
+  ]);
 
   useEffect(() => {
     let url = router.query.url as string;
