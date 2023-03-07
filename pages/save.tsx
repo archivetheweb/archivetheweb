@@ -60,6 +60,7 @@ export default function Save() {
   useEffect(() => {
     let url = router.query.url as string;
     if (url && isValidUrl(url)) {
+      url = processURL(url);
       setURL({ url: url, valid: true, domain: getDomain(url) });
     }
   }, [router, router.query.url]);
@@ -75,22 +76,28 @@ export default function Save() {
     }
   }, [router, router.query.clear]);
 
+  const processURL = (url: string) => {
+    if (url.includes("www.")) {
+      url = url.replace("www.", "");
+    }
+
+    if (!new RegExp(/^(https:\/\/)/).test(url)) {
+      url = "https://" + url;
+    }
+
+    if (url.endsWith("/")) {
+      url = url.substring(0, url.length - 1);
+    }
+
+    return url;
+  };
+
   const handleURL = (e: React.FormEvent<HTMLInputElement>) => {
     let url = e.currentTarget.value;
     let valid = isValidUrl(url);
 
     if (valid) {
-      if (url.includes("www.")) {
-        url = url.replace("www.", "");
-      }
-
-      if (!new RegExp(/^(https:\/\/)/).test(url)) {
-        url = "https://" + url;
-      }
-
-      if (url.endsWith("/")) {
-        url = url.substring(0, url.length - 1);
-      }
+      url = processURL(url);
     }
 
     setURL({
