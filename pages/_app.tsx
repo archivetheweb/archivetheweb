@@ -7,12 +7,11 @@ import {
   walletConnectProvider,
 } from "@web3modal/ethereum";
 import { Web3Modal } from "@web3modal/react";
-import { chain, configureChains, createClient, WagmiConfig } from "wagmi";
+import { mainnet, configureChains, createClient, WagmiConfig } from "wagmi";
 import ConnectorContext, { emptyState } from "../context/connector";
 
-const chains = [chain.mainnet, chain.polygon, chain.optimism, chain.arbitrum];
+const chains = [mainnet];
 
-// Wagmi client
 const { provider } = configureChains(chains, [
   walletConnectProvider({ projectId: process.env.WEB3_MODAL_PROJECT_ID || "" }),
 ]);
@@ -22,7 +21,6 @@ const wagmiClient = createClient({
   provider,
 });
 
-// Web3Modal Ethereum Client
 const ethereumClient = new EthereumClient(wagmiClient, chains);
 
 export default function App({ Component, pageProps }: AppProps) {

@@ -3,15 +3,39 @@ import Link from "next/link";
 import Image from "next/image";
 import { fetchPrice } from "../http/fetcher";
 import { useRouter } from "next/router";
+import { useContext, useEffect, useState } from "react";
+import { Depth } from "./types";
+import { calculateUploadPrice, MB } from "./utils";
+import ConnectorContext from "../context/connector";
 
 export const Header: React.FC<any> = (props) => {
   const router = useRouter();
-  // const { price, isLoading } = fetchPrice();
+  const priceInfo = fetchPrice();
+  const { warp } = useContext(ConnectorContext);
+  let [costPerSnapshot, setCostPerSnapshot] = useState({
+    usd: "",
+    winston: "",
+  });
+
+  useEffect(() => {
+    if (!priceInfo.isLoading) {
+      (async () => {
+        let arweaveFeeForMB = await warp.arweave.transactions.getPrice(MB);
+        setCostPerSnapshot(
+          calculateUploadPrice(
+            +arweaveFeeForMB,
+            Depth.PageOnly,
+            +priceInfo.price
+          )
+        );
+      })();
+    }
+  }, [priceInfo.price, priceInfo.isLoading, warp.arweave.transactions]);
 
   return (
     <div
       className={
-        "grid grid-cols-1 justify-center content-center items-center md:grid-cols-3 pt-4 w-full " +
+        "grid grid-cols-2 justify-center content-center items-center md:grid-cols-3 pt-4 w-full " +
         props.className
       }
       style={{ color: "rgba(0, 0, 0, 0.6)" }}
@@ -98,25 +122,29 @@ export const Header: React.FC<any> = (props) => {
         </div>
       </div>
       <div className="flex col-span-1 justify-end content-center items-center gap-8 ">
-        {/* <div className="flex flex-col">
-          <div>Average Snapshot Cost</div>
-          <div className="text-funpurple">
-            USD ${isLoading ? "loading..." : Math.round(+price * 100) / 100}
+        {costPerSnapshot.usd === "" ? (
+          <></>
+        ) : (
+          <div className=" flex-col hidden lg:flex ">
+            <div
+              className="tooltip tooltip-bottom"
+              data-tip="Based on a 5mb upload"
+            >
+              Average Snapshot Cost
+            </div>
+            <div className="text-funpurple">
+              {" "}
+              {costPerSnapshot.usd === "" ? "" : `USD $${costPerSnapshot.usd}`}
+            </div>
           </div>
-        </div> */}
+        )}
         <button
-          onClick={() => window.open("https://twitter.com/archive_the_web")}
-          style={{ borderRadius: "5px" }}
-          className="hidden md:inline btn bg-funpurple normal-case  text-[#FFFFFF] hover:bg-funpurple/75 border-none"
-        >
-          Follow us on Twitter
-        </button>
-        {/* <button
           onClick={() => router.push("/save")}
-          className="btn bg-funpurple text-[#FFFFFF] hover:bg-funpurple/75 border-none"
+          style={{ borderRadius: "5px" }}
+          className=" btn bg-funpurple normal-case  text-[#FFFFFF] hover:bg-funpurple/75 border-none"
         >
           Save a Website
-        </button> */}
+        </button>
       </div>
     </div>
   );

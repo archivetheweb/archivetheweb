@@ -12,11 +12,10 @@ import puzzle from "../public/puzzle.png";
 import eth from "../public/eth.png";
 import svg from "../public/copy.svg";
 import faqImage from "../public/faq.png";
-import gh from "../public/github.png";
 import diagram from "../public/diagram.png";
 import openArchive from "../public/open_archive.png";
 import mainHeader from "../public/main_header.png";
-import library from "../public/page_break.png";
+import library from "../public/library.png";
 import top from "../public/top.svg";
 
 import { Header } from "../components/header";
@@ -43,7 +42,7 @@ export default function Home() {
       return;
     }
 
-    router.push(`/save?url=${urlInfo.url}`);
+    router.push(`/explore?url=${urlInfo.url}`);
   };
 
   const handleCopyArClick = (e: any) => {
@@ -68,7 +67,7 @@ export default function Home() {
   return (
     <div className="flex flex-col h-screen w-fit">
       <Header className="px-16 pb-16" />
-      <Toast message={toastMessage} />
+      <Toast message={toastMessage} severity="success" />
       <button
         onClick={() => router.push("/")}
         className="btn btn-circle bg-[#FFFFFF] active:bg-funpurple hover:bg-funpurple  right-2 bottom-2 fixed"
@@ -94,38 +93,33 @@ export default function Home() {
                 tweets, articles, and more.
               </div>
               <div className="flex gap-4">
-                <br />
-                <br />
-                <br />
-                <br />
-                {/* <input
+                <input
                   type="text"
                   value={urlInfo.url}
                   onChange={handleURL}
                   onKeyDown={(e) =>
                     e.key === "Enter" && urlInfo.valid && handleClick()
                   }
-                  placeholder="Enter a website to save (ex. www.bbc.com)"
+                  placeholder="Enter a website to save (ex. https://bbc.com)"
                   className="input input-bordered w-full h-16 shadow-lg"
                 />
 
                 <button
                   disabled={!urlInfo.valid}
                   onClick={handleClick}
+                  style={{ borderRadius: "5px" }}
                   className="btn bg-funpurple text-[#FFFFFF] hover:bg-funpurple/75 border-none h-16 "
                 >
                   Save a Website
-                </button> */}
+                </button>
               </div>
             </div>
             <div className="flex justify-center items-center p-16">
               <Image
                 src={mainHeader}
-                // className="max-h-full"
-                // height={413}
-                // width={353}
                 style={{ maxHeight: "413px", maxWidth: "353px" }}
                 alt="man fetching book in library"
+                priority
               />
             </div>
           </div>
@@ -177,7 +171,7 @@ export default function Home() {
                 impose this on others. For example{" "}
                 <a
                   className="underline"
-                  href="https://www.theguardian.com/world/2022/nov/28/china-censors-maskless-crowd-footage-in-world-cup-broadcasts"
+                  href="https://theguardian.com/world/2022/nov/28/china-censors-maskless-crowd-footage-in-world-cup-broadcasts"
                   target={"_blank"}
                   rel="noreferrer"
                 >
@@ -203,7 +197,7 @@ export default function Home() {
                 a change in government. In 2013, the{" "}
                 <a
                   className="underline"
-                  href="https://www.vice.com/en/article/78xzmb/the-conservative-party-tried-to-delete-their-old-speeches-from-the-web"
+                  href="https://vice.com/en/article/78xzmb/the-conservative-party-tried-to-delete-their-old-speeches-from-the-web"
                   target={"_blank"}
                   rel="noreferrer"
                 >
@@ -312,7 +306,7 @@ export default function Home() {
                 uploads, totalling 50+ million{" "}
                 <a
                   className="underline"
-                  href="https://www.bbc.com/news/technology-47610936"
+                  href="https://bbc.com/news/technology-47610936"
                   target={"_blank"}
                   rel="noreferrer"
                 >
@@ -486,7 +480,6 @@ export default function Home() {
                 style={{ borderRadius: "5px" }}
                 className="btn btn-outline normal-case  text-funpurple hover:border-none hover:bg-funpurple/75 border-funpurple h-16 "
               >
-                {/* <Image src={gh} height={24} width={24} alt="github" /> */}
                 <span className="">Visit our Github</span>
               </button>
             </div>
@@ -509,7 +502,7 @@ export default function Home() {
                   alt="eth"
                 />
                 <div
-                  className="grow text-center text-lightgrey"
+                  className="grow text-sm xl:text-base text-center text-lightgrey"
                   onClick={handleCopyEthClick}
                 >
                   0x9655443B0DBA59d9125d2fEC98f84f4c9c0460BE
@@ -530,7 +523,7 @@ export default function Home() {
                 />
                 <div
                   id="ar_address"
-                  className="grow text-center text-lightgrey"
+                  className="grow text-sm xl:text-base  text-center text-lightgrey"
                 >
                   7BOgKhQMI3rxhTZRBqazmCY6AiSFN3etX_5w91Ks7sQ
                 </div>
@@ -656,7 +649,7 @@ const faq = [
         <br /> You can read more about their content moderation policy on their{" "}
         <a
           className="underline"
-          href="https://www.arweave.org/technology#content-moderation"
+          href="https://arwiki.arweave.dev/#/en/content-policies"
           target={"_blank"}
           rel="noreferrer"
         >
@@ -666,7 +659,7 @@ const faq = [
         or in greater detail in their{" "}
         <a
           className="underline"
-          href="https://www.arweave.org/yellow-paper.pdf"
+          href="https://yellow-paper.arweave.dev/"
           target={"_blank"}
           rel="noreferrer"
         >
