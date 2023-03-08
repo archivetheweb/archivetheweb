@@ -62,16 +62,25 @@ export const getDomain = (url: string): string => {
   return a.hostname.replace("www.", "");
 };
 
-export const calculateUploadPrice = (
+export const calculateUploadPriceWithDepth = (
   arweaveFeeForMB: number,
   depth: Depth,
   price: number
 ) => {
-  let priceInAr =
-    arweaveFeeForMB *
-    (depth === Depth.PageOnly
+  let mbs =
+    depth === Depth.PageOnly
       ? AVERAGE_WEBSITE_DEPTH_0_IN_MB
-      : AVERAGE_WEBSITE_DEPTH_1_IN_MB);
+      : AVERAGE_WEBSITE_DEPTH_1_IN_MB;
+
+  return calculateUploadPrice(arweaveFeeForMB, mbs, +price);
+};
+
+export const calculateUploadPrice = (
+  arweaveFeeForMB: number,
+  mbs: number,
+  price: number
+) => {
+  let priceInAr = +arweaveFeeForMB * mbs;
   let pricePerSnapshot =
     Math.round((+price * priceInAr * 1000) / 1000000000000) / 1000;
 

@@ -3,16 +3,14 @@ import Link from "next/link";
 import Image from "next/image";
 import { fetchArweaveMarketPrice, fetchBundlrPrice } from "../http/fetcher";
 import { useRouter } from "next/router";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Depth } from "./types";
-import { calculateUploadPrice, MB } from "./utils";
-import ConnectorContext from "../context/connector";
+import { calculateUploadPriceWithDepth, MB } from "./utils";
 
 export const Header: React.FC<any> = (props) => {
   const router = useRouter();
   const priceInfo = fetchArweaveMarketPrice();
   const bundlrPriceInfo = fetchBundlrPrice();
-  const { warp } = useContext(ConnectorContext);
   let [costPerSnapshot, setCostPerSnapshot] = useState({
     usd: "",
     winston: "",
@@ -23,7 +21,7 @@ export const Header: React.FC<any> = (props) => {
       (async () => {
         let arweaveFeeForMB = bundlrPriceInfo.price;
         setCostPerSnapshot(
-          calculateUploadPrice(
+          calculateUploadPriceWithDepth(
             +arweaveFeeForMB,
             Depth.PageOnly,
             +priceInfo.price
@@ -131,7 +129,7 @@ export const Header: React.FC<any> = (props) => {
         {costPerSnapshot.usd === "" ? (
           <></>
         ) : (
-          <div className=" flex-col hidden lg:flex ">
+          <div className=" flex-col hidden xl:flex ">
             <div
               className="tooltip tooltip-bottom"
               data-tip="Based on a 5mb upload"
@@ -145,11 +143,11 @@ export const Header: React.FC<any> = (props) => {
           </div>
         )}
         <button
-          onClick={() => router.push("/save")}
+          onClick={() => router.push("/explore")}
           style={{ borderRadius: "5px" }}
           className=" btn bg-funpurple normal-case  text-[#FFFFFF] hover:bg-funpurple/75 border-none"
         >
-          Save a Website
+          See all archived sites
         </button>
       </div>
     </div>
