@@ -95,10 +95,10 @@ export default function Home() {
                 An open & permanent public web archive <u>for everyone</u>
               </h1>
               <div className="py-6 text-xl text-lightgrey">
-                Let's safeguard the web and our digital history. Explore the
-                open and decentralized archive and begin archiving your favorite
-                content - from government speeches and news articles to social
-                media posts and cat memes!
+                Let&apos;s safeguard the web and our digital history. Explore
+                the open and decentralized archive and begin archiving your
+                favorite content - from government speeches and news articles to
+                social media posts and cat memes!
               </div>
               <div className="flex gap-4">
                 <input
@@ -165,9 +165,12 @@ export default function Home() {
         </div>
 
         <div className="grid lg:grid-cols-2 sm:grid-cols-1 px-24 gap-8 pt-16 ">
-          {infoPills.map((x) => {
+          {infoPills.map((x, i) => {
             return (
-              <div className="flex flex-col items-center sm:flex-row  border rounded-md p-8 gap-4 border-[#D9D9D9]">
+              <div
+                key={i}
+                className="flex flex-col items-center sm:flex-row  border rounded-md p-8 gap-4 border-[#D9D9D9]"
+              >
                 <Image
                   src={x.image}
                   style={{ height: "100px", width: "100px" }}
@@ -314,11 +317,12 @@ export default function Home() {
             <div className="text-3xl font-bold pb-8">Built to last</div>
             <div className="text-lightgrey">
               We are committed to preserving the web and its rich history for
-              future generations. That's why we use Arweave, a permanent data
-              storage protocol that ensures all website snapshots are stored in
-              an immutable and community-owned web, known as the permaweb. Data
-              added to Arweave is replicated among hundreds or thousands of
-              computers or "miners," making it resilient and easily retrievable.
+              future generations. That&apos;s why we use Arweave, a permanent
+              data storage protocol that ensures all website snapshots are
+              stored in an immutable and community-owned web, known as the
+              permaweb. Data added to Arweave is replicated among hundreds or
+              thousands of computers or &quot;miners&quot; making it resilient
+              and easily retrievable.
               <br />
               <br />
               To permanently save data, the Arweave network charges an upfront
@@ -479,7 +483,7 @@ const faq = (costPer22Mb: string) => [
     ),
   },
   {
-    question: "What can I store? ",
+    question: "What can I store?",
     answer: (
       <div>
         Currently, Archive the Web allows users to store interactive website
@@ -489,12 +493,12 @@ const faq = (costPer22Mb: string) => [
         its capabilities, so you can archive other types of content besides
         websites. <br />
         <br />
-        It's important to note that the website snapshots saved through Archive
-        the Web are interactive, just like the actual website at the time of the
-        snapshot. This means they can be viewed and interacted with, rather than
-        static images like screenshots. This allows users to access archived
-        websites in a way that is similar to how they would experience the live
-        website.
+        It&apos;s important to note that the website snapshots saved through
+        Archive the Web are interactive, just like the actual website at the
+        time of the snapshot. This means they can be viewed and interacted with,
+        rather than static images like screenshots. This allows users to access
+        archived websites in a way that is similar to how they would experience
+        the live website.
       </div>
     ),
   },
@@ -549,9 +553,9 @@ const faq = (costPer22Mb: string) => [
       <div>
         Archive the Web is an open-source project that allows anyone to upload
         content to the Arweave network. Once the content is uploaded, it becomes
-        subject to Arweave's content moderation policies. These policies aim to
-        prevent network abuse and ensure that the content stored on the network
-        adheres to the community's standards.
+        subject to Arweave&apos;s content moderation policies. These policies
+        aim to prevent network abuse and ensure that the content stored on the
+        network adheres to the community&apos;s standards.
         <br />
         <br />
         Arweave uses a democratic moderation tool at the core of its protocol to
@@ -562,10 +566,10 @@ const faq = (costPer22Mb: string) => [
         illicit material or using computer vision software to scan the data.
         <br />
         <br />
-        If someone finds content they believe violates Arweave's moderation
+        If someone finds content they believe violates Arweave&apos;s moderation
         policies they can contact gateways that serve the data and request its
-        removal from the network. For more information about Arweave's content
-        moderation policies, visit their{" "}
+        removal from the network. For more information about Arweave&apos;s
+        content moderation policies, visit their{" "}
         <a
           className="underline"
           href="https://arweave.org"
@@ -620,11 +624,11 @@ const faq = (costPer22Mb: string) => [
         one-time fee to secure storage on the Arweave network for 200+ years. In
         contrast, Wayback Machine is primarily funded through donations to its
         parent organization, the Internet Archive. This means that Archive the
-        Web's funding model is driven by user payments, which may provide a more
-        sustainable and long-term approach to preserving web content. In
-        comparison, Wayback Machine's funding relies on sustained donations from
-        individuals and organizations, which may be less reliable over the long
-        term.
+        Web&apos;s funding model is driven by user payments, which may provide a
+        more sustainable and long-term approach to preserving web content. In
+        comparison, Wayback Machine&apos;s funding relies on sustained donations
+        from individuals and organizations, which may be less reliable over the
+        long term.
       </div>
     ),
   },
@@ -637,7 +641,8 @@ const infoPills = [
     text: (
       <div>
         Censorship occurs when governments or private groups suppress words,
-        images, and ideas that are "offensive" and impose this on others.
+        images, and ideas that are &quot;offensive&quot; and impose this on
+        others.
       </div>
     ),
     exampleTitle: "See example: FIFA world cup coverage in China",
@@ -652,7 +657,7 @@ const infoPills = [
           In China, during the FIFA World Cup 2022 in Qatar
         </a>
         , footage of maskless crowds in the stadiums was not aired on TV because
-        it contradicted China's zero-covid lockdown protocols.
+        it contradicted China&apos;s zero-covid lockdown protocols.
       </div>
     ),
   },
@@ -675,7 +680,7 @@ const infoPills = [
           target={"_blank"}
           rel="noreferrer"
         >
-          British Conservative Party abruptly deleted ten years' worth of
+          British Conservative Party abruptly deleted ten years&apos; worth of
           speeches and press releases
         </a>{" "}
         from their website. They also attempted to prevent search engines from
@@ -773,7 +778,7 @@ const infoPills = [
     title: "Servers go down",
     text: (
       <div>
-        In a company's routine operations, servers can sometimes go down,
+        In a company&apos;s routine operations, servers can sometimes go down,
         causing data loss on small and large scales.
       </div>
     ),
