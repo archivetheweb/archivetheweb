@@ -75,6 +75,23 @@ export const calculateUploadPriceWithDepth = (
   return calculateUploadPrice(arweaveFeeForMB, mbs, +price);
 };
 
+export const processURL = (url: string) => {
+  url = url.toLowerCase();
+  if (url.includes("www.")) {
+    url = url.replace("www.", "");
+  }
+
+  if (!new RegExp(/^(https:\/\/)/).test(url)) {
+    url = "https://" + url;
+  }
+
+  if (url.endsWith("/")) {
+    url = url.substring(0, url.length - 1);
+  }
+
+  return url;
+};
+
 export const calculateUploadPrice = (
   arweaveFeeForMB: number,
   mbs: number,

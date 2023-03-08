@@ -14,8 +14,8 @@ import {
   durationToSeconds,
   getDomain,
   isValidUrl,
-  MB,
   pluralize,
+  processURL,
   shortenAddress,
   Toast,
   translateToCronFrequency,
@@ -79,22 +79,6 @@ export default function Save() {
       router.push("/save");
     }
   }, [router, router.query.clear]);
-
-  const processURL = (url: string) => {
-    if (url.includes("www.")) {
-      url = url.replace("www.", "");
-    }
-
-    if (!new RegExp(/^(https:\/\/)/).test(url)) {
-      url = "https://" + url;
-    }
-
-    if (url.endsWith("/")) {
-      url = url.substring(0, url.length - 1);
-    }
-
-    return url;
-  };
 
   const handleURL = (e: React.FormEvent<HTMLInputElement>) => {
     let url = e.currentTarget.value;

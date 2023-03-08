@@ -23,21 +23,28 @@ import { Header } from "../components/header";
 import { Footer } from "../components/footer";
 import Image from "next/image";
 import { useState } from "react";
-import { isValidUrl, Toast } from "../components/utils";
+import { getDomain, isValidUrl, processURL, Toast } from "../components/utils";
 import { useRouter } from "next/router";
 import { fetchPricePerMB } from "../http/fetcher";
 
 export default function Home() {
   const router = useRouter();
-  let [urlInfo, setURL] = useState({ url: "", valid: false });
+  let [urlInfo, setURL] = useState({ url: "", valid: false, domain: "" });
   let [toastMessage, setToastMessage] = useState(<></>);
   const priceInfo = fetchPricePerMB();
 
   const handleURL = (e: React.FormEvent<HTMLInputElement>) => {
-    setURL({
-      url: e.currentTarget.value,
-      valid: isValidUrl(e.currentTarget.value),
-    });
+    let url = e.currentTarget.value;
+    if (url && isValidUrl(url)) {
+      url = processURL(url);
+      setURL({ url: url, valid: true, domain: getDomain(url) });
+    } else {
+      setURL({
+        url: e.currentTarget.value,
+        valid: false,
+        domain: "",
+      });
+    }
   };
 
   const handleClick = () => {
@@ -45,7 +52,7 @@ export default function Home() {
       return;
     }
 
-    router.push(`/explore?url=${urlInfo.url}`);
+    router.push(`/explore?url=${urlInfo.domain}`);
   };
 
   const handleCopyArClick = (e: any) => {
