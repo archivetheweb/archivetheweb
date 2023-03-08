@@ -385,13 +385,15 @@ export default function Home() {
               GitHub repository!
               <br />
               <br />
-              <button
-                onClick={() => window.open("https://github.com/archivetheweb")}
+              <a
+                href="https://github.com/archivetheweb"
+                target={"_blank"}
+                rel="noreferrer"
                 style={{ borderRadius: "5px" }}
                 className="btn btn-outline normal-case  text-funpurple hover:border-none hover:bg-funpurple/75 border-funpurple h-16 "
               >
-                <span className="">Visit our Github</span>
-              </button>
+                Visit our Github
+              </a>
             </div>
             <div className="text-3xl font-bold pb-8 pt-10">
               Donate to Archive the Web
