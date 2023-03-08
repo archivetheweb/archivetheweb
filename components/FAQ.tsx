@@ -57,7 +57,7 @@ export function Faq() {
           </div>
         </div>
       </div>
-      <div className="flex gap-4">
+      {/* <div className="flex gap-4">
         <div className="border border-[#00000033] rounded-lg">
           <div tabIndex={2} className="collapse collapse-arrow">
             <input type="checkbox" />
@@ -72,7 +72,6 @@ export function Faq() {
               </span>{" "}
             </div>
             <div className="collapse-content">
-              {/* TODO */}
               Yes, you will be able to pay for archiving with a credit card as
               soon as we integrate with Metamask. To do so, you will need to use
               Metamask. You can buy ETH and ERC-20 tokens with credit card
@@ -81,7 +80,7 @@ export function Faq() {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }

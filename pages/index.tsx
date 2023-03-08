@@ -165,165 +165,33 @@ export default function Home() {
         </div>
 
         <div className="grid lg:grid-cols-2 sm:grid-cols-1 px-24 gap-8 pt-16 ">
-          <div className="flex flex-col items-center sm:flex-row  border rounded-md p-8 gap-4 border-[#D9D9D9]">
-            <Image
-              src={monkey}
-              style={{ height: "100px", width: "100px" }}
-              alt="monkey"
-            />
-            <div>
-              <div className="font-bold pb-1">Content is censored</div>
-              <div className="text-lightgrey">
-                Censorship occurs when governments or private groups suppress
-                words, images, and ideas that are &quot;offensive&quot; and
-                impose this on others. For example{" "}
-                <a
-                  className="underline"
-                  href="https://theguardian.com/world/2022/nov/28/china-censors-maskless-crowd-footage-in-world-cup-broadcasts"
-                  target={"_blank"}
-                  rel="noreferrer"
-                >
-                  in China, during the FIFA World Cup 2022 in Qatar,
-                </a>{" "}
-                footage of maskless crowds in the stadiums was not aired on TV
-                because it contradicted China&apos;s zero-covid lockdown
-                protocols.
+          {infoPills.map((x) => {
+            return (
+              <div className="flex flex-col items-center sm:flex-row  border rounded-md p-8 gap-4 border-[#D9D9D9]">
+                <Image
+                  src={x.image}
+                  style={{ height: "100px", width: "100px" }}
+                  alt="monkey"
+                />
+                <div>
+                  <div className="font-bold pb-1">{x.title}</div>
+                  <div className="text-lightgrey">
+                    {x.text}
+                    <div className="collapse collapse-arrow">
+                      <input type="checkbox" />
+                      <div className="collapse-title pl-0 text-funpurple">
+                        {x.exampleTitle}
+                      </div>
+                      <div className="collapse-content  pl-0">
+                        <div className="divider m-0  before:bg-[#D9D9D9]  after:bg-[#D9D9D9]"></div>
+                        {x.exampleText}
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-          <div className="flex flex-col items-center sm:flex-row border rounded-md p-8 gap-4 border-[#D9D9D9]">
-            <Image
-              src={opinions}
-              alt="opinions"
-              style={{ height: "100px", width: "100px" }}
-            />
-            <div>
-              <div className="font-bold pb-1">Opinions change</div>
-              <div className="text-lightgrey">
-                Sometimes, online information is deleted or altered due to a
-                change in leadership. For example, this can occur when there is
-                a change in government. In 2013, the{" "}
-                <a
-                  className="underline"
-                  href="https://vice.com/en/article/78xzmb/the-conservative-party-tried-to-delete-their-old-speeches-from-the-web"
-                  target={"_blank"}
-                  rel="noreferrer"
-                >
-                  British Conservative Party abruptly deleted ten years&apos;
-                  worth of speeches and press releases
-                </a>{" "}
-                from their website. They also attempted to prevent search
-                engines from being able to access the deleted files by updating
-                the robots.txt files.
-              </div>
-            </div>
-          </div>
-          <div className="flex flex-col items-center sm:flex-row border rounded-md p-8 gap-4 border-[#D9D9D9]">
-            <Image
-              src={door}
-              alt="door"
-              style={{ height: "100px", width: "100px" }}
-            />
-            <div>
-              <div className="font-bold pb-1">Organizations close</div>
-              <div className="text-lightgrey">
-                Companies can shut down and lose the data you entrusted them
-                with keeping. If they were running a website of particular
-                social and historical significance, the information made
-                available there may be lost and unincluded in our digital
-                memory.
-              </div>
-            </div>
-          </div>
-          <div className="flex flex-col items-center sm:flex-row border rounded-md border-[#D9D9D9] p-8 gap-4">
-            <Image
-              src={apple}
-              alt="apple"
-              style={{ height: "100px", width: "100px" }}
-            />
-            <div>
-              <div className="font-bold pb-1">Links rot</div>
-              <div className="text-lightgrey">
-                Link rot occurs when the hyperlinked text no longer leads to the
-                original site or file. In other words, when hyperlinked text is
-                broken. A 2022 study found that over 66.5% of links to sites in
-                the last{" "}
-                <a
-                  className="underline"
-                  href="https://ahrefs.com/blog/link-rot-study/"
-                  target={"_blank"}
-                  rel="noreferrer"
-                >
-                  nine years have been lost
-                </a>
-                . An earlier study from 2014 found that 70% of links in legal
-                journals and 50% of URLs cited in the{" "}
-                <a
-                  className="underline"
-                  href="https://harvardlawreview.org/2014/03/perma-scoping-and-addressing-the-problem-of-link-and-reference-rot-in-legal-citations"
-                  target={"_blank"}
-                  rel="noreferrer"
-                >
-                  U.S. Supreme Court decisions no longer worked.
-                </a>
-              </div>
-            </div>
-          </div>
-          <div className="flex flex-col items-center sm:flex-row border rounded-md p-8 gap-4 border-[#D9D9D9]">
-            <Image
-              src={unpaid}
-              alt="wallet"
-              style={{ height: "100px", width: "100px" }}
-            />
-            <div>
-              <div className="font-bold pb-1">Hosting is unpaid</div>
-              <div className="text-lightgrey">
-                Hosting services can be left unpaid and content abandoned. This
-                may be an unintended consequence for users due to company
-                shutdowns and bankruptcies. For example, the{" "}
-                <a
-                  href="https://decrypt.co/114856/coachella-tomorrowland-solana-nfts-stuck-ftx"
-                  target={"_blank"}
-                  rel="noreferrer"
-                  className="underline"
-                >
-                  {" "}
-                  artwork for Coachella NFTs, including the lifetime passes
-                  which sold for six figures, is unavailable{" "}
-                </a>{" "}
-                because of server issues in the wake of the FTX collapse and
-                bankruptcy. Many other projects launched on this platform are
-                having similar problems.
-              </div>
-            </div>
-          </div>
-          <div className="flex flex-col items-center sm:flex-row border rounded-md p-8 gap-4 border-[#D9D9D9]">
-            <Image
-              src={fire}
-              alt="fire"
-              style={{ height: "100px", width: "100px" }}
-            />
-            <div>
-              <div className="font-bold pb-1">Servers go down</div>
-              <div className="text-lightgrey">
-                In a company&apos;s routine operations, servers can sometimes go
-                down, causing data loss on small and large scales. One extreme
-                example was the massive data loss suffered by Myspace in 2019.
-                Images, videos, and audio files uploaded before 2016 were likely
-                lost due to this incident. This loss included 12 years of music
-                uploads, totalling 50+ million{" "}
-                <a
-                  className="underline"
-                  href="https://bbc.com/news/technology-47610936"
-                  target={"_blank"}
-                  rel="noreferrer"
-                >
-                  songs from 14 million artists
-                </a>
-                . They claimed it occurred due to server migration.
-              </div>
-            </div>
-          </div>
+            );
+          })}
         </div>
         <Image className="w-full pt-16" src={library} alt="library" />
 
@@ -406,7 +274,7 @@ export default function Home() {
               That&apos;s all! The snapshots will be automatically saved on the
               permaweb and added to the open and decentralized archive, where
               they will be accessible to anyone who wants to explore the history
-              of the web. Multiple payment methods are available.
+              of the web.
             </div>
           </div>
         </div>
@@ -454,11 +322,11 @@ export default function Home() {
               <br />
               <br />
               To permanently save data, the Arweave network charges an upfront
-              fee, known as an "endowment fee," which is calculated based on
-              conservative estimates around price reductions for storage over
-              time. This fee incentivizes the miners to continue storing the
-              data for at least 200 years, ensuring that website snapshots are
-              preserved for future historical purposes.
+              fee, which is calculated based on conservative estimates around
+              price reductions for storage over time. This fee incentivizes the
+              miners to continue storing the data for at least 200 years,
+              ensuring that website snapshots are preserved for future
+              historical purposes.
             </div>
           </div>
         </div>
@@ -479,7 +347,7 @@ export default function Home() {
                     </div>
                     <div className="collapse-content">{x.answer}</div>
                   </div>
-                  <div className="divider m-0  before:bg-[#D9D9D9]  after:before:bg-[#D9D9D9]"></div>
+                  <div className="divider m-0  before:bg-[#D9D9D9]  after:bg-[#D9D9D9]"></div>
                 </div>
               ))}
             </div>
@@ -507,9 +375,7 @@ export default function Home() {
               <br />
               <br />
               <button
-                onClick={() =>
-                  window.open("https://github.com/archivetheweb/archivetheweb")
-                }
+                onClick={() => window.open("https://github.com/archivetheweb")}
                 style={{ borderRadius: "5px" }}
                 className="btn btn-outline normal-case  text-funpurple hover:border-none hover:bg-funpurple/75 border-funpurple h-16 "
               >
@@ -602,9 +468,8 @@ const faq = (costPer22Mb: string) => [
           will be able to pay this fee using a variety of methods, including
           Metamask, Wallet Connect, or Arweave directly. The fee can be paid
           using various cryptocurrencies, such as AR, ETH, and ERC-20s, on
-          multiple blockchain networks (e.g., Polygon, Arbitrum, etc.). Through
-          Metamask, you can also pay with a credit card to purchase ETH to save
-          the website.
+          multiple blockchain networks (e.g., Polygon, Arbitrum, etc.) - coming
+          soon.
         </div>
         <br />
         Once you have completed these steps, the website snapshots will be
@@ -665,16 +530,16 @@ const faq = (costPer22Mb: string) => [
         The average size of a website is 2.2MB. It would cost approximately{" "}
         {costPer22Mb} to permanently archive a site of that size. <br />
         <br />
-        To save websites on Archive the Web, users must pay a small fee called
-        an "endowment fee." This fee is paid to the network to incentivize data
-        storers to keep the data for approximately 200+ years. The cost of the
-        fee is determined by the current price of the Arweave network, which may
-        fluctuate over time. Archive the Web does not charge any additional fees
-        beyond the cost of the endowment fee. <br />
+        To save websites on Archive the Web, users must pay a small fee. This
+        fee is paid to the network to incentivize data storers to keep the data
+        for approximately 200+ years. The cost of the fee is determined by the
+        current price of the Arweave network, which may fluctuate over time.
+        Archive the Web does not charge any additional fees beyond the cost of
+        the network fee. <br />
         <br />
-        The endowment fee is necessary for permanently storing data on the
-        Arweave network, and the cost is determined by the current market price
-        for storing data on the network.
+        The network fee is necessary for permanently storing data on the Arweave
+        network, and the cost is determined by the current market price for
+        storing data on the network.
       </div>
     ),
   },
@@ -698,9 +563,9 @@ const faq = (costPer22Mb: string) => [
         <br />
         <br />
         If someone finds content they believe violates Arweave's moderation
-        policies. In that case, they can contact gateways that serve the data
-        and request its removal from the network. For more information about
-        Arweave's content moderation policies, visit their{" "}
+        policies they can contact gateways that serve the data and request its
+        removal from the network. For more information about Arweave's content
+        moderation policies, visit their{" "}
         <a
           className="underline"
           href="https://arweave.org"
@@ -735,21 +600,19 @@ const faq = (costPer22Mb: string) => [
         <br />
         One key difference is the technology and data storage methods used by
         each service. Wayback Machine uses periodic crawling to save copies of
-        web pages, which are then made available through its user interface. In
-        this case, the storage network is centralized and vulnerable to
-        censorship and other threats. In contrast, Archive the Web uses a
-        decentralized, permanent storage network called Arweave. Arweave
-        distributes data across a network of individual nodes, which allows for
-        greater reliability and resistance to tampering or censorship.
+        web pages, which are then saved on their databases and made available
+        through its user interface. In this case, the storage network is
+        centralized and vulnerable to censorship and other threats. In contrast,
+        Archive the Web uses a decentralized, permanent storage network called
+        Arweave. Arweave distributes data across a network of individual nodes,
+        which allows for greater reliability and resistance to tampering or
+        censorship.
         <br />
         <br />
         Another key difference is the process by which content is saved. Archive
         the Web allows users to directly contribute to the archive by submitting
         their own web pages for preservation. In contrast, Wayback Machine
-        primarily relies on periodic crawls to add content to its archive. This
-        means that Archive the Web may be able to capture a broader range of
-        content, including pages that may not be easily accessible through
-        traditional crawling methods.
+        primarily relies on periodic crawls to add content to its archive.
         <br />
         <br />
         Finally, the funding mechanism for archiving content differs between the
@@ -761,8 +624,176 @@ const faq = (costPer22Mb: string) => [
         sustainable and long-term approach to preserving web content. In
         comparison, Wayback Machine's funding relies on sustained donations from
         individuals and organizations, which may be less reliable over the long
-        term. As a result, Archive the Web may be better equipped to preserve
-        web content for the long term.
+        term.
+      </div>
+    ),
+  },
+];
+
+const infoPills = [
+  {
+    image: monkey,
+    title: "Content is censored",
+    text: (
+      <div>
+        Censorship occurs when governments or private groups suppress words,
+        images, and ideas that are "offensive" and impose this on others.
+      </div>
+    ),
+    exampleTitle: "See example: FIFA world cup coverage in China",
+    exampleText: (
+      <div>
+        <a
+          className="underline"
+          href="https://theguardian.com/world/2022/nov/28/china-censors-maskless-crowd-footage-in-world-cup-broadcasts"
+          target={"_blank"}
+          rel="noreferrer"
+        >
+          In China, during the FIFA World Cup 2022 in Qatar
+        </a>
+        , footage of maskless crowds in the stadiums was not aired on TV because
+        it contradicted China's zero-covid lockdown protocols.
+      </div>
+    ),
+  },
+  {
+    image: opinions,
+    title: "Opinions change",
+    text: (
+      <div>
+        Sometimes, online information is deleted or altered due to a change in
+        leadership.
+      </div>
+    ),
+    exampleTitle: "See example: British Conservative Party",
+    exampleText: (
+      <div>
+        This can occur when there is a change in government. In 2013, the{" "}
+        <a
+          className="underline"
+          href="https://vice.com/en/article/78xzmb/the-conservative-party-tried-to-delete-their-old-speeches-from-the-web"
+          target={"_blank"}
+          rel="noreferrer"
+        >
+          British Conservative Party abruptly deleted ten years' worth of
+          speeches and press releases
+        </a>{" "}
+        from their website. They also attempted to prevent search engines from
+        being able to access the deleted files by updating the robots.txt files.
+      </div>
+    ),
+  },
+  {
+    image: door,
+    title: "Organizations close",
+    text: (
+      <div>
+        Companies can shut down and lose the data you entrusted them with
+        keeping. 
+      </div>
+    ),
+    exampleTitle: "See example: Yahoo! closure of GeoCities",
+    exampleText: (
+      <div>
+        In 2009, Yahoo! closed GeoCities, a free web hosting platform popular
+        for personal websites, fan sites, and other online communities. When it
+        was shut down, millions of files and user accounts were deleted. Despite
+        efforts by the Internet Archive to preserve as much of the GeoCities
+        content as possible, a significant amount of data was lost forever.
+      </div>
+    ),
+  },
+  {
+    image: apple,
+    title: "Links rot",
+    text: (
+      <div>
+        Link rot occurs when the hyperlinked text no longer leads to the
+        original site or file.
+      </div>
+    ),
+    exampleTitle: "See example: U.S. Supreme Court references",
+    exampleText: (
+      <div>
+        A 2022 study found that over 66.5% of links to sites in the last{" "}
+        <a
+          className="underline"
+          href="https://ahrefs.com/blog/link-rot-study/"
+          target={"_blank"}
+          rel="noreferrer"
+        >
+          {" "}
+          nine years have been lost
+        </a>
+        . An earlier study from 2014 found that 70% of links in legal journals
+        and 50% of URLs cited in the{" "}
+        <a
+          className="underline"
+          href="https://harvardlawreview.org/2014/03/perma-scoping-and-addressing-the-problem-of-link-and-reference-rot-in-legal-citations"
+          target={"_blank"}
+          rel="noreferrer"
+        >
+          {" "}
+          U.S. Supreme Court decisions no longer worked
+        </a>
+        .
+      </div>
+    ),
+  },
+  {
+    image: unpaid,
+    title: "Hosting is unpaid",
+    text: (
+      <div>
+        Hosting services can be left unpaid and content abandoned. This can
+        sometimes happen due to company shutdowns and bankruptcies.
+      </div>
+    ),
+    exampleTitle: "See example: Coachella lifetime passes & FTX",
+    exampleText: (
+      <div>
+        The{" "}
+        <a
+          href="https://decrypt.co/114856/coachella-tomorrowland-solana-nfts-stuck-ftx"
+          target={"_blank"}
+          rel="noreferrer"
+          className="underline"
+        >
+          artwork for Coachella NFTs, including the lifetime passes which sold
+          for six figures, is unavailable
+        </a>{" "}
+        because of server issues in the wake of the FTX collapse and bankruptcy.
+        Many other projects launched on this platform are having similar
+        problems.
+      </div>
+    ),
+  },
+  {
+    image: fire,
+    title: "Servers go down",
+    text: (
+      <div>
+        In a company's routine operations, servers can sometimes go down,
+        causing data loss on small and large scales.
+      </div>
+    ),
+    exampleTitle: "See example: Coachella lifetime passes & FTX",
+    exampleText: (
+      <div>
+        One extreme example was the massive data loss suffered by Myspace in
+        2019. Images, videos, and audio files uploaded before 2016 were likely
+        lost due to this incident. This loss included 12 years of music uploads,
+        totalling 50+ million{" "}
+        <a
+          className="underline"
+          href="https://bbc.com/news/technology-47610936"
+          target={"_blank"}
+          rel="noreferrer"
+        >
+          {" "}
+          songs from 14 million artists
+        </a>
+        . They claimed it occurred due to server migration.
       </div>
     ),
   },
