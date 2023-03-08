@@ -17,6 +17,7 @@ import openArchive from "../public/open_archive.png";
 import mainHeader from "../public/main_header.png";
 import library from "../public/library.png";
 import top from "../public/top.svg";
+import info from "../public/info.png";
 
 import { Header } from "../components/header";
 import { Footer } from "../components/footer";
@@ -24,11 +25,13 @@ import Image from "next/image";
 import { useState } from "react";
 import { isValidUrl, Toast } from "../components/utils";
 import { useRouter } from "next/router";
+import { fetchPricePerMB } from "../http/fetcher";
 
 export default function Home() {
   const router = useRouter();
   let [urlInfo, setURL] = useState({ url: "", valid: false });
   let [toastMessage, setToastMessage] = useState(<></>);
+  const priceInfo = fetchPricePerMB();
 
   const handleURL = (e: React.FormEvent<HTMLInputElement>) => {
     setURL({
@@ -64,6 +67,10 @@ export default function Home() {
     );
   };
 
+  let costPer22Mb = priceInfo.isLoading
+    ? ""
+    : `USD $${Math.round(+priceInfo.pricePerMB.usd * 2.2 * 1000) / 1000}`;
+
   return (
     <div className="flex flex-col h-screen w-fit">
       <Header className="px-16 pb-16" />
@@ -88,9 +95,10 @@ export default function Home() {
                 An open & permanent public web archive <u>for everyone</u>
               </h1>
               <div className="py-6 text-xl text-lightgrey">
-                Archive the Web is an open and decentralized backup of the world
-                wide web. You can set up long-term archiving of websites,
-                tweets, articles, and more.
+                Let's safeguard the web and our digital history. Explore the
+                open and decentralized archive and begin archiving your favorite
+                content - from government speeches and news articles to social
+                media posts and cat memes!
               </div>
               <div className="flex gap-4">
                 <input
@@ -108,9 +116,9 @@ export default function Home() {
                   disabled={!urlInfo.valid}
                   onClick={handleClick}
                   style={{ borderRadius: "5px" }}
-                  className="btn bg-funpurple text-[#FFFFFF] hover:bg-funpurple/75 border-none h-16 "
+                  className="btn bg-funpurple text-[#FFFFFF] hover:bg-funpurple/75 border-none h-16 normal-case "
                 >
-                  Save a Website
+                  See archive
                 </button>
               </div>
             </div>
@@ -325,13 +333,15 @@ export default function Home() {
               Introducing an open archive
             </div>
             <div className="text-lightgrey">
-              Archive the Web is an open-source website archiving tool that
-              allows you to set up automated archiving stored on Arweave. Our
-              mission at Archive the Web is to create a decentralized backup of
-              the world wide web together.
+              Archive the Web is an open-source tool that allows you to set up
+              automated website archiving stored on Arweave. Our mission is to
+              create a decentralized backup of the world wide web and to make it
+              accessible to everyone.
               <br /> <br />
-              It is open by default. Simply select the content you want to
-              include.
+              You can easily select the content you want to include in the
+              archive, and our platform will take care of the rest. We believe
+              in open access to information, so our platform is open by default,
+              allowing anyone to access and use the archive.
             </div>
           </div>
           <div className="flex justify-center">
@@ -359,19 +369,44 @@ export default function Home() {
 
             <div className="text-lightgrey pb-2 flex items-center gap-2">
               <span className="px-1 text-3xl text-funpurple text-bold">1</span>{" "}
-              Find a website you want to archive permanently.
+              Find a website to preserve.
             </div>
             <div className="text-lightgrey pb-2 flex items-center gap-2">
               <span className="px-1 text-3xl text-funpurple text-bold">2</span>{" "}
-              Select a duration and frequency for website snapshots.
+              Select a duration and frequency for snapshots.
             </div>
-            <div className="text-lightgrey pb-8 flex items-center gap-2">
+            <div className="text-lightgrey pb-2 flex items-center gap-2">
               <span className="px-1 text-3xl text-funpurple text-bold">3</span>{" "}
-              Pay the storage fee. Multiple payment methods are available.
+              Pay the storage fee.
+            </div>
+            <div className=" w-full p-4 mb-4 items-center gap-1 bg-funlightpurple rounded-lg hidden sm:flex">
+              <Image
+                src={info}
+                alt="info"
+                style={{ width: "24px", height: "24px" }}
+              />
+              <div className="text-[#79747E]">
+                The cost to archive the average website (2.2MB in size) for 200+
+                years on Arweave is currently{" "}
+                <span className="text-funpurple">
+                  <b>
+                    about{" "}
+                    {priceInfo.isLoading
+                      ? ""
+                      : `USD $${
+                          Math.round(+priceInfo.pricePerMB.usd * 2.2 * 1000) /
+                          1000
+                        }`}
+                  </b>
+                </span>
+                .
+              </div>
             </div>
             <div className="text-lightgrey pb-2">
-              That&apos;s all! The snapshots will be automatically taken and
-              saved on the permaweb.
+              That&apos;s all! The snapshots will be automatically saved on the
+              permaweb and added to the open and decentralized archive, where
+              they will be accessible to anyone who wants to explore the history
+              of the web. Multiple payment methods are available.
             </div>
           </div>
         </div>
@@ -381,15 +416,12 @@ export default function Home() {
               Archive what matters to you
             </div>
             <div className="text-lightgrey">
-              Archive the Web is an open archive for all to contribute to,
-              regardless of your political, religious, or ideological beliefs.
-              Working together allows us to compile a diverse and unbiased set
-              of information preserved for future historical purposes.
-              <br />
-              <br />
-              From news to important artworks to public-facing governmental
-              information, we believe that by working together, we can create a
-              resilient and substantial archive of our digital footprint.
+              Archive the Web is open to everyone, regardless of political,
+              religious, or ideological beliefs. We aim to work together and
+              archive a diverse range of information, from news and important
+              artworks to public-facing governmental information. With this
+              approach, we can create a resilient and substantial archive of our
+              digital footprint that will be preserved for future generations.
             </div>
           </div>
           <div className="flex justify-center">
@@ -405,7 +437,7 @@ export default function Home() {
           <div className="flex justify-center">
             <Image
               className=""
-              style={{ maxHeight: "398px", maxWidth: "398px" }}
+              style={{ maxHeight: "287px", maxWidth: "253px" }}
               src={diagram}
               alt="diagram"
             />
@@ -413,19 +445,20 @@ export default function Home() {
           <div>
             <div className="text-3xl font-bold pb-8">Built to last</div>
             <div className="text-lightgrey">
-              All website snapshots are stored on Arweave, a permanent data
-              storage protocol. All content is available via the permaweb, an
-              immutable and community-owned web that lives on top of Arweave.
+              We are committed to preserving the web and its rich history for
+              future generations. That's why we use Arweave, a permanent data
+              storage protocol that ensures all website snapshots are stored in
+              an immutable and community-owned web, known as the permaweb. Data
+              added to Arweave is replicated among hundreds or thousands of
+              computers or "miners," making it resilient and easily retrievable.
               <br />
               <br />
-              Data added to Arweave is replicated amongst hundreds or thousands
-              of computers or &quot;miners&quot; making it resilient and easily
-              retrievable. To permanently save data, the Arweave network charges
-              an upfront fee or an &quot;endowment fee&quot;. The cost is
-              estimated to incentivize these miners to continue to store the
-              data for at least 200 years. The cost is calculated based on
+              To permanently save data, the Arweave network charges an upfront
+              fee, known as an "endowment fee," which is calculated based on
               conservative estimates around price reductions for storage over
-              time.
+              time. This fee incentivizes the miners to continue storing the
+              data for at least 200 years, ensuring that website snapshots are
+              preserved for future historical purposes.
             </div>
           </div>
         </div>
@@ -437,7 +470,7 @@ export default function Home() {
               Frequently Asked Questions
             </div>
             <div className="text-lightgrey mt-2">
-              {faq.map((x, i) => (
+              {faq(costPer22Mb).map((x, i) => (
                 <div key={i}>
                   <div className="collapse collapse-arrow">
                     <input type="checkbox" />
@@ -551,7 +584,7 @@ export default function Home() {
   );
 }
 
-const faq = [
+const faq = (costPer22Mb: string) => [
   {
     question: "How does Archive the Web work?",
     answer: (
@@ -560,21 +593,23 @@ const faq = [
           <b>1.</b> Find a website you want to archive permanently.
         </div>
         <div className="pb-1">
-          <b>2.</b> Enter the website URL on Archive the Web. Initially, you
-          will be able to archive a website one time. In the future, you will be
-          able to set up long-term archiving, which automatically takes
-          snapshots at pre-set intervals (ex. every 24 hours)
+          <b>2.</b> Enter the URL and snapshot settings on Archive the Web. You
+          can set up long-term archiving, which automatically takes snapshots at
+          pre-set intervals (e.g., every 24 hours).
         </div>
         <div className="pb-1">
           <b>3.</b> Pay the storage fee calculated by the Arweave network. You
-          can pay via Metamask, Wallet Connect, or Arweave directly. Payment
-          methods include AR, ETH, and ERC-20s on multiple chains (ex. Polygon,
-          Arbitrum, and so on). Via Metamask, you can pay with a credit card to
-          purchase ETH to save the content.
+          will be able to pay this fee using a variety of methods, including
+          Metamask, Wallet Connect, or Arweave directly. The fee can be paid
+          using various cryptocurrencies, such as AR, ETH, and ERC-20s, on
+          multiple blockchain networks (e.g., Polygon, Arbitrum, etc.). Through
+          Metamask, you can also pay with a credit card to purchase ETH to save
+          the website.
         </div>
         <br />
-        That&apos;s all! The snapshots will be automatically taken and saved on
-        the permaweb.
+        Once you have completed these steps, the website snapshots will be
+        automatically taken and saved on the permaweb. The website will be
+        archived permanently; anyone can access and view it anytime.
       </div>
     ),
   },
@@ -582,9 +617,19 @@ const faq = [
     question: "What can I store? ",
     answer: (
       <div>
-        Currently, you can store interactive website snapshots. These capture
-        the websites as they are in real-time. In the future, you will also be
-        able to archive other mediums.
+        Currently, Archive the Web allows users to store interactive website
+        snapshots. Snapshots capture websites at the time of archiving and are
+        saved in a way that allows them to be viewed and interacted with, just
+        like the live website. In the future, Archive the Web plans to expand
+        its capabilities, so you can archive other types of content besides
+        websites. <br />
+        <br />
+        It's important to note that the website snapshots saved through Archive
+        the Web are interactive, just like the actual website at the time of the
+        snapshot. This means they can be viewed and interacted with, rather than
+        static images like screenshots. This allows users to access archived
+        websites in a way that is similar to how they would experience the live
+        website.
       </div>
     ),
   },
@@ -592,21 +637,21 @@ const faq = [
     question: "How do you save data permanently?",
     answer: (
       <div>
-        All website snapshots are saved on Arweave, a permanent data storage
-        protocol. This new technology does not allow data to be deleted or
-        changed once saved, adding a great deal of security to the websites
-        archived via Archive the Web.
+        Archive the Web uses Arweave, a permanent data storage protocol to save
+        website data permanently. This new technology allows website data to be
+        stored so that it cannot be deleted or changed once saved. This adds a
+        high level of security to the websites archived through Archive the Web.
         <br />
         <br />
-        An excellent primer on Arweave, written by ArDrive, a decentralized
-        version of Dropbox, can be found{" "}
+        If you would like to learn more about Arweave and how it works, ArDrive,
+        a decentralized version of Dropbox, has written a helpful primer that
+        you can read{" "}
         <a
           className="underline"
           href="https://ardrive.io/what-is-arweave/"
           target={"_blank"}
           rel="noreferrer"
         >
-          {" "}
           here
         </a>
         .
@@ -617,13 +662,19 @@ const faq = [
     question: "Why do I have to pay and how is the cost calculated?",
     answer: (
       <div>
-        To permanently save data on Arweave, a small fee called an
-        &quot;endowment fee&quot; must be sent to the network to pay data
-        storers to keep it for approximately 200+ years. The fee is solely the
-        Arweave network fee. Archive the Web does not charge a fee.
+        The average size of a website is 2.2MB. It would cost approximately{" "}
+        {costPer22Mb} to permanently archive a site of that size. <br />
         <br />
+        To save websites on Archive the Web, users must pay a small fee called
+        an "endowment fee." This fee is paid to the network to incentivize data
+        storers to keep the data for approximately 200+ years. The cost of the
+        fee is determined by the current price of the Arweave network, which may
+        fluctuate over time. Archive the Web does not charge any additional fees
+        beyond the cost of the endowment fee. <br />
         <br />
-        The cost is calculated based on the real-time Arweave network pricing.
+        The endowment fee is necessary for permanently storing data on the
+        Arweave network, and the cost is determined by the current market price
+        for storing data on the network.
       </div>
     ),
   },
@@ -631,32 +682,35 @@ const faq = [
     question: "What is Archive the Web’s content moderation policy? ",
     answer: (
       <div>
-        Archive the Web is a decentralized open-source project that allows
-        anyone to upload content to the Arweave network. Once the content is
-        uploaded to Arweave, that data becomes subject to Arweave&apos;s content
-        moderation policies. They take this potential for abuse seriously and
-        have implemented a democratic moderation tool at the protocol&apos;s
-        core.
+        Archive the Web is an open-source project that allows anyone to upload
+        content to the Arweave network. Once the content is uploaded, it becomes
+        subject to Arweave's content moderation policies. These policies aim to
+        prevent network abuse and ensure that the content stored on the network
+        adheres to the community's standards.
         <br />
         <br />
-        When someone submits a transaction to the network, data storers can
-        choose to replicate the associated data. The network maintainers can
-        filter and screen the transaction in any manner they prefer. For
-        example: checking against known illicit material, scanning the data with
-        computer vision software, and so on. Complainants can contact gateways
-        that serve said data to request its removal from the network.
+        Arweave uses a democratic moderation tool at the core of its protocol to
+        moderate submitted content. When someone submits a transaction to the
+        network, data storers can choose whether or not to replicate the
+        associated data. The network maintainers can filter and screen the
+        transaction using various methods, such as checking against known
+        illicit material or using computer vision software to scan the data.
         <br />
-        <br /> You can read more about their content moderation policy on their{" "}
+        <br />
+        If someone finds content they believe violates Arweave's moderation
+        policies. In that case, they can contact gateways that serve the data
+        and request its removal from the network. For more information about
+        Arweave's content moderation policies, visit their{" "}
         <a
           className="underline"
-          href="https://arwiki.arweave.dev/#/en/content-policies"
+          href="https://arweave.org"
           target={"_blank"}
           rel="noreferrer"
         >
           {" "}
           website
         </a>{" "}
-        or in greater detail in their{" "}
+        or read their{" "}
         <a
           className="underline"
           href="https://yellow-paper.arweave.dev/"
@@ -667,6 +721,48 @@ const faq = [
           yellow paper
         </a>
         .
+      </div>
+    ),
+  },
+  {
+    question: "How does this differ from other services like Wayback Machine?",
+    answer: (
+      <div>
+        Archive the Web and Wayback Machine are similar in allowing users to
+        access archived versions of websites. However, there are some notable
+        differences between the two services.
+        <br />
+        <br />
+        One key difference is the technology and data storage methods used by
+        each service. Wayback Machine uses periodic crawling to save copies of
+        web pages, which are then made available through its user interface. In
+        this case, the storage network is centralized and vulnerable to
+        censorship and other threats. In contrast, Archive the Web uses a
+        decentralized, permanent storage network called Arweave. Arweave
+        distributes data across a network of individual nodes, which allows for
+        greater reliability and resistance to tampering or censorship.
+        <br />
+        <br />
+        Another key difference is the process by which content is saved. Archive
+        the Web allows users to directly contribute to the archive by submitting
+        their own web pages for preservation. In contrast, Wayback Machine
+        primarily relies on periodic crawls to add content to its archive. This
+        means that Archive the Web may be able to capture a broader range of
+        content, including pages that may not be easily accessible through
+        traditional crawling methods.
+        <br />
+        <br />
+        Finally, the funding mechanism for archiving content differs between the
+        two services. Archive the Web is funded through user contributions as a
+        one-time fee to secure storage on the Arweave network for 200+ years. In
+        contrast, Wayback Machine is primarily funded through donations to its
+        parent organization, the Internet Archive. This means that Archive the
+        Web's funding model is driven by user payments, which may provide a more
+        sustainable and long-term approach to preserving web content. In
+        comparison, Wayback Machine's funding relies on sustained donations from
+        individuals and organizations, which may be less reliable over the long
+        term. As a result, Archive the Web may be better equipped to preserve
+        web content for the long term.
       </div>
     ),
   },
