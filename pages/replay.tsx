@@ -4,10 +4,10 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import logo from "../public/logo.png";
 import { isValidUrl } from "../components/utils";
-import Script from "next/script";
 import ConnectorContext from "../context/connector";
 import { ArchiveSubmission } from "../bindings/ts/View";
 import moment from "moment";
+import axios from "axios";
 
 type ArchiveSubmissionOrNull = ArchiveSubmission | null;
 
@@ -19,6 +19,7 @@ export default function Replay() {
     data: null as ArchiveSubmissionOrNull,
     isLoading: true,
     isError: false,
+    sourceURL: "",
   });
 
   useEffect(() => {
@@ -35,7 +36,17 @@ export default function Replay() {
             timestamp: +ts,
           });
 
-          setData({ data: result.archive, isLoading: false, isError: false });
+          // this is to play well with firefox
+          let source = await axios.head(
+            `https://arweave.net/${result.archive.arweaveTx}/data.warc`
+          );
+
+          setData({
+            data: result.archive,
+            isLoading: false,
+            isError: false,
+            sourceURL: source.request.responseURL,
+          });
         } catch (e) {
           console.error(e);
         }
@@ -112,7 +123,7 @@ export default function Replay() {
 
           <div className="w-full h-full flex justify-center flex-col items-center ">
             <replay-web-page
-              source={`https://arweave.net/${data.data?.arweaveTx}/data.warc`}
+              source={data.sourceURL}
               url={data.data?.fullUrl}
               embed="replayonly"
               replayBase="./replay/"
