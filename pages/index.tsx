@@ -108,7 +108,7 @@ export default function Home() {
                   onKeyDown={(e) =>
                     e.key === "Enter" && urlInfo.valid && handleClick()
                   }
-                  placeholder="Enter a website to save (ex. https://bbc.com)"
+                  placeholder="Enter a website URL (ex. https://bbc.com)"
                   className="input input-bordered w-full h-16 shadow-lg"
                 />
 
@@ -782,7 +782,7 @@ const infoPills = [
         causing data loss on small and large scales.
       </div>
     ),
-    exampleTitle: "See example: Coachella lifetime passes & FTX",
+    exampleTitle: "See example: MySpace loses 50 million songs",
     exampleText: (
       <div>
         One extreme example was the massive data loss suffered by Myspace in
