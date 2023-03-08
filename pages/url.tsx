@@ -6,7 +6,7 @@ import info from "../public/info.png";
 import chevron from "../public/chevron.png";
 import { useRouter } from "next/router";
 import {
-  calculateUploadPrice,
+  calculateUploadPriceWithDepth,
   isValidUrl,
   MB,
   shortenAddress,
@@ -55,7 +55,7 @@ export default function ArchivePage() {
       (async () => {
         let arweaveFeeForMB = bundlrPriceInfo.price;
         setCostPerSnapshot(
-          calculateUploadPrice(
+          calculateUploadPriceWithDepth(
             +arweaveFeeForMB,
             Depth.PageOnly,
             +priceInfo.price

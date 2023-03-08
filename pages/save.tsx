@@ -10,7 +10,7 @@ import { Container } from "../components/container";
 import {
   AVERAGE_WEBSITE_DEPTH_0_IN_MB,
   AVERAGE_WEBSITE_DEPTH_1_IN_MB,
-  calculateUploadPrice,
+  calculateUploadPriceWithDepth,
   durationToSeconds,
   getDomain,
   isValidUrl,
@@ -48,12 +48,10 @@ export default function Save() {
 
   useEffect(() => {
     if (!priceInfo.isLoading && !bundlrPriceInfo.isLoading) {
-      (async () => {
-        let arweaveFeeForMB = bundlrPriceInfo.price;
-        setCostPerSnapshot(
-          calculateUploadPrice(+arweaveFeeForMB, depth, +priceInfo.price)
-        );
-      })();
+      let arweaveFeeForMB = bundlrPriceInfo.price;
+      setCostPerSnapshot(
+        calculateUploadPriceWithDepth(+arweaveFeeForMB, depth, +priceInfo.price)
+      );
     }
   }, [
     priceInfo.price,
