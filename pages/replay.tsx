@@ -3,7 +3,7 @@ import { useContext, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import logo from "../public/logo.png";
-import { isValidUrl } from "../components/utils";
+import { isValidUrl, processURL } from "../components/utils";
 import ConnectorContext from "../context/connector";
 import { ArchiveSubmission } from "../bindings/ts/View";
 import moment from "moment";
@@ -21,6 +21,7 @@ export default function Replay() {
     isError: false,
     sourceURL: "",
   });
+  const [listURL, setListURL] = useState(false);
 
   useEffect(() => {
     let url = router.query.url as string;
@@ -109,6 +110,18 @@ export default function Replay() {
                 >
                   View on Arweave
                 </Link>{" "}
+                <div>
+                  {" "}
+                  <div className="flex gap-3">
+                    <span>List URLs</span>
+                    <input
+                      type="checkbox"
+                      className="toggle bg-funpurple"
+                      checked={listURL}
+                      onClick={() => setListURL(!listURL)}
+                    />
+                  </div>
+                </div>
               </div>
             </div>
             <div className=" justify-end hidden md:flex">
@@ -124,7 +137,7 @@ export default function Replay() {
           <div className="w-full h-full flex justify-center flex-col items-center ">
             <replay-web-page
               source={data.sourceURL}
-              url={data.data?.fullUrl}
+              url={listURL ? "" : processURL(data.data.fullUrl)}
               embed="replayonly"
               replayBase="./replay/"
             ></replay-web-page>
