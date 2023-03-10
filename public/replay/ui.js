@@ -1,4 +1,4 @@
-/*! 'ui.js is part of ReplayWeb.page (https://replayweb.page) Copyright (C) 2020-2021, Webrecorder Software. Licensed under the Affero General Public License v3.' */ (() => {
+/*! 'ui.js is part of ReplayWeb.page (https://replayweb.page) Copyright (C) 2020-2023, Webrecorder Software. Licensed under the Affero General Public License v3.' */ (() => {
   var __webpack_modules__ = {
       6274: (e, t, i) => {
         "use strict";
@@ -2578,7 +2578,7 @@
         window.IS_APP ||
         (window.electron && window.electron.IS_APP) ||
         window.matchMedia("(display-mode: standalone)").matches,
-      me = "1.7.7";
+      me = "1.7.13";
     function ge(e) {
       " " == e.key && (e.preventDefault(), e.target.click());
     }
@@ -3282,11 +3282,11 @@
           } catch (e) {
             console.log("invalid config: " + e);
           }
-        if (
-          (this.pageParams.get("baseUrlSourcePrefix") &&
-            ((this.loadInfo.extraConfig = this.loadInfo.extraConfig || {}),
-            (this.loadInfo.extraConfig.baseUrlSourcePrefix =
-              this.pageParams.get("baseUrlSourcePrefix"))),
+        this.pageParams.get("baseUrlSourcePrefix") &&
+          ((this.loadInfo.extraConfig = this.loadInfo.extraConfig || {}),
+          (this.loadInfo.extraConfig.baseUrlSourcePrefix = this.pageParams.get(
+            "baseUrlSourcePrefix"
+          ))),
           this.pageParams.get("basePageUrl") &&
             ((this.loadInfo.extraConfig = this.loadInfo.extraConfig || {}),
             (this.loadInfo.extraConfig.baseUrl =
@@ -3301,15 +3301,12 @@
             (this.loadInfo.hideOffscreen = !0),
           "eager" === this.pageParams.get("loading") &&
             (this.loadInfo.loadEager = !0),
-          pe && this.sourceUrl.startsWith("file://"))
-        ) {
-          const e = new URL("http://files.replayweb.page/");
-          e.searchParams.set(
-            "filename",
-            this.sourceUrl.slice("file://".length)
-          ),
-            (this.loadInfo = { sourceUrl: this.sourceUrl, loadUrl: e.href });
-        }
+          pe &&
+            this.sourceUrl.startsWith("file://") &&
+            (this.loadInfo = {
+              sourceUrl: this.sourceUrl,
+              loadUrl: this.sourceUrl.replace("file://", "file2://"),
+            });
       }
       onStartLoad(e) {
         this.pageParams.set("source", e.detail.sourceUrl);
@@ -3477,23 +3474,20 @@
       onStartLoad(e) {
         e.preventDefault();
         const t = { sourceUrl: this.fileDisplayName };
-        if (this.file) {
-          if (((t.isFile = !0), this.file.path)) {
-            const e = new URL("http://files.replayweb.page/");
-            e.searchParams.set("filename", this.file.path),
-              (t.loadUrl = e.href),
-              (t.noCache = !0);
-          } else
-            this.fileHandle
+        return (
+          this.file &&
+            ((t.isFile = !0),
+            this.file.path
+              ? ((t.loadUrl = "file2://" + this.file.path), (t.noCache = !0))
+              : this.fileHandle
               ? ((t.loadUrl = this.fileDisplayName),
                 (t.extra = { fileHandle: this.fileHandle }),
                 (t.noCache = !1))
               : ((t.loadUrl = URL.createObjectURL(this.file)),
                 (t.blob = this.file),
-                (t.noCache = !1));
-          (t.size = this.file.size), (t.name = this.fileDisplayName);
-        }
-        return (
+                (t.noCache = !1)),
+            (t.size = this.file.size),
+            (t.name = this.fileDisplayName)),
           (t.newFullImport = this.newFullImport),
           this.dispatchEvent(
             new CustomEvent("load-start", {
@@ -4044,7 +4038,7 @@
           software: n,
         } = this.coll.verify || {};
         (t = t || 0), (i = i || 0);
-        const s = r ? `https://search.censys.io/certificates/${r}` : "";
+        const s = r ? `https://crt.sh/?q=${r}` : "";
         return P`
       <div class="columns">
         <div class="column col-title is-4">
@@ -4388,7 +4382,7 @@
         } = this.collInfo.verify || {};
         (e = e || 0), (t = t || 0);
         const s = this.collInfo.sourceUrl,
-          l = a ? `https://search.censys.io/certificates/${a}` : "",
+          l = a ? `https://crt.sh/?q=${a}` : "",
           c = Ke(this.ts).toLocaleString();
         return P`
     <div class="dropdown mb-4 ${this.active ? "is-active" : ""}">
@@ -5043,8 +5037,19 @@
           r = await fetch(i + "?all=1");
         if (200 != r.status) return void (this.collInfo = {});
         const o = await r.json();
-        (this.collInfo = { apiPrefix: i, replayPrefix: a, coll: t, ...o }),
-          this.collInfo.title || (this.collInfo.title = this.collInfo.filename),
+        if (
+          ((this.collInfo = { apiPrefix: i, replayPrefix: a, coll: t, ...o }),
+          this.loadInfo &&
+            this.loadInfo.extraConfig &&
+            this.loadInfo.extraConfig.headers)
+        ) {
+          const e = this.loadInfo.extraConfig.headers;
+          await fetch(`${i}/updateAuth`, {
+            method: "POST",
+            body: JSON.stringify({ headers: e }),
+          });
+        }
+        this.collInfo.title || (this.collInfo.title = this.collInfo.filename),
           ("replayonly" !== this.embed && "replay-with-info" !== this.embed) ||
             (this.showSidebar = !1),
           (this.hasStory = this.collInfo.desc || this.collInfo.lists.length),
