@@ -3,7 +3,7 @@ import Script from "next/script";
 
 export default function Document() {
   return (
-    <Html>
+    <Html prefix="og: https://ogp.me/ns#">
       <Head />
       <body>
         <Main />
