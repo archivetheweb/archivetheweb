@@ -14,8 +14,8 @@ export function Faq() {
               style={{ width: "18px", height: "18px" }}
             />
             <span className="text-funpurple font-bold ">
-              What is the difference between "This page only" and "This page and
-              linked pages"?{" "}
+              What is the difference between &quot;This page only&quot; and
+              &quot;This page and linked pages&quot;?{" "}
             </span>{" "}
           </div>
           <div className="collapse-content">
@@ -26,8 +26,8 @@ export function Faq() {
             <b>This page and linked pages</b> means the archiver will archive
             the submitted URL, collect <b>all</b> links within that page and
             archive them too. For example, if your page has a link to your
-            Twitter page, that twitter page will be archived too, but it won't
-            go deeper than that.
+            Twitter page, that twitter page will be archived too, but it
+            won&apos;t go deeper than that.
           </div>
         </div>
       </div>
