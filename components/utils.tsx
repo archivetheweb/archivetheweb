@@ -19,8 +19,7 @@ export const CONTRACT_ADDRESS =
 
 export const isValidUrl = (url: string) => {
   try {
-    let u = url.replace("www.", "");
-    u = u.replace(/^(https?:\/\/)?/, "https://");
+    let u = url.replace(/^(https?:\/\/)?/, "https://");
     // if it isn't, throws an error
     new URL(u);
 
@@ -77,9 +76,6 @@ export const calculateUploadPriceWithDepth = (
 
 export const processURL = (url: string) => {
   url = url.toLowerCase();
-  if (url.includes("www.")) {
-    url = url.replace("www.", "");
-  }
 
   if (!new RegExp(/^(https:\/\/)/).test(url)) {
     url = "https://" + url;

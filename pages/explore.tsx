@@ -30,9 +30,7 @@ export default function Explore() {
       let result = await contract.archives({});
       setData({
         // TODO remove this, hack for now
-        data: result.archives.filter(
-          (archive) => !archive.url.includes("www.")
-        ),
+        data: result.archives,
         isLoading: false,
         isError: false,
       });
