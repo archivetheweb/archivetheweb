@@ -14,6 +14,33 @@ export function Faq() {
               style={{ width: "18px", height: "18px" }}
             />
             <span className="text-funpurple font-bold ">
+              What is the difference between "This page only" and "This page and
+              linked pages"?{" "}
+            </span>{" "}
+          </div>
+          <div className="collapse-content">
+            <b>This page only</b> means the archive will consist only of the
+            content on the page whose URL you enter.
+            <br />
+            <br />
+            <b>This page and linked pages</b> means the archiver will archive
+            the submitted URL, collect <b>all</b> links within that page and
+            archive them too. For example, if your page has a link to your
+            Twitter page, that twitter page will be archived too, but it won't
+            go deeper than that.
+          </div>
+        </div>
+      </div>
+      <div className="border border-[#00000033] rounded-lg">
+        <div tabIndex={0} className="collapse collapse-arrow">
+          <input type="checkbox" />
+          <div className="collapse-title flex items-center gap-2 ">
+            <Image
+              src={questionMark}
+              alt="info 1"
+              style={{ width: "18px", height: "18px" }}
+            />
+            <span className="text-funpurple font-bold ">
               Why do I need to pay to save a website?{" "}
             </span>{" "}
           </div>
