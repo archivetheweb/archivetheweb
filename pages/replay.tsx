@@ -125,12 +125,12 @@ export default function Replay() {
               </div>
             </div>
             <div className=" justify-end hidden md:flex">
-              <div
-                onClick={() => router.push(`/url?url=${urlInfo.url}`)}
+              <Link
+                href={`/url?url=${urlInfo.url}`}
                 className="btn w-fit justify-end bg-funpurple normal-case  text-[#FFFFFF] hover:bg-funpurple/75 border-none"
               >
                 See all snapshots of this site
-              </div>
+              </Link>
             </div>
           </div>
 

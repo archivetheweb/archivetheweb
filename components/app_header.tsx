@@ -96,8 +96,8 @@ export const AppHeader = () => {
           </Link>
         </div>
         <div>
-          <button
-            onClick={() => router.push("/save?clear=true")}
+          <Link
+            href={"/save?clear=true"}
             className="flex gap-2 btn btn-primary bg-funpurple hover:bg-funmidpurple"
           >
             <Image
@@ -106,7 +106,7 @@ export const AppHeader = () => {
               style={{ height: "24px", width: "24px" }}
             />
             Archive a website
-          </button>
+          </Link>
         </div>
       </div>
     </div>

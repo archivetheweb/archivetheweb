@@ -253,12 +253,12 @@ export default function Explore() {
                             </i>
                           </div>
                           <div className="card-actions justify-end">
-                            <button
-                              onClick={() => router.push(`/url?url=${x.url}`)}
+                            <Link
+                              href={`/url?url=${x.url}`}
                               className="btn w-full bg-[#FFFFFF] text-funpurple border border-funpurple hover:bg-funpurple/75 normal-case"
                             >
                               View all snapshots
-                            </button>
+                            </Link>
                           </div>
                         </div>
                       </div>
