@@ -142,13 +142,13 @@ export const Header: React.FC<any> = (props) => {
             </div>
           </div>
         )}
-        <button
-          onClick={() => router.push("/explore")}
+        <Link
+          href="/explore"
           style={{ borderRadius: "5px" }}
           className=" btn bg-funpurple normal-case  text-[#FFFFFF] hover:bg-funpurple/75 border-none"
         >
           See all archived sites
-        </button>
+        </Link>
       </div>
     </div>
   );

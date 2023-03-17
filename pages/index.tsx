@@ -26,6 +26,7 @@ import { useState } from "react";
 import { getDomain, isValidUrl, processURL, Toast } from "../components/utils";
 import { useRouter } from "next/router";
 import { fetchPricePerMB } from "../http/fetcher";
+import Link from "next/link";
 
 export default function Home() {
   const router = useRouter();
@@ -218,10 +219,10 @@ export default function Home() {
               <br /> <br />
               You can easily select the content you want to include in the
               archive, and our platform will take care of the rest.{" "}
-              <a href="/explore">
+              <Link href="/explore">
                 We believe in open access to information, so our platform is
                 open by default, allowing anyone to access and use the archive.
-              </a>
+              </Link>
             </div>
           </div>
           <div className="flex justify-center">
