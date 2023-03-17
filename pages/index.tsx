@@ -217,9 +217,11 @@ export default function Home() {
               accessible to everyone.
               <br /> <br />
               You can easily select the content you want to include in the
-              archive, and our platform will take care of the rest. We believe
-              in open access to information, so our platform is open by default,
-              allowing anyone to access and use the archive.
+              archive, and our platform will take care of the rest.{" "}
+              <a href="/explore">
+                We believe in open access to information, so our platform is
+                open by default, allowing anyone to access and use the archive.
+              </a>
             </div>
           </div>
           <div className="flex justify-center">
