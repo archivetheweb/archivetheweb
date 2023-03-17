@@ -48,16 +48,18 @@ export function Faq() {
             All website snapshots are saved on Arweave, a permanent data storage
             protocol. A small fee is sent to the network to pay data storers to
             add data to the network and keep it for 200+ years. Archive the Web
-            does not take a fee. Learn more
+            does not take a fee. Learn more{" "}
             <Link
+              className="underline"
               href={
                 "https://ardrive.io/topic/arweave-economics/#:~:text=Arweave%20Endowment&text=Arweave%20designed%20the%20system%20so,a%20University%20or%20non%2Dprofit"
               }
               target="_blank"
               rel={"noreferrer"}
             >
-              here.
+              here
             </Link>
+            .
           </div>
         </div>
       </div>
