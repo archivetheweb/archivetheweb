@@ -8,6 +8,8 @@ type Blockchain = {
   id: string;
 };
 let warp = WarpFactory.forMainnet();
+let contract = new AtwContract(CONTRACT_ADDRESS, warp);
+contract.setEvaluationOptions({ remoteStateSyncEnabled: true });
 
 const ARWEAVE_WALLET = "arweave_wallet";
 const ARWEAVE_ADDRESS = "arweave_address";
@@ -23,7 +25,7 @@ export const emptyState = {
   isConnecting: false,
   connect: () => {},
   warp: warp,
-  contract: new AtwContract(CONTRACT_ADDRESS, warp),
+  contract,
   getLocalAddress: async () => {
     return await getWallet();
   },
