@@ -20,6 +20,12 @@ export enum Depth {
   PageAndLinks,
 }
 
+export enum CrawlTypes {
+  DomainOnly = "domainOnly",
+  DomainWithPageLinks = "domainWithPageLinks",
+  DomainAndLinks = "domainAndLinks",
+}
+
 export enum ModalStep {
   Connect,
   Review,

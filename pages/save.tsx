@@ -29,7 +29,14 @@ import ConnectorContext from "../context/connector";
 import { fetchArweaveMarketPrice, fetchBundlrPrice } from "../http/fetcher";
 import { Faq } from "../components/FAQ";
 import { Paywith } from "../components/PayWith";
-import { Depth, TimeUnit, ModalStep, Steps, Terms } from "../components/types";
+import {
+  Depth,
+  TimeUnit,
+  ModalStep,
+  Steps,
+  Terms,
+  CrawlTypes,
+} from "../components/types";
 
 export default function Save() {
   const router = useRouter();
@@ -281,8 +288,9 @@ function ArchivingOptions(props: any) {
   let [openModal, setOpenModal] = useState(false);
   let [modalStep, setModalStep] = useState(ModalStep.Connect);
   const { contract, warp, getLocalAddress } = useContext(ConnectorContext);
-  let [interactionTxID, setInteractionTxID] = useState("");
   let [paymentTxID, setPaymentTxID] = useState("");
+  let [advancedOptions, setAdvancedOptions] = useState(false);
+  let [crawlType, setCrawlType] = useState(CrawlTypes.DomainWithPageLinks);
 
   useEffect(() => {
     if (props.urlInfo.valid && props.terms === Terms.Once) {
@@ -393,7 +401,7 @@ function ArchivingOptions(props: any) {
         frequency: cronFreq,
         options: {
           depth: props.depth,
-          crawlType: "domainAndLinks",
+          crawlType: crawlType,
           urls: [props.urlInfo.url],
         },
         uploaderAddress: UPLOADER,
@@ -401,7 +409,6 @@ function ArchivingOptions(props: any) {
 
       let interactionTxID = res?.originalTxId || "";
       let bundlrID = res?.bundlrResponse?.id || "";
-      setInteractionTxID(interactionTxID);
       console.debug("Interaction result", res);
       console.debug("Interaction tx", interactionTxID);
 
@@ -512,29 +519,91 @@ function ArchivingOptions(props: any) {
             <b>Long Term</b>
           </button>
         </div>
-        <div className="btn-group  grid grid-cols-2 w-full border rounded-lg  shadow-xl border-[#00000033]">
-          <button
-            onClick={() => props.setDepth(Depth.PageOnly)}
-            className={
-              props.depth === Depth.PageOnly
-                ? "p-4 border-r border-[#00000033] bg-funpurple text-[#FFFFFF]"
-                : "p-4 border-r border-[#00000033]"
-            }
-          >
-            <b>This page only</b>
-          </button>
-          <button
-            onClick={() => props.setDepth(Depth.PageAndLinks)}
-            className={
-              props.depth === Depth.PageAndLinks
-                ? "p-4 border-r border-[#00000033] bg-funpurple text-[#FFFFFF]"
-                : "p-4 border-r border-[#00000033]"
-            }
-          >
-            <b>This page and linked pages</b>
-          </button>
+        {!advancedOptions && (
+          <div className="btn-group  grid grid-cols-2 w-full border rounded-lg  shadow-xl border-[#00000033]">
+            <button
+              onClick={() => props.setDepth(Depth.PageOnly)}
+              className={
+                props.depth === Depth.PageOnly
+                  ? "p-4 border-r border-[#00000033] bg-funpurple text-[#FFFFFF]"
+                  : "p-4 border-r border-[#00000033]"
+              }
+            >
+              <b>This page only</b>
+            </button>
+            <button
+              onClick={() => props.setDepth(Depth.PageAndLinks)}
+              className={
+                props.depth === Depth.PageAndLinks
+                  ? "p-4 border-r border-[#00000033] bg-funpurple text-[#FFFFFF]"
+                  : "p-4 border-r border-[#00000033]"
+              }
+            >
+              <b>This page and linked pages</b>
+            </button>
+          </div>
+        )}
+
+        <div className="flex w-full justify-end gap-3">
+          <span>Advanced</span>
+          <input
+            type="checkbox"
+            className="toggle bg-funpurple"
+            checked={advancedOptions}
+            onClick={() => setAdvancedOptions(!advancedOptions)}
+          />
         </div>
 
+        {advancedOptions && (
+          <>
+            <div className="flex form-control w-full items-center flex-col sm:flex-row gap-0 sm:gap-4   ">
+              <div className="w-full">
+                <label className="label">
+                  <span className="label-text">Crawl Depth:</span>
+                </label>
+                <input
+                  type="number"
+                  placeholder="Enter a number"
+                  value={props.depth}
+                  onChange={(e: any) => {
+                    // TODO remove this in the future
+                    let depth = +e.target.value;
+                    if (+depth > 3) {
+                      depth = 3;
+                    }
+                    props.setDepth(depth);
+                  }}
+                  className="input input-bordered w-full h-16 "
+                />
+              </div>
+              <div className="w-full">
+                <label className="label">
+                  <span className="label-text">
+                    <span className="label-text">Crawl type:</span>
+                  </span>
+                </label>
+                <select
+                  className="select select-bordered w-full h-16"
+                  value={crawlType}
+                  defaultValue={CrawlTypes.DomainWithPageLinks}
+                  onChange={(e: any) => {
+                    setCrawlType(e.target.value);
+                  }}
+                >
+                  <option key={1} value={CrawlTypes.DomainWithPageLinks}>
+                    Domain with page links
+                  </option>
+                  <option key={2} value={CrawlTypes.DomainOnly}>
+                    Domain Only
+                  </option>
+                  <option key={3} value={CrawlTypes.DomainAndLinks}>
+                    Full
+                  </option>
+                </select>
+              </div>
+            </div>
+          </>
+        )}
         {props.terms === Terms.Multiple && (
           <>
             <div className="flex form-control w-full items-center flex-col sm:flex-row gap-0 sm:gap-4   ">
