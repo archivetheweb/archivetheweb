@@ -393,7 +393,7 @@ function ArchivingOptions(props: any) {
         frequency: cronFreq,
         options: {
           depth: props.depth,
-          domainOnly: false,
+          crawlType: "domainAndLinks",
           urls: [props.urlInfo.url],
         },
         uploaderAddress: UPLOADER,

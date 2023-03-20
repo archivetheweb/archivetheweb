@@ -6,6 +6,7 @@
  */
 
 export type ContractState = State;
+export type CrawlType = 'domainOnly' | 'domainWithPageLinks' | 'domainAndLinks';
 
 export interface State {
   archiveRequests: {
@@ -28,14 +29,14 @@ export interface ArchiveRequest {
   frequency: string;
   id: string;
   latestArchivedTimestamp: number;
-  options: Options;
+  options: ArchiveRequestOptions;
   requestedBy: string;
   startTimestamp: number;
   uploaderAddress: string;
 }
-export interface Options {
+export interface ArchiveRequestOptions {
+  crawlType: CrawlType;
   depth: number;
-  domainOnly: boolean;
   urls: string[];
 }
 export interface ArchiveSubmission {
@@ -50,8 +51,8 @@ export interface ArchiveSubmission {
   uploaderAddress: string;
 }
 export interface ArchiveOptions {
+  crawlType: CrawlType;
   depth: number;
-  domainOnly: boolean;
 }
 export interface Uploader {
   friendlyName: string;

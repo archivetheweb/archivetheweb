@@ -10,12 +10,12 @@ export const BUNDLR_URL = "https://node1.bundlr.network";
 export const UPLOADER =
   process.env.NEXT_PUBLIC_ENVIRONMENT === "production"
     ? "a_SDCVQa0B5QTobh5LWBzySpCdIm-3X9APrkmHZ-yV4"
-    : "2NbYHgsuI8uQcuErDsgoRUCyj9X2wZ6PBN6WTz9xyu0";
+    : "sy9sAC9wr2917napTQwMMyjk0bhqzKRqRZ5EexCGdkE";
 
 export const CONTRACT_ADDRESS =
   process.env.NEXT_PUBLIC_ENVIRONMENT === "production"
     ? "dD1DuvgM_Vigtnv4vl2H1IYn9CgLvYuhbEWPOL-_4Mw"
-    : "-27RfG2DJAI3ddQlrXkN1rmS5fBSC4eG8Zfhz8skYTU";
+    : "51M3s8hKonwD1-7NKnpyf2gcwha9ql1wCz2BOnxRGwI";
 
 export const isValidUrl = (url: string) => {
   try {

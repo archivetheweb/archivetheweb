@@ -12,6 +12,7 @@ export type WriteAction =
   | DeleteArchiveRequest
   | DeRegisterUploader
   | Evolve;
+export type CrawlType = 'domainOnly' | 'domainWithPageLinks' | 'domainAndLinks';
 
 export interface RegisterUploader {
   friendlyName: string;
@@ -19,13 +20,13 @@ export interface RegisterUploader {
 export interface RequestArchiving {
   endTimestamp: number;
   frequency: string;
-  options: Options;
+  options: ArchiveRequestOptions;
   startTimestamp: number;
   uploaderAddress: string;
 }
-export interface Options {
+export interface ArchiveRequestOptions {
+  crawlType: CrawlType;
   depth: number;
-  domainOnly: boolean;
   urls: string[];
 }
 export interface SubmitArchive {
@@ -39,8 +40,8 @@ export interface SubmitArchive {
   title: string;
 }
 export interface ArchiveOptions {
+  crawlType: CrawlType;
   depth: number;
-  domainOnly: boolean;
 }
 export interface DeleteArchiveRequest {
   archiveId: string;
