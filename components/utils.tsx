@@ -134,9 +134,9 @@ export const translateToCronFrequency = (
 };
 
 export const durationToSeconds = (duration: Duration): number => {
-  // if duration is small, we assume 1 hour
+  // if duration is small, we assume 3 hours
   if (duration.value === "" || duration.value === "0") {
-    return 60 * 60;
+    return 60 * 60 * 3;
   }
   switch (duration.unit) {
     case TimeUnit.Days:
