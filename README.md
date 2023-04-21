@@ -20,4 +20,4 @@ yarn dev
 
 ## Contributions
 
-Contributions and feedback are welcome! Just open a PR or an issue and we will be right on it!
+Contributions and feedback are welcome!
