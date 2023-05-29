@@ -16,7 +16,11 @@ import arrowTopRight from "../public/arrow_top_right.png";
 import link from "../public/link.png";
 import saveWhite from "../public/save_white.png";
 import ConnectorContext from "../context/connector";
-import { ArchivesByURLInfo, ArchiveSubmission } from "../bindings/ts/View";
+import {
+  ArchivesByURLInfo,
+  ArchivesByURLResult,
+  ArchiveSubmission,
+} from "../bindings/ts/View";
 import moment from "moment";
 import CustomIframe from "../components/iframe";
 import { Depth } from "../components/types";
@@ -27,8 +31,20 @@ momentDurationFormatSetup(moment);
 
 type Data = ArchivesByURLInfo | null;
 
-interface GroupedData {
+interface GroupMap {
   [k: string]: ArchiveSubmission[];
+}
+
+interface GroupedData {
+  data: GroupMap;
+  groupedBy: string;
+}
+
+interface State {
+  data: Data;
+  groupedData: GroupedData;
+  isLoading: boolean;
+  isError: boolean;
 }
 
 export default function ArchivePage() {
@@ -39,7 +55,7 @@ export default function ArchivePage() {
     groupedData: {} as GroupedData,
     isLoading: true,
     isError: false,
-  });
+  } as State);
   const [toExpand, setToExpand] = useState("");
   const priceInfo = fetchArweaveMarketPrice();
   const bundlrPriceInfo = fetchBundlrPrice();
@@ -80,22 +96,18 @@ export default function ArchivePage() {
       setURL({ url: url, valid });
       (async () => {
         try {
-          let result = await contract.archivesByURL({ url: url, count: 10 });
+          let result = await contract.archivesByURL({ url: url, count: 100 });
 
-          let groupedArchivesByDate: GroupedData = {};
-          for (let archive of result.archives.archivedInfo) {
-            let ts = archive.timestamp;
-            let dayFormatted = moment(ts * 1000).format("MMMM DD, YYYY");
-            if (!groupedArchivesByDate[dayFormatted]) {
-              groupedArchivesByDate[dayFormatted] = [archive];
-            } else {
-              groupedArchivesByDate[dayFormatted].push(archive);
-            }
+          let groupedArchives: GroupedData = { groupedBy: "date", data: {} };
+          if (url.includes("twitter.com")) {
+            groupedArchives = groupArchivesByTwitterHandle(result);
+          } else {
+            groupedArchives = groupArchivesByDate(result);
           }
-
+          console.log(groupedArchives);
           setData({
             data: result.archives,
-            groupedData: groupedArchivesByDate,
+            groupedData: groupedArchives,
             isLoading: false,
             isError: false,
           });
@@ -112,6 +124,36 @@ export default function ArchivePage() {
     }
     return () => {};
   }, [router.query.url, contract]);
+
+  const groupArchivesByDate = (data: ArchivesByURLResult): GroupedData => {
+    let groupedArchives: GroupedData = { groupedBy: "date", data: {} };
+    for (let archive of data.archives.archivedInfo) {
+      let ts = archive.timestamp;
+      let dayFormatted = moment(ts * 1000).format("MMMM DD, YYYY");
+      if (!groupedArchives.data[dayFormatted]) {
+        groupedArchives.data[dayFormatted] = [archive];
+      } else {
+        groupedArchives.data[dayFormatted].push(archive);
+      }
+    }
+    return groupedArchives;
+  };
+
+  const groupArchivesByTwitterHandle = (
+    data: ArchivesByURLResult
+  ): GroupedData => {
+    let groupedArchives: GroupedData = { groupedBy: "twitter", data: {} };
+    for (let archive of data.archives.archivedInfo) {
+      // get twitter handle from full url
+      let twitterHandle = archive.fullUrl.split("/")[3]; // https://twitter.com/username/status/1234567890
+      if (!groupedArchives.data[twitterHandle]) {
+        groupedArchives.data[twitterHandle] = [archive];
+      } else {
+        groupedArchives.data[twitterHandle].push(archive);
+      }
+    }
+    return groupedArchives;
+  };
 
   const getTimeKey = (timestamp: number): string => {
     return moment(timestamp * 1000).format("MMMM DD, YYYY");
@@ -167,6 +209,192 @@ export default function ArchivePage() {
                 setToExpand("");
               } else {
                 setToExpand(t);
+              }
+            }}
+            className="flex gap-2 items-center "
+          >
+            {total === 0 ? (
+              <div className="flex items-center gap-1">
+                <Link
+                  className="underline"
+                  href={`/replay?url=${url}&ts=${data.timestamp}`}
+                  target="_blank"
+                >
+                  View this snapshot
+                </Link>
+                <Image
+                  src={arrowTopRight}
+                  alt="arrowTopRight"
+                  style={{
+                    height: "24px",
+                    width: "24px",
+                  }}
+                />
+              </div>
+            ) : getTimeKey(data.timestamp) === toExpand ? (
+              <div className="flex items-center underline">
+                Collapse all snapshots{" "}
+                <Image
+                  src={chevron}
+                  className="rotate-180"
+                  alt="chevron"
+                  style={{
+                    height: "24px",
+                    width: "24px",
+                  }}
+                />
+              </div>
+            ) : (
+              <div className="flex items-center underline">
+                Expand all snapshots{" "}
+                <Image
+                  src={chevron}
+                  alt="chevron"
+                  style={{
+                    height: "24px",
+                    width: "24px",
+                  }}
+                />
+              </div>
+            )}
+          </div>
+        </td>
+      </tr>
+    );
+  };
+
+  const createDateTimeTable = (data: State) => {
+    return (
+      <table className="table w-full border-b border border-extralightgrey">
+        <thead>
+          <tr className="border-b p-4 border border-extralightgrey">
+            <th className="bg-[#FFFFFF] text-lightgrey py-1">Date</th>
+            <th className="bg-[#FFFFFF] text-lightgrey py-1">Time</th>
+            <th className="bg-[#FFFFFF] text-lightgrey py-1"># Snapshots</th>
+            <th className="bg-[#FFFFFF] text-lightgrey py-1">Uploader</th>
+            <th className="bg-[#FFFFFF] text-lightgrey py-1">Linked Pages</th>
+            <th className="bg-[#FFFFFF] text-lightgrey py-1">Expand all</th>
+          </tr>
+        </thead>
+        <tbody>
+          {data &&
+            Object.keys(data.groupedData.data).map((x: string, i: number) => {
+              // determine if we need to expand more here
+              return (
+                <>
+                  {createTableData(
+                    data.data?.url || "",
+                    data.groupedData.data[x][0],
+                    data.groupedData.data[x].length,
+                    i,
+                    false
+                  )}
+                  {toExpand === x &&
+                    data.groupedData.data[x].map((elem, index) => {
+                      return createTableData(
+                        data.data?.url || "",
+                        elem,
+                        0,
+                        index * 100,
+                        true
+                      );
+                    })}
+                </>
+              );
+            })}
+        </tbody>
+      </table>
+    );
+  };
+  const createTwitterTable = (data: State) => {
+    return (
+      <table className="table w-full border-b border border-extralightgrey">
+        <thead>
+          <tr className="border-b p-4 border border-extralightgrey">
+            <th className="bg-[#FFFFFF] text-lightgrey py-1">Username</th>
+            <th className="bg-[#FFFFFF] text-lightgrey py-1">Date</th>
+            <th className="bg-[#FFFFFF] text-lightgrey py-1">Time</th>
+            <th className="bg-[#FFFFFF] text-lightgrey py-1"># Snapshots</th>
+            <th className="bg-[#FFFFFF] text-lightgrey py-1">Uploader</th>
+            <th className="bg-[#FFFFFF] text-lightgrey py-1">Linked Pages</th>
+            <th className="bg-[#FFFFFF] text-lightgrey py-1">Expand all</th>
+          </tr>
+        </thead>
+        <tbody>
+          {data &&
+            Object.keys(data.groupedData.data).map((x: string, i: number) => {
+              // determine if we need to expand more here
+              return (
+                <>
+                  {createTwitterTableData(
+                    data.data?.url || "",
+                    data.groupedData.data[x][0],
+                    data.groupedData.data[x].length,
+                    i,
+                    false
+                  )}
+                  {toExpand === x &&
+                    data.groupedData.data[x].map((elem, index) => {
+                      return createTwitterTableData(
+                        data.data?.url || "",
+                        elem,
+                        0,
+                        index * 100,
+                        true
+                      );
+                    })}
+                </>
+              );
+            })}
+        </tbody>
+      </table>
+    );
+  };
+
+  const createTwitterTableData = (
+    url: string,
+    data: ArchiveSubmission,
+    total: number,
+    key: number,
+    expansion: boolean
+  ) => {
+    let username = data.fullUrl.split("/")[3];
+    return (
+      <tr key={key}>
+        <td>{username}</td>
+        <td>
+          <Link
+            className="underline"
+            href={`/replay?url=${url}&ts=${data.timestamp}`}
+          >
+            {getTimeKey(data.timestamp)}
+          </Link>
+        </td>
+        <td>{moment(data.timestamp * 1000).format("HH:mm:ss")}</td>
+        <td>{total === 0 || total}</td>
+        <td>
+          <Link
+            target={"_blank"}
+            className="underline"
+            href={`https://viewblock.io/arweave/address/${data.uploaderAddress}`}
+          >
+            {shortenAddress(data.uploaderAddress)}
+          </Link>
+        </td>
+        <td>
+          {expansion
+            ? data.options.depth === Depth.PageOnly
+              ? "No"
+              : "Yes"
+            : ""}
+        </td>
+        <td>
+          <div
+            onClick={() => {
+              if (toExpand == username) {
+                setToExpand("");
+              } else {
+                setToExpand(username);
               }
             }}
             className="flex gap-2 items-center "
@@ -414,62 +642,10 @@ export default function ArchivePage() {
                 <div className="border-b p-4 border border-extralightgrey ">
                   Snapshot history
                 </div>
-
-                <div className="overflow-x-auto">
-                  <table className="table w-full border-b border border-extralightgrey">
-                    <thead>
-                      <tr className="border-b p-4 border border-extralightgrey">
-                        <th className="bg-[#FFFFFF] text-lightgrey py-1">
-                          Date
-                        </th>
-                        <th className="bg-[#FFFFFF] text-lightgrey py-1">
-                          Time
-                        </th>
-                        <th className="bg-[#FFFFFF] text-lightgrey py-1">
-                          # Snapshots
-                        </th>
-                        <th className="bg-[#FFFFFF] text-lightgrey py-1">
-                          Uploader
-                        </th>
-                        <th className="bg-[#FFFFFF] text-lightgrey py-1">
-                          Linked Pages
-                        </th>
-                        <th className="bg-[#FFFFFF] text-lightgrey py-1">
-                          Expand all
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {data &&
-                        Object.keys(data.groupedData).map(
-                          (x: string, i: number) => {
-                            // determine if we need to expand more here
-                            return (
-                              <>
-                                {createTableData(
-                                  data.data?.url || "",
-                                  data.groupedData[x][0],
-                                  data.groupedData[x].length,
-                                  i,
-                                  false
-                                )}
-                                {toExpand === x &&
-                                  data.groupedData[x].map((elem, index) => {
-                                    return createTableData(
-                                      data.data?.url || "",
-                                      elem,
-                                      0,
-                                      index * 100,
-                                      true
-                                    );
-                                  })}
-                              </>
-                            );
-                          }
-                        )}
-                    </tbody>
-                  </table>
-                </div>
+                {data.groupedData.groupedBy === "date"
+                  ? createDateTimeTable(data)
+                  : createTwitterTable(data)}
+                <div className="overflow-x-auto"></div>
               </div>
             </div>
           ) : (
