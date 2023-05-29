@@ -769,7 +769,7 @@ function ConnectModal(props: any) {
             <b>Arweave</b>
           </div>
         </button>
-        <button
+        {/* <button
           disabled
           className="flex gap-4 items-center p-4 bg-extralightgrey rounded-lg hover:bg-funpurple hover:text-[#FFFFFF] "
         >
@@ -794,7 +794,7 @@ function ConnectModal(props: any) {
           <div>
             <b>WalletConnect</b> (coming soon)
           </div>
-        </button>
+        </button> */}
       </div>
     </div>
   );
