@@ -25,10 +25,9 @@ export const Footer: React.FC<any> = ({ props, className }) => {
 
         <div className="justify-self-end items-center">
           {" "}
-          {/* TODO */}
           <div className="text-lightgrey text-xs text-right">
             This website does not use any cookies or trackers. <br />
-            Website last updated: April 11, 2023
+            Website last updated: May 29, 2023
           </div>
         </div>
       </div>
