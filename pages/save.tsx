@@ -714,14 +714,9 @@ function ArchivingOptions(props: any) {
         <button
           className="btn w-full btn-primary bg-funpurple hover:bg-funmidpurple h-16"
           onClick={() => setOpenModal(true)}
-          disabled={
-            !canMoveToPayment ||
-            (+duration.value > 3 && duration.unit === TimeUnit.Days)
-          }
+          disabled={!canMoveToPayment}
         >
-          {+duration.value > 3 && duration.unit === TimeUnit.Days
-            ? "Please limit your archiving to less than 3 days"
-            : "Next"}
+          Next
         </button>
         <Paywith />
       </div>
