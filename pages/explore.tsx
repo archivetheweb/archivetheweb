@@ -79,7 +79,7 @@ export default function Explore() {
   }, [sorting, data.data]);
 
   const handleURL = (e: React.FormEvent<HTMLInputElement>) => {
-    let url = e.currentTarget.value;
+    let url = e.currentTarget.value.toLowerCase();
     let valid = isValidUrl(url);
     if (url.endsWith("/")) {
       url = url.substring(0, url.length - 1);
